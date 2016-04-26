@@ -1,4 +1,4 @@
-import {UPDATE_STANDARD, GET_MENU} from '../mutation-types'
+import {UPDATE_STANDARD, HYDRATE_MENU} from '../mutation-types'
 
 const state = {
   standard: '',
@@ -9,7 +9,7 @@ const mutations = {
   [UPDATE_STANDARD] (state, newStandard) {
     state.standard = newStandard
   },
-  [GET_MENU] (state, menus) {
+  [HYDRATE_MENU] (state, menus) {
     state.menus = menus
   }
 }

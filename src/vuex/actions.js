@@ -6,5 +6,10 @@ export const updateStandard = ({dispatch}, standard) => {
 }
 
 export const hydrateMenu = ({dispatch}) => {
-  dispatch(types.GET_MENU, getMenu)
+  let menu = getMenu
+  menu.then((response) => {
+    dispatch(types.HYDRATE_MENU, response.data)
+  }, (response) => {
+    dispatch(types.HYDRATE_MENU, [])
+  })
 }

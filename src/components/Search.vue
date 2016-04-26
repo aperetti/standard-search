@@ -1,5 +1,4 @@
 <template>
-  <div> {{hydrateMenu()}} </div>
   <div class='row'>
     <div class='col-md-6 col-xs-8 col-md-offset-3 col-xs-offset-2'>
         <input autocomplete="off" placeholder='Search for...' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="showResults = true" @blur="blurResults" />
@@ -10,14 +9,12 @@
         </div>
     </div>
   </div>
-  <div class='row' style='height: 100%;'>
     <standard-view></standard-view>
-  </div>
 </template>
 
 <script>
   import StandardView from './StandardView'
-  import {updateStandard, hydrateMenu} from '../vuex/actions'
+  import {updateStandard} from '../vuex/actions'
   export default {
     data () {
       return {
@@ -31,8 +28,7 @@
     },
     vuex: {
       actions: {
-        updateStandard,
-        hydrateMenu
+        updateStandard
       }
     },
     components: {

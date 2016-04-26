@@ -1,17 +1,25 @@
 <template>
-  <div class='col-xs-10 col-sm-8 col-sm-offset-2 col-xs-offset-1' style='height: 100%'>
-    <div> Hello</div>
-    <iframe id='pdf-frame' class='pdf-frame' :src="currentStandard" v-if="standard != ''"  frameborder="0" wmode="transparent"></iframe>
+  <div class='row'>
+    <div class='col-xs-10 col-sm-8 col-sm-offset-2 col-xs-offset-1' style='height: 50%'>
+      <div> Hello</div>
+      <iframe id='pdf-frame' class='pdf-frame' :src="currentStandard" v-if="standard != ''"  frameborder="0" wmode="transparent"></iframe>
+    </div>
   </div>
-
+  <div class='row'>
+    <standard-menu></standard-menu>
+  </div>
 </template>
 
 <script>
+  import StandardMenu from './StandardMenu'
   export default {
     data () {
       return {
         url: 'http://45.56.92.153:8080/api/html?file='
       }
+    },
+    components: {
+      StandardMenu
     },
     vuex: {
       getters: {

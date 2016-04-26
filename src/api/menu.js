@@ -1,10 +1,5 @@
 import {apiMenuUrl} from './config'
-
-export const getMenu = () => {
-  this.$http({url: apiMenuUrl, method: 'GET', params: {token: window.localStorage.getItem('token')}}).then((response) => {
-    console.log(response.data)
-    return response.data
-  }, (response) => {
-    return []
-  })
-}
+import Vue from 'vue'
+import VueResource from 'vue-resource'
+Vue.use(VueResource)
+export const getMenu = Vue.http({url: apiMenuUrl, method: 'GET', params: {token: window.localStorage.getItem('token')}})

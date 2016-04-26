@@ -1,2 +1,2 @@
 export const UPDATE_STANDARD = 'UPDATE_STANDARD'
-export const GET_MENU = 'GET_MENU'
+export const HYDRATE_MENU = 'HYDRATE_MENU'

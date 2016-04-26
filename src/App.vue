@@ -25,7 +25,7 @@
     </form>
 
     <template v-if='loggedIn'>
-     <router-view></router-view>
+      <router-view></router-view>
     </template>
 
     <template v-else>
@@ -37,11 +37,21 @@
 <script>
   import Search from './components/Search'
   import store from './vuex/store'
-  import {apiAuthUrl} from './api/config'
+  import {hydrateMenu} from './vuex/actions'
+  // import {apiAuthUrl} from './api/config'
+  import {getToken} from './api/auth'
   export default {
     store,
     components: {
       Search
+    },
+    vuex: {
+      actions: {
+        hydrateMenu
+      },
+      getter: {
+        menus: state => state.standards.menus
+      }
     },
     data () {
       return {
@@ -54,31 +64,22 @@
     },
     methods: {
       login: function () {
-        var loginUrl = apiAuthUrl
-        var xmlHttp = new window.XMLHttpRequest()
-        var data = 'name=' + this.username + '&password=' + this.password
         var self = this
         this.loading = true
-        xmlHttp.onreadystatechange = function () {
-          if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
-            let result = JSON.parse(xmlHttp.responseText)
-            if (result.success) {
-              window.localStorage.setItem('token', result.token)
-              window.localStorage.setItem('expiration', result.expires)
-              window.localStorage.setItem('user', self.username)
-              self.logged = true
-              self.password = ''
-            } else {
-              console.log('failed to log in')
-              self.password = ''
-              self.failed = true
-            }
-            self.loading = false
-          }
-        }
-        xmlHttp.open('POST', loginUrl, true)
-        xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-        xmlHttp.send(data)
+        console.log('Running Login')
+        getToken(this.username, this.password).then((response) => {
+          window.localStorage.setItem('token', response.data.token)
+          window.localStorage.setItem('expiration', response.data.expires)
+          window.localStorage.setItem('user', self.username)
+          self.logged = true
+          self.password = ''
+          self.loading = false
+          self.hydrateMenu()
+        }, (response) => {
+          self.password = ''
+          self.failed = true
+          self.loading = false
+        })
       },
       logout: function () {
         window.localStorage.setItem('token', null)
@@ -98,7 +99,6 @@
       }
     }
   }
-
 </script>
 
 <style>
