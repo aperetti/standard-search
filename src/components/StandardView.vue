@@ -1,7 +1,6 @@
 <template>
   <div class='row'>
     <div class='col-xs-10 col-sm-8 col-sm-offset-2 col-xs-offset-1' style='height: 50%'>
-      <div> Hello</div>
       <iframe id='pdf-frame' class='pdf-frame' :src="currentStandard" v-if="standard != ''"  frameborder="0" wmode="transparent"></iframe>
     </div>
   </div>

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <form v-if='loggedIn'>
+    <form v-if='loggedIn && !expired'>
       <div class='form-group'>
       <div class='row header'>
         <button class='pull-right col-md-2 col-xs-2 btn btn-primary btn-default' @click.prevent='logout' type='button'>Logout</button>
@@ -24,7 +24,7 @@
       </div>
     </form>
 
-    <template v-if='loggedIn'>
+    <template v-if='loggedIn && !expired'>
       <router-view></router-view>
     </template>
 
@@ -37,44 +37,50 @@
 <script>
   import Search from './components/Search'
   import store from './vuex/store'
-  import {hydrateMenu} from './vuex/actions'
   // import {apiAuthUrl} from './api/config'
   import {getToken} from './api/auth'
+  import {setToken} from './vuex/actions'
   export default {
     store,
     components: {
       Search
     },
-    vuex: {
-      actions: {
-        hydrateMenu
-      },
-      getter: {
-        menus: state => state.standards.menus
-      }
-    },
     data () {
       return {
         username: '',
         password: '',
-        logged: '',
+        logged: false,
         failed: false,
         loading: false
+      }
+    },
+    vuex: {
+      actions: {
+        setToken
+      },
+      getters: {
+        expired: state => {
+          let exp = state.standard.token.expiration
+          if (exp > new Date()) {
+            return false
+          } else {
+            return true
+          }
+        }
       }
     },
     methods: {
       login: function () {
         var self = this
         this.loading = true
-        console.log('Running Login')
         getToken(this.username, this.password).then((response) => {
           window.localStorage.setItem('token', response.data.token)
           window.localStorage.setItem('expiration', response.data.expires)
           window.localStorage.setItem('user', self.username)
+          self.setToken({token: response.data.token, expiration: response.data.expires})
           self.logged = true
           self.password = ''
           self.loading = false
-          self.hydrateMenu()
         }, (response) => {
           self.password = ''
           self.failed = true
@@ -85,16 +91,21 @@
         window.localStorage.setItem('token', null)
         window.localStorage.setItem('expiration', null)
         window.localStorage.setItem('username', null)
+        this.setToken({token: '', expiration: 0})
         this.logged = false
       }
     },
     computed: {
-      loggedIn: function () {
-        this.logged
-        if (window.localStorage.getItem('token') != null && new Date() < window.localStorage.getItem('expiration')) {
-          return true
-        } else {
-          return false
+      loggedIn: {
+        cache: true,
+        get: function () {
+          this.logged
+          if (window.localStorage.getItem('token') != null && new Date() < window.localStorage.getItem('expiration')) {
+            this.setToken({token: window.localStorage.getItem('token'), expiration: window.localStorage.getItem('expiration')})
+            return true
+          } else {
+            return false
+          }
         }
       }
     }
