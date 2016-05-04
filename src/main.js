@@ -10,10 +10,23 @@ var Application = Vue.extend({
 
 Vue.use(VueRouter)
 
-var router = new VueRouter()
+var router = new VueRouter({
+  history: true,
+  hashbang: false
+})
 
 router.map({
-  '/': { component: Search }
+  '/search': {
+    name: 'search',
+    component: Search
+  },
+  '/search/:standard': {
+    component: Search
+  }
+})
+
+router.redirect({
+  '/': '/search'
 })
 
 router.start(Application, 'body')

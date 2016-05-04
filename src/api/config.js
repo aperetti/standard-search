@@ -3,7 +3,10 @@ export const apiUrl = 'http://45.56.92.153:8080/api/'
 export const apiAuthUrl = apiUrl + 'authenticate'
 export const apiMenuUrl = apiUrl + 'menu'
 export const apiStandardUrl = (standard) => {
-  return apiUrl + 'standard/' + standard
+  return apiUrl + 'standard/' + standard + '?token=' + token()
+}
+export const apiHtmlStandardUrl = (standard) => {
+  return apiUrl + 'html/' + standard + '?token=' + token()
 }
 export const apiStandardsByMenuUrl = apiUrl + 'standardsByMenu'
 

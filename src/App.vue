@@ -78,6 +78,10 @@
           window.localStorage.setItem('expiration', response.data.expires)
           window.localStorage.setItem('user', self.username)
           self.setToken({token: response.data.token, expiration: response.data.expires})
+          console.log(response.data.expires - new Date())
+          setTimeout(() => {
+            self.logged = false
+          }, response.data.expires - new Date())
           self.logged = true
           self.password = ''
           self.loading = false

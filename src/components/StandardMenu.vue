@@ -60,7 +60,6 @@
           allMenus.forEach((menu) => {
             if (menus.indexOf(menu[path.length]) === -1) {
               if ((equals(path, menu.slice(0, path.length)) || path.length === 0) && menu.length !== path.length) {
-                console.log('Pushing: ' + menu[path.length] + ' from: ' + menu)
                 menus.push(menu[path.length])
               }
             }
