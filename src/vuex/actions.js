@@ -31,12 +31,29 @@ export const setToken = ({dispatch}, token) => {
   dispatch(types.SET_TOKEN, token)
 }
 
+export const logout = ({dispatch}) => {
+  let token = {token: '', expiration: 0}
+  window.localStorage.setItem('token', '')
+  window.localStorage.setItem('expiration', 0)
+  window.localStorage.setItem('username', '')
+  dispatch(types.SET_TOKEN, token)
+}
+
+export const login = ({dispatch}, response) => {
+  window.localStorage.setItem('token', response.data.token)
+  window.localStorage.setItem('expiration', response.data.expires)
+  window.localStorage.setItem('username', response.data.username)
+  let token = {token: response.data.token, expiration: response.data.expires}
+  dispatch(types.SET_TOKEN, token)
+}
+
 export const setCurrentMenu = ({dispatch}, currentMenu) => {
   dispatch(types.SET_CURRENT_MENU, currentMenu)
   let standards = getStandardsByMenu(currentMenu)
   standards.then((response) => {
     dispatch(types.SET_MENU_STANDARDS, response.data)
   }, (response) => {
+    console.log(response)
     console.log('Failed to retrieve standards')
     dispatch(types.SET_MENU_STANDARDS, [])
   })

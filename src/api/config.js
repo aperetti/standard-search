@@ -1,15 +1,49 @@
 import store from '../vuex/store'
-export const apiUrl = 'http://45.56.92.153:8080/api/'
-export const apiAuthUrl = apiUrl + 'authenticate'
-export const apiMenuUrl = apiUrl + 'menu'
-export const apiStandardUrl = (standard) => {
-  return apiUrl + 'standard/' + standard + '?token=' + token()
+import Vue from 'vue'
+import VueResource from 'vue-resource'
+import {setToken} from '../vuex/actions'
+
+Vue.use(VueResource)
+Vue.http.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getItem('token')
+
+// The follow intercepts any request and updates the Authorization token
+Vue.http.interceptors.push({
+  request: (request) => {
+    request.headers.Authorization = 'Bearer ' + window.localStorage.getItem('token')
+    return request
+  }
+})
+
+export {Vue}
+
+export const apiBase = 'http://45.56.92.153:8080/api/'
+export const apiAuth = apiBase + 'authenticate'
+export const apiStandardsBase = apiBase + 'standards/'
+export const apiGetMenus = apiStandardsBase + 'menu'
+
+// Gets the specific Mongo standard document referenced by the filename
+// standard -> String (filename of the standard)
+export const apiLookupStandardRecord = (standard) => {
+  return apiStandardsBase + 'lookup/' + standard
 }
-export const apiHtmlStandardUrl = (standard) => {
-  return apiUrl + 'html/' + standard + '?token=' + token()
+export const apiGetStandardHtml = (standard) => {
+  return apiStandardsBase + 'html/' + standard + '?token=' + token()
 }
-export const apiStandardsByMenuUrl = apiUrl + 'standardsByMenu'
+
+export const apiGetStandardsFromMenu = apiStandardsBase + 'from_menu/'
 
 export const token = () => {
   return store.state.standard.token.token
 }
+
+export const loggedIn = () => {
+  if (store.state.standard.token.token && store.state.standard.token.expiration > new Date()) {
+    return true
+  } else if (window.localStorage.getItem('token') && window.localStorage.getItem('expiration') > new Date()) {
+    setToken(store, {token: window.localStorage.getItem('token'), expiration: window.localStorage.getItem('expiration')})
+    return true
+  } else {
+    return false
+  }
+}
+

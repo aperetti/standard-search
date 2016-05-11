@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App'
-import Search from './components/Search'
+import StandardView from './components/StandardView'
+import Login from './components/Login'
+import {loggedIn} from './api/config'
 
 /* eslint-disable no-new */
 var Application = Vue.extend({
@@ -12,16 +14,21 @@ Vue.use(VueRouter)
 
 var router = new VueRouter({
   history: true,
-  hashbang: false
+  hashbang: false,
+  transitionOnLoad: true
 })
 
 router.map({
   '/search': {
     name: 'search',
-    component: Search
+    component: StandardView
   },
   '/search/:standard': {
-    component: Search
+    component: StandardView
+  },
+  '/login': {
+    name: 'login',
+    component: Login
   }
 })
 
@@ -29,4 +36,14 @@ router.redirect({
   '/': '/search'
 })
 
+router.beforeEach(function (transition) {
+  if (!loggedIn() && !transition.to.path.includes('/login')) {
+    transition.redirect('/login')
+  } else {
+    transition.next()
+  }
+})
+
 router.start(Application, 'body')
+
+export {router}

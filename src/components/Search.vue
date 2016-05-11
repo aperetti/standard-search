@@ -1,19 +1,12 @@
 <template>
-  <div class='row'>
-    <div class='col-md-6 col-xs-8 col-md-offset-3 col-xs-offset-2'>
-        <a v-link="{path: '/search', query: {standard: 123}}">WTF</a>
-        <input autocomplete="off" placeholder='Search for...' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="showResults = true" @blur="blurResults" />
-        <div class='list-group float' id='results' v-show='showResults'>
-          <template v-for='item in searchResults'>
-            <a @blur="blurResults" v-link="{ path: '/search', query:{standard: item._source.file} }"  class='list-group-item text-left'>{{item._source.code}} - {{item._source.desc}}</a>
-          </template>
-        </div>
+  <input autocomplete="off" placeholder='Search for...' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="showResults = true" @blur="blurResults" />
+  <div>
+    <div class='list-group float' id='results' v-show='showResults'>
+      <template v-for='item in searchResults'>
+        <a @blur="blurResults" v-link="{ path: '/search', query:{standard: item._source.file} }"  class='list-group-item text-left'>{{item._source.code}} - {{item._source.desc}}</a>
+      </template>
     </div>
   </div>
-  <div class='row'>
-    <standard-menu></standard-menu>
-  </div>
-  <standard-view v-if='$route.query.standard'></standard-view>
 </template>
 
 <script>
@@ -39,9 +32,6 @@
     components: {
       StandardView,
       StandardMenu
-    },
-    computed: {
-      standardFile: () => this.$route.query.standard
     },
     methods: {
       setCurrentStandard: function (item) {
