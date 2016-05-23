@@ -35,7 +35,7 @@
       Search
     },
     data () {
-      return {open: true}
+      return {open: false}
     },
     vuex: {
       actions: {

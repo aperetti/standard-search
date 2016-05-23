@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App'
 import StandardView from './components/StandardView'
+import CreateStandard from './components/CreateStandard'
 import Login from './components/Login'
 import {loggedIn} from './api/config'
 
@@ -29,6 +30,10 @@ router.map({
   '/login': {
     name: 'login',
     component: Login
+  },
+  '/admin/standard/create': {
+    name: 'createStandard',
+    component: CreateStandard
   }
 })
 

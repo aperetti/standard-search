@@ -6,7 +6,7 @@ import {setToken} from '../vuex/actions'
 Vue.use(VueResource)
 Vue.http.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getItem('token')
 
-// The follow intercepts any request and updates the Authorization token
+// The following intercepts any request and updates the Authorization token
 Vue.http.interceptors.push({
   request: (request) => {
     request.headers.Authorization = 'Bearer ' + window.localStorage.getItem('token')
@@ -19,6 +19,7 @@ export {Vue}
 export const apiBase = 'http://45.56.92.153:8080/api/'
 export const apiAuth = apiBase + 'authenticate'
 export const apiStandardsBase = apiBase + 'standards/'
+export const apiAdminBase = apiBase + 'admin/'
 export const apiGetMenus = apiStandardsBase + 'menu'
 
 // Gets the specific Mongo standard document referenced by the filename
@@ -47,3 +48,7 @@ export const loggedIn = () => {
   }
 }
 
+export const apiGetPdfText = apiAdminBase + 'get_text'
+
+// appends the current token to the url string
+export const withToken = (url) => url + '?token=' + token()

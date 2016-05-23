@@ -1,9 +1,9 @@
 <template>
   <div class='row' style="height: 100%">
     <div class='col-xs-10 col-sm-8 col-sm-offset-2 col-xs-offset-1 wrap' style="height: 100%">
-      <form action="/pictures/upload" method="POST" enctype="multipart/form-data">
+      <form action="{{submitUrl}}" method="POST" enctype="multipart/form-data">
         Select an image to upload:
-        <input type="file" name="image"> 
+        <input type="file" name="pdf"> 
         <input type="submit" value="Upload Image">
       </form>
     </div>
@@ -11,11 +11,11 @@
 </template>
 
 <script>
-  import {apiGetStandardHtml} from '../api/config'
+  import {apiGetPdfText, withToken} from '../api/config'
   export default {
     computed: {
-      currentStandard: function () {
-        return apiGetStandardHtml(this.$route.query.standard)
+      submitUrl: function () {
+        return withToken(apiGetPdfText)
       }
     }
   }
