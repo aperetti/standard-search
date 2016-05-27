@@ -17,6 +17,7 @@
     "babel-runtime": "^5.8.0",
     "bootstrap": "^3.3.6",
     "javascript-natural-sort": "^0.7.1",
+    "json-editor": "^0.7.25",
     "natural-compare-lite": "^1.4.0",
     "pdfjs-dist": "^1.4.213",
     "pdfviewer": "^0.3.2",
@@ -27,6 +28,7 @@
     "vue-side-nav": "^0.1.4",
     "vue-strap": "^1.0.7",
     "vue-touch": "^1.0.2",
+    "vue-validator": "^2.1.2",
     "vuex": "^0.6.3"
   },
   "devDependencies": {

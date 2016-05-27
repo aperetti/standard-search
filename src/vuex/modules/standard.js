@@ -9,7 +9,8 @@ const state = {
   currentMenu: [],
   token: {
     token: '',
-    expiration: 0
+    expiration: 0,
+    admin: false
   }
 }
 

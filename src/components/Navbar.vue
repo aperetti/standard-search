@@ -1,15 +1,14 @@
 <template>
- <nav class="navbar navbar-default navbar-fixed-top">
+ <nav class="navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
-
-      <button type="button" class="navbar-toggle collapse.in" @click="open = !open">
+      <button type="button" class="navbar-toggle" @click="open = !open">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
     </div>
-    <div class="navbar-collapse" v-show="open"> 
+    <div class="{{ open ? 'navbar collapse-in' : 'navbar collapse'}}"> 
       <ul class="nav navbar-nav">
         <li><a @click.prevent='proccessLogout'>Logout</a></li>
       </ul>
@@ -28,7 +27,6 @@
 
 <script>
   import {logout} from '../vuex/actions'
-  import {router} from '../main'
   import Search from './Search'
   export default {
     components: {
@@ -45,7 +43,7 @@
     methods: {
       proccessLogout: function () {
         this.logout()
-        router.go('/login')
+        this.$route.router.go('/login')
       }
     }
   }

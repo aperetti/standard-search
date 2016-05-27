@@ -43,7 +43,7 @@ export const login = ({dispatch}, response) => {
   window.localStorage.setItem('token', response.data.token)
   window.localStorage.setItem('expiration', response.data.expires)
   window.localStorage.setItem('username', response.data.username)
-  let token = {token: response.data.token, expiration: response.data.expires}
+  let token = {token: response.data.token, expiration: response.data.expires, admin: response.data.admin}
   dispatch(types.SET_TOKEN, token)
 }
 

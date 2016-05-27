@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueValidator from 'vue-validator'
 import App from './App'
 import StandardView from './components/StandardView'
 import CreateStandard from './components/CreateStandard'
@@ -11,6 +12,7 @@ var Application = Vue.extend({
   components: { App }
 })
 
+Vue.use(VueValidator)
 Vue.use(VueRouter)
 
 var router = new VueRouter({
@@ -50,5 +52,3 @@ router.beforeEach(function (transition) {
 })
 
 router.start(Application, 'body')
-
-export {router}

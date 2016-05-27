@@ -22,7 +22,6 @@
 <script>
   import {logout, login} from '../vuex/actions'
   import {getToken} from '../api/auth'
-  import {router} from '../main'
   
   export default {
     data () {
@@ -48,7 +47,7 @@
           self.login(response)
           self.password = ''
           self.loading = false
-          router.go('/')
+          self.$route.router.go('/')
         }, (response) => {
           self.password = ''
           self.failed = true
