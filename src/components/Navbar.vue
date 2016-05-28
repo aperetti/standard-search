@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
       </button>
     </div>
-    <div class="{{ open ? 'navbar collapse-in' : 'navbar collapse'}}"> 
+    <div class="{{ open ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}"> 
       <ul class="nav navbar-nav">
         <li><a @click.prevent='proccessLogout'>Logout</a></li>
       </ul>
