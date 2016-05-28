@@ -1,15 +1,15 @@
 <template>
-    <form class="form-horizontal" action="{{submitUrl}}" method="POST" enctype="multipart/form-data">
+    <form class="form-horizontal" action="{{submitUrl}}" method="POST" enctype="multipart/form-data" v-on:submit.prevent="onSubmit">
       <div class="form-group">
         <label for="inputStandard" class="col-sm-2 control-label">Standards</label>
         <div class="col-sm-2">
-          <input type="text" class="form-control" placeholder="Standard Code"></input>
+          <input type="text" class="form-control" placeholder="Standard Code" v-model="code"></input>
         </div>
       </div>
       <div class="form-group">
         <label for="inputStandard" class="col-sm-2 control-label">Description</label>
         <div class="col-sm-6">
-          <textarea rows="2" class="form-control"></textarea>
+          <textarea rows="2" class="form-control" v-model="desc"></textarea>
         </div>
       </div>
       <div class="form-group" v-if="menu.length">
@@ -37,22 +37,23 @@
       </div>
       <div class="form-group">
         <label class="btn btn-default btn-file">
-          Upload PDF<input type="file" name="pdf" style="display: none;">
+          Upload PDF<input id="pdfFile" type="file" name="pdf" style="display: none;">
         </label>
-
-        <input class="btn btn-primary" type="submit" value="Submit">
+        <input class="btn btn-primary" type="submit" value="Submit" >
       </div>
     </form>
 </template>
 
 <script>
-  import {apiGetPdfText, withToken} from '../api/config'
+  import {apiAddStandard, withToken} from '../api/config'
   
   export default {
     ready: function () {
     },
     data: function () {
       return {
+        code: '',
+        desc: '',
         addGroup: false,
         newGroup: '',
         menu: []
@@ -75,11 +76,32 @@
       },
       removeGroup: function (index) {
         this.menu.splice(index)
+      },
+      onSubmit: function (e) {
+        console.log(this)
+        var formData = new window.FormData()
+        formData.append('path', this.menu.join('|'))
+        formData.append('code', this.code)
+        formData.append('desc', this.desc)
+        formData.append('pdf', document.getElementById('pdfFile').files[0])
+        var xhr = new window.XMLHttpRequest()
+        xhr.open('POST', this.submitUrl, true)
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            console.log('Uploaded')
+            console.log(xhr.response)
+          } else {
+            console.log(xhr.response)
+            console.log('Failed to Upload!')
+          }
+        }
+        xhr.send(formData)
+        console.log('Submit Pushed')
       }
     },
     computed: {
       submitUrl: function () {
-        return withToken(apiGetPdfText)
+        return withToken(apiAddStandard)
       }
     }
   }

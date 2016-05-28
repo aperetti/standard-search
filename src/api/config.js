@@ -27,9 +27,14 @@ export const apiGetMenus = apiStandardsBase + 'menu'
 export const apiLookupStandardRecord = (standard) => {
   return apiStandardsBase + 'lookup/' + standard
 }
+
 export const apiGetStandardHtml = (standard) => {
   return apiStandardsBase + 'html/' + standard + '?token=' + token()
 }
+
+// Used to determine if the current User is admin. Should only be used to affect display. All authentication
+// should take place on the server.
+export const apiIsAdmin = apiAdminBase + 'is_admin'
 
 export const apiGetStandardsFromMenu = apiStandardsBase + 'from_menu/'
 
@@ -48,7 +53,7 @@ export const loggedIn = () => {
   }
 }
 
-export const apiGetPdfText = apiAdminBase + 'get_text'
+export const apiAddStandard = apiAdminBase + 'add_standard'
 
 // appends the current token to the url string
 export const withToken = (url) => url + '?token=' + token()

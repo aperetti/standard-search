@@ -6,6 +6,7 @@ import StandardView from './components/StandardView'
 import CreateStandard from './components/CreateStandard'
 import Login from './components/Login'
 import {loggedIn} from './api/config'
+import {isAdmin} from './api/auth'
 
 /* eslint-disable no-new */
 var Application = Vue.extend({
@@ -46,6 +47,18 @@ router.redirect({
 router.beforeEach(function (transition) {
   if (!loggedIn() && !transition.to.path.includes('/login')) {
     transition.redirect('/login')
+  } else if (transition.to.path.includes('/admin')) {
+    let admin = isAdmin()
+    admin.then(function (res) {
+      console.log(res)
+      if (res.status === 200) {
+        transition.next()
+      } else {
+        transition.abort()
+      }
+    }, function (res) {
+      transition.abort()
+    })
   } else {
     transition.next()
   }

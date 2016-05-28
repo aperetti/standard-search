@@ -12,6 +12,9 @@
       <ul class="nav navbar-nav">
         <li><a @click.prevent='proccessLogout'>Logout</a></li>
       </ul>
+      <ul v-if="admin" class="nav navbar-nav">
+        <li><a @click.prevent="createStandard()"><span class="glyphicon glyphicon-plus"></span></span> Add New Standard</a></li>
+      </ul>
       <form class="navbar-form">
         <div class="form-group" style="display:inline;">
           <div class="input-group" style="display:table;">
@@ -27,13 +30,24 @@
 
 <script>
   import {logout} from '../vuex/actions'
+  import {isAdmin} from '../api/auth'
   import Search from './Search'
   export default {
+    ready: function () {
+      let getAdmin = isAdmin()
+      var self = this
+      getAdmin.then(function (res) {
+        console.log(res)
+        if (res.status === 200) {
+          self.admin = true
+        }
+      })
+    },
     components: {
       Search
     },
     data () {
-      return {open: false}
+      return {open: false, admin: false}
     },
     vuex: {
       actions: {
@@ -44,6 +58,10 @@
       proccessLogout: function () {
         this.logout()
         this.$route.router.go('/login')
+      },
+      createStandard: function () {
+        this.$route.router.go('/admin/standard/create')
+        this.open = false
       }
     }
   }
