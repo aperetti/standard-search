@@ -9,26 +9,24 @@
       }
     },
     computed: {
-      $valid: function () {
+      $vd: function () {
         let obj = this.$options.validator.call(this)
-        console.log('Loaded')
-        console.log(obj)
         if (!this.$options.validator) {
           return true
         }
 
         for (var type in obj) {
           let o = obj[type]
-          o.valid = (function () {
+          o.$valid = (function () {
             for (var key in o) {
               if (!o[key]) return false
             }
             return true
           })()
         }
-        obj.valid = (function () {
+        obj.$valid = (function () {
           for (var type in obj) {
-            if (!obj[type].valid) return false
+            if (!obj[type].$valid) return false
           }
           return true
         })()

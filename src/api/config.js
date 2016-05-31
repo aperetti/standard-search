@@ -35,6 +35,7 @@ export const apiGetStandardHtml = (standard) => {
 // Used to determine if the current User is admin. Should only be used to affect display. All authentication
 // should take place on the server.
 export const apiIsAdmin = apiAdminBase + 'is_admin'
+export const apiValidStandard = apiStandardsBase + 'valid_standard/'
 
 export const apiGetStandardsFromMenu = apiStandardsBase + 'from_menu/'
 

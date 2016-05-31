@@ -1,4 +1,4 @@
-import {apiLookupStandardRecord, apiGetStandardsFromMenu, Vue} from './config'
+import {apiLookupStandardRecord, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, Vue} from './config'
 
 // Gets the specific Mongo standard document referenced by the filename
 // standard -> String (filename of the standard)
@@ -10,4 +10,14 @@ export const getStandard = (standard) => {
 // menu -> Array (The list of menu items needed to find the standards)
 export const getStandardsByMenu = (menu) => {
   return Vue.http({url: apiGetStandardsFromMenu, method: 'POST', data: {'menu': menu}})
+}
+
+// Sends Standard Object for Server to Create Record
+export const setNewStandard = (standard) => {
+  return Vue.http({url: apiSetNewStandard, method: 'POST', data: {standard: standard}})
+}
+
+// Requires Admin
+export const validStandard = (code) => {
+  return Vue.http({url: apiValidStandard + code, method: 'GET'})
 }

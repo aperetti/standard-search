@@ -37,7 +37,6 @@
       let getAdmin = isAdmin()
       var self = this
       getAdmin.then(function (res) {
-        console.log(res)
         if (res.status === 200) {
           self.admin = true
         }
