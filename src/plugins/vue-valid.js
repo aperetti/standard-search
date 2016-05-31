@@ -24,12 +24,24 @@
             return true
           })()
         }
+
+        obj.$percent = (function () {
+          let count = 0
+          for (var type in obj) {
+            if (obj[type].$valid) ++count
+          }
+          return count / Object.keys(obj).length
+        })()
+
         obj.$valid = (function () {
           for (var type in obj) {
-            if (!obj[type].$valid) return false
+            if (!obj[type].$valid && type.indexOf('$') !== 0) return false
           }
           return true
         })()
+
+        let debug = true
+        debug ? console.log(obj) : ''
         return obj
       }
     }
