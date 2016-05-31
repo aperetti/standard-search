@@ -42,14 +42,14 @@
         <input class="btn btn-primary" type="submit" value="Submit">
       </div>
       <div class="col-sm-6 col-sm-offset-3">
-        <div class="panel panel-danger" v-if="!$val.valid">
+        <div class="panel panel-danger" v-if="!$valid.valid">
           <div class="panel-heading">Errors</div>
-          <ul class="list-group">
-            <li class="list-group-item" v-if="!$val.code.required">Standard Code Required</li>
-            <li class="list-group-item" v-if="!$val.desc.required">Standard Description Required</li>
-            <li class="list-group-item" v-if="!$val.menu.required">(1) Group Required</li>
-            <li class="list-group-item" v-if="!$val.menu.eachLength(1)">Each Group Must Have a Name</li>
-            <li class="list-group-item" v-if="!$val.file.required">File Upload Required</li>
+          <ul vif="$" class="list-group">
+            <li class="list-group-item" v-if="!$valid.code.required">Standard Code Required</li>
+            <li class="list-group-item" v-if="!$valid.desc.required">Standard Description Required</li>
+            <li class="list-group-item" v-if="!$valid.menu.required">(1) Group Required</li>
+            <li class="list-group-item" v-if="!$valid.menu.eachLength(1)">Each Group Must Have a Name</li>
+            <li class="list-group-item" v-if="!$valid.file.required">File Upload Required</li>
           </ul>
         </div>
       </div>
@@ -73,6 +73,7 @@
     },
     methods: {
       toggleGroup: function () {
+        console.log(this)
         this.addGroup = !this.addGroup
       },
       pushGroup: function (a) {
@@ -110,15 +111,11 @@
         console.log('Submit Pushed')
       }
     },
-    computed: {
-      submitUrl: function () {
-        return withToken(apiAddStandard)
-      },
-      $val: function () {
-        let $ = {}
-        $.code = {required: this.code.length > 0}
-        $.desc = {required: this.desc.length > 0}
-        $.menu = {
+    validator: function () {
+      return {
+        code: {required: this.code.length > 0},
+        desc: {required: this.desc.length > 0},
+        menu: {
           required: this.menu.length > 0,
           eachLength: (min) => {
             for (var el in this.menu) {
@@ -129,24 +126,46 @@
               }
             }
           }
-        }
-        $.file = {required: this.file.length > 0, type: (extension) => {
+        },
+        file: {required: this.file.length > 0, type: (extension) => {
           if (this.file.indexof(extension)) {
             return true
           } else {
             return true
           }
         }}
-        $.valid = (function () {
-          for (var type in $) {
-            for (var key in $[type]) {
-              if (!$[type][key]) return false
-            }
-          }
-          return true
-        })()
-        return $
       }
+    },
+    computed: {
+      submitUrl: function () {
+        return withToken(apiAddStandard)
+      }
+      // Validation for the form
+      // val: function () {
+      //   return this.$valid({
+      //     code: {required: this.code.length > 0},
+      //     desc: {required: this.desc.length > 0},
+      //     menu: {
+      //       required: this.menu.length > 0,
+      //       eachLength: (min) => {
+      //         for (var el in this.menu) {
+      //           if (this.menu[el].length < min) {
+      //             return false
+      //           } else {
+      //             return true
+      //           }
+      //         }
+      //       }
+      //     },
+      //     file: {required: this.file.length > 0, type: (extension) => {
+      //       if (this.file.indexof(extension)) {
+      //         return true
+      //       } else {
+      //         return true
+      //       }
+      //     }}
+      //   })
+      // }
     }
   }
 </script>

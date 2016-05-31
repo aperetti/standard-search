@@ -7,6 +7,7 @@ import CreateStandard from './components/CreateStandard'
 import Login from './components/Login'
 import {loggedIn} from './api/config'
 import {isAdmin} from './api/auth'
+import VueValid from './plugins/vue-valid'
 
 /* eslint-disable no-new */
 var Application = Vue.extend({
@@ -15,6 +16,7 @@ var Application = Vue.extend({
 
 Vue.use(VueValidator)
 Vue.use(VueRouter)
+Vue.use(VueValid)
 
 var router = new VueRouter({
   history: true,
