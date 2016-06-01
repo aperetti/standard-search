@@ -56,7 +56,7 @@
         <label for="inputStandard" class="col-sm-2 control-label">File</label>
         <div class="col-sm-8">
           <div class="input-group-btn">
-            <label class="btn {{this.file? 'btn-success' : 'btn-default'}} btn-file pull-left">
+            <label class="btn {{this.file && !this.fileConflict? 'btn-success' : 'btn-default'}} {{this.fileConflict ? 'btn-warning' : 'btn-default'}} btn-file pull-left">
               <span class="glyphicon glyphicon-cloud-upload"></span> Upload PDF <input id="pdfFile" type="file" name="pdf" style="display: none;" v-model="file">
             </label>
             <label class="btn btn-default btn-file pull-left" v-if="file">
@@ -73,28 +73,45 @@
       <div class="col-sm-6 col-sm-offset-3">
         <div class="panel panel-danger" v-if="!$vd.$valid">
           <div class="panel-heading">Errors</div>
-          <ul class="list-group">
-            <li class="list-group-item" v-if="!$vd.code.required">Standard Code Required</li>
+          <div class="list-group">
+            <li class="list-group-item" v-if="!$vd.code.required.valid">Standard Code Required</li>
             <li class="list-group-item" v-if="!$vd.code.valid && code.length !== 0">Standard Name Already Used</li>
-            <li class="list-group-item" v-if="!$vd.desc.required">Standard Description Required</li>
-            <li class="list-group-item" v-if="!$vd.menu.required">(1) Group Required</li>
-            <li class="list-group-item" v-if="!$vd.menu.eachLength(1)">Each Group Must Have a Name</li>
-            <li class="list-group-item" v-if="!$vd.file.required">PDF Upload Required</li>
-          </ul>
+            <li class="list-group-item" v-if="!$vd.desc.required.valid">Standard Description Required</li>
+            <li class="list-group-item" v-if="!$vd.menu.required.valid">(1) Group Required</li>
+            <li class="list-group-item" v-if="!$vd.menu.eachLength.valid(1)">Each Group Must Have a Name</li>
+            <li class="list-group-item" v-if="!$vd.file.required.valid">PDF Upload Required</li>
+          </div>
         </div>
       </div>
-    </form>
 </template>
 
 <script>
   import {apiAddStandard, withToken} from '../api/config'
-  import {validStandard} from '../api/standard'
+  import {validStandard, getStandard} from '../api/standard'
   import {hydrateMenu, menuLoading, setCurrentMenu, updateStandard} from '../vuex/actions'
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
   export default {
     ready: function () {
       this.hydrateMenu()
+
+      // Used to find a file conflict before uploading the file.
+      // This will try to find the Mongo document. If found it will
+      // return the document and the set fileConflict to true
+      this.$watch('file', () => {
+        var self = this
+        console.log(this.fileName)
+        getStandard(this.fileName + '.pdf').then((response) => {
+          console.log(response)
+          if (response.data) {
+            self.fileConflict = true
+          } else {
+            self.fileConflict = false
+          }
+        })
+      })
+
+      // Watch for code to find a conflict with the Name of the standard.
       this.$watch('code', () => {
         var self = this
         validStandard(this.code).then((response) => {
@@ -120,32 +137,52 @@
         file: '',
         addGroup: false,
         newGroup: '',
-        menu: []
+        menu: [],
+        fileConflict: false
       }
     },
     validator: function () {
       return {
-        code: {required: this.code.length > 0, valid: this.validCode || this.val},
-        desc: {required: this.desc.length > 0},
+        code: {
+          $name: 'Code',
+          required: {valid: this.code.length > 0, msg: 'Standard Code is required.'},
+          valid: {valid: this.validCode || this.val, msg: 'Standard Code is already in use.'}
+        },
+        desc: {
+          $name: 'Description',
+          required: {valid: this.desc.length > 0, msg: 'Standard Description is required.'}
+        },
         menu: {
-          required: this.menu.length > 0,
-          eachLength: (min) => {
-            for (var el in this.menu) {
-              if (this.menu[el].length < min) {
-                return false
+          $name: 'Groups',
+          required: {valid: this.menu.length > 0, msg: 'Standard must contain (1) Group.'},
+          eachLength: {
+            valid: (min) => {
+              for (var el in this.menu) {
+                if (this.menu[el].length < min) {
+                  return false
+                } else {
+                  return true
+                }
+              }
+            },
+            msg: 'One of the Standard Groups does not contain a name'
+          }
+        },
+        file: {
+          $name: 'File Upload',
+          required: {valid: this.file.length > 0, msg: 'PDF Upload is Required'},
+          conflict: {valid: !this.fileConflict, msg: 'File is already in use'},
+          type: {
+            valid: (extension) => {
+              if (this.file.indexof(extension)) {
+                return true
               } else {
                 return true
               }
-            }
+            },
+            msg: '*.pdf extension is required!'
           }
-        },
-        file: {required: this.file.length > 0, type: (extension) => {
-          if (this.file.indexof(extension)) {
-            return true
-          } else {
-            return true
-          }
-        }}
+        }
       }
     },
     methods: {
@@ -191,7 +228,8 @@
       fileName: function () {
         let array = this.file.split(/(\/|\\)/).slice(-1)[0].split('.')
         array.pop()
-        return array
+        console.log(array)
+        return array[0].toLowerCase()
       },
       menus: function () {
         let allMenus = this.allMenus

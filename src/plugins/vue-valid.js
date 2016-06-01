@@ -16,13 +16,16 @@
         }
 
         for (var type in obj) {
-          let o = obj[type]
-          o.$valid = (function () {
-            for (var key in o) {
-              if (!o[key]) return false
-            }
-            return true
-          })()
+          if (type.indexOf('$') !== '0') {
+            let o = obj[type]
+            o.$valid = (function () {
+              for (var key in o) {
+                if (!o[key]) return false
+                else if (typeof o[key] === 'object' && !o[key].valid) return false
+              }
+              return true
+            })()
+          }
         }
 
         obj.$percent = (function () {
@@ -40,7 +43,7 @@
           return true
         })()
 
-        let debug = true
+        let debug = false
         debug ? console.log(obj) : ''
         return obj
       }
