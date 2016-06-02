@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueValidator from 'vue-validator'
+import VueTouch from 'vue-touch'
 import App from './App'
 import StandardView from './components/StandardView'
 import CreateStandard from './components/CreateStandard'
@@ -17,6 +18,7 @@ var Application = Vue.extend({
 Vue.use(VueValidator)
 Vue.use(VueRouter)
 Vue.use(VueValid)
+Vue.use(VueTouch)
 
 var router = new VueRouter({
   history: true,
@@ -47,21 +49,29 @@ router.redirect({
 })
 
 router.beforeEach(function (transition) {
+  console.log('Transitioning')
+  console.log(loggedIn())
+  console.log()
   if (!loggedIn() && !transition.to.path.includes('/login')) {
     transition.redirect('/login')
   } else if (transition.to.path.includes('/admin')) {
+    console.log('Testing Admin')
     let admin = isAdmin()
     admin.then(function (res) {
       console.log(res)
       if (res.status === 200) {
+        console.log('Transition Next Admin Granted')
         transition.next()
       } else {
-        transition.abort()
+        console.log('Transition Aborted Admin Not Granted')
+        transition.redirect('/')
       }
     }, function (res) {
+      console.log('Transition Aborted Admin Error')
       transition.abort()
     })
   } else {
+    console.log('Finishing Transition')
     transition.next()
   }
 })

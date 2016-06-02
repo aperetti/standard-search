@@ -75,11 +75,12 @@
           <div class="panel-heading">Errors</div>
           <div class="list-group">
             <li class="list-group-item" v-if="!$vd.code.required.valid">Standard Code Required</li>
-            <li class="list-group-item" v-if="!$vd.code.valid && code.length !== 0">Standard Name Already Used</li>
+            <li class="list-group-item" v-if="!$vd.code.conflict.valid && code.length !== 0">Standard Name Already Used</li>
             <li class="list-group-item" v-if="!$vd.desc.required.valid">Standard Description Required</li>
             <li class="list-group-item" v-if="!$vd.menu.required.valid">(1) Group Required</li>
             <li class="list-group-item" v-if="!$vd.menu.eachLength.valid(1)">Each Group Must Have a Name</li>
             <li class="list-group-item" v-if="!$vd.file.required.valid">PDF Upload Required</li>
+            <li class="list-group-item" v-if="!$vd.file.conflict.valid">PDF already exists under Standard: {{fileConflictInfo.code}}</li>
           </div>
         </div>
       </div>
@@ -105,8 +106,10 @@
           console.log(response)
           if (response.data) {
             self.fileConflict = true
+            self.fileConflictInfo = response.data
           } else {
             self.fileConflict = false
+            self.fileConflictInfo = {}
           }
         })
       })
@@ -138,7 +141,8 @@
         addGroup: false,
         newGroup: '',
         menu: [],
-        fileConflict: false
+        fileConflict: false,
+        fileConflictInfo: {}
       }
     },
     validator: function () {
@@ -146,7 +150,7 @@
         code: {
           $name: 'Code',
           required: {valid: this.code.length > 0, msg: 'Standard Code is required.'},
-          valid: {valid: this.validCode || this.val, msg: 'Standard Code is already in use.'}
+          conflict: {valid: this.validCode || this.val, msg: 'Standard Code is already in use.'}
         },
         desc: {
           $name: 'Description',
