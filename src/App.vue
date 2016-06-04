@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navbar class='navbar' v-if='logged'></navbar>
-    <div class='navbar-fixed-top' style='position:absolute; height: 75px; width: 100%; background-color: #eee;'  v-else></div>
+    <div class='navbar-fixed-top' style='position:absolute; height: 50px; width: 100%; background-color: #eee;'  v-else></div>
     <div class='router'>
       <router-view></router-view>
     </div>  
@@ -10,7 +10,7 @@
 
 <script>
   import store from './vuex/store'
-  import logout from './vuex/actions'
+  import {logout, setToken} from './vuex/actions'
   import Navbar from './components/Navbar'
   import {loggedIn} from './api/config'
   export default {
@@ -18,27 +18,33 @@
     components: {
       Navbar
     },
+    date () {
+      return {
+        loggedIn: false
+      }
+    },
     ready: function () {
       var self = this
+      var loggedOut = !loggedIn()
       window.setInterval(function () {
-        if (!loggedIn()) {
+        if (loggedOut) {
+          self.$route.router.go('/login')
           self.logout()
         }
-      }, 1000)
-    },
-    vuex: {
-      actions: {
-        logout
-      },
-      getters: {
-        token: state => state.standard.token.token
-      }
+      }, 10000)
     },
     computed: {
       logged: function () {
-        if (this.token) {
-          return true
-        }
+        return (this.expiration > new Date().getTime())
+      }
+    },
+    vuex: {
+      getters: {
+        expiration: state => state.standard.token.expiration
+      },
+      actions: {
+        logout,
+        setToken
       }
     }
   }
@@ -68,7 +74,7 @@ body {
   font-family: Source Sans Pro, Helvetica, sans-serif;
   text-align: center;
   height: 100%;
-  padding-top: 75px;
+  padding-top: 50px;
   padding-bottom: 50px;
 }
 .login {

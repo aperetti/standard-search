@@ -7,7 +7,7 @@
         <li role="presentation" @click="zoom(false)"><a href="#">Zoom Out</a></li>
       </ul>
     </div>
-    <div v-touch:swipe='test' class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
+    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
       <iframe v-if="$route.query.standard !== undefined" id='pdf' class='pdf-frame' :src="currentStandard" frameborder="0" wmode="transparent"></iframe>
     </div>
   </div>
@@ -40,9 +40,6 @@
       }
     },
     methods: {
-      test: function (event) {
-        console.log(event)
-      },
       minZoomRate: function () {
         let zoomRatio = window.innerWidth / this.pdfWidth
         this.minZoom = zoomRatio > 1 ? 1 : zoomRatio

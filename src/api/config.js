@@ -44,9 +44,9 @@ export const token = () => {
 }
 
 export const loggedIn = () => {
-  if (store.state.standard.token.token && store.state.standard.token.expiration > new Date()) {
+  if (store.state.standard.token.token && store.state.standard.token.expiration > new Date().getTime()) {
     return true
-  } else if (window.localStorage.getItem('token') && window.localStorage.getItem('expiration') > new Date()) {
+  } else if (window.localStorage.getItem('token') && window.localStorage.getItem('expiration') > new Date().getTime()) {
     setToken(store, {token: window.localStorage.getItem('token'), expiration: window.localStorage.getItem('expiration')})
     return true
   } else {
