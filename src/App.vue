@@ -18,16 +18,10 @@
     components: {
       Navbar
     },
-    date () {
-      return {
-        loggedIn: false
-      }
-    },
     ready: function () {
       var self = this
-      var loggedOut = !loggedIn()
       window.setInterval(function () {
-        if (loggedOut) {
+        if (!loggedIn()) {
           self.$route.router.go('/login')
           self.logout()
         }
