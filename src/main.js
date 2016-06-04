@@ -49,29 +49,21 @@ router.redirect({
 })
 
 router.beforeEach(function (transition) {
-  console.log('Transitioning')
-  console.log(loggedIn())
-  console.log()
   if (!loggedIn() && !transition.to.path.includes('/login')) {
     transition.redirect('/login')
   } else if (transition.to.path.includes('/admin')) {
-    console.log('Testing Admin')
     let admin = isAdmin()
     admin.then(function (res) {
       console.log(res)
       if (res.status === 200) {
-        console.log('Transition Next Admin Granted')
         transition.next()
       } else {
-        console.log('Transition Aborted Admin Not Granted')
         transition.redirect('/')
       }
     }, function (res) {
-      console.log('Transition Aborted Admin Error')
       transition.abort()
     })
   } else {
-    console.log('Finishing Transition')
     transition.next()
   }
 })

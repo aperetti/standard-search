@@ -1,6 +1,7 @@
 <template>
- <nav class="navbar-default navbar-fixed-top" role="navigation">
+  <nav class="navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
+      <a class="navbar-brand"><span class="glyphicon glyphicon-th"></span></a>
       <button type="button" class="navbar-toggle" @click="open = !open">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
@@ -23,7 +24,6 @@
           </div>
         </div>
       </form>
-      </form>
     </div>
   </nav>
 </template>
@@ -32,6 +32,7 @@
   import {logout} from '../vuex/actions'
   import {isAdmin} from '../api/auth'
   import Search from './Search'
+  import StandardMenu from './StandardMenu'
   export default {
     ready: function () {
       let getAdmin = isAdmin()
@@ -43,7 +44,8 @@
       })
     },
     components: {
-      Search
+      Search,
+      StandardMenu
     },
     data () {
       return {open: false, admin: false}

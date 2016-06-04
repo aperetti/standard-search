@@ -3,21 +3,21 @@
      
       <div class="form-group {{$vd.code.$valid ? 'has-success' : 'has-error'}}">
         <label for="inputStandard" class="col-sm-2 control-label">Standard Code</label>
-        <div class="col-sm-2">
+        <div class="col-sm-3 col-xs-10 col-xs-offset-1">
           <input type="text" class="form-control" placeholder="Standard Code" v-model="code" @></input>
         </div>
       </div>
       
       <div class="form-group {{$vd.desc.$valid ? 'has-success' : 'has-error'}}">
-        <label for="inputStandard" class="col-sm-2 control-label">Description</label>
-        <div class="col-sm-6">
+        <label for="inputStandard" placeholder="One or Two Line Description" class="col-sm-2 control-label">Description</label>
+        <div class="col-sm-6 col-xs-10 col-xs-offset-1">
           <textarea rows="2" class="form-control" v-model="desc"></textarea>
         </div>
       </div>
           
       <div class="form-group">
         <label for="inputStandard" class="col-sm-2 control-label">Select Group</label>
-        <div class="col-sm-8">
+        <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group" >
             <div v-if="addGroup">
               <div class="input-group-btn">
@@ -37,7 +37,7 @@
     
       <div class="form-group">
         <label for="inputStandard" class="col-sm-2 control-label">Groups</label>
-        <div class="col-sm-8">
+        <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <template v-for="(index, group) in menu" track-by="$index">
               <button  @click.prevent="removeGroup(index)" class="btn btn-primary pull-left">
@@ -54,7 +54,7 @@
       
       <div class="form-group">
         <label for="inputStandard" class="col-sm-2 control-label">File</label>
-        <div class="col-sm-8">
+        <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <label class="btn {{this.file && !this.fileConflict? 'btn-success' : 'btn-default'}} {{this.fileConflict ? 'btn-warning' : 'btn-default'}} btn-file pull-left">
               <span class="glyphicon glyphicon-cloud-upload"></span> Upload PDF <input id="pdfFile" type="file" name="pdf" style="display: none;" v-model="file">
@@ -70,7 +70,7 @@
         <input class="btn btn-primary" :disabled="!$vd.$valid" type="submit" value="Submit">
       </div>
       
-      <div class="col-sm-6 col-sm-offset-3">
+      <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
         <div class="panel panel-danger" v-if="!$vd.$valid">
           <div class="panel-heading">Errors</div>
           <div class="list-group">

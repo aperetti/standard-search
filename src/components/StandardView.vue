@@ -1,12 +1,13 @@
 <template>
   <div class='row' style="height: 100%">
-    <div class='col-xs-10'><standard-menu></standard-menu></div>
-    <div class='col-xs-10 col-xs-offset-1'>
-      <div class='input-group-btn'>
-        <button class='btn btn-primary' @click='zoom(true)'>Zoom</button><button class='btn btn-primary' @click='zoom(false)'>Zoom Out</button>
-      </div>
+    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap'>
+      <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">Messages</a></li>
+        <li role="presentation" @click="zoom(true)"><a href="#">Zoom In</a></li>
+        <li role="presentation" @click="zoom(false)"><a href="#">Zoom Out</a></li>
+      </ul>
     </div>
-    <div class='col-xs-12 col-sm-8 col-sm-offset-2 col-xs-offset wrap' style="height: 100%">
+    <div v-touch:swipe='test' class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
       <iframe v-if="$route.query.standard !== undefined" id='pdf' class='pdf-frame' :src="currentStandard" frameborder="0" wmode="transparent"></iframe>
     </div>
   </div>
@@ -30,7 +31,7 @@
       return {
         zoomRate: 1,
         minZoom: 1,
-        pdfWidth: 700
+        pdfWidth: 685
       }
     },
     computed: {
@@ -39,8 +40,10 @@
       }
     },
     methods: {
+      test: function (event) {
+        console.log(event)
+      },
       minZoomRate: function () {
-        console.log('ZOOOOM')
         let zoomRatio = window.innerWidth / this.pdfWidth
         this.minZoom = zoomRatio > 1 ? 1 : zoomRatio
         this.zoomRate = this.minZoom

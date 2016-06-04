@@ -10,6 +10,7 @@
 
 <script>
   import store from './vuex/store'
+  import logout from './vuex/actions'
   import Navbar from './components/Navbar'
   import {loggedIn} from './api/config'
   export default {
@@ -17,9 +18,27 @@
     components: {
       Navbar
     },
+    ready: function () {
+      var self = this
+      window.setInterval(function () {
+        if (!loggedIn()) {
+          self.logout()
+        }
+      }, 1000)
+    },
+    vuex: {
+      actions: {
+        logout
+      },
+      getters: {
+        token: state => state.standard.token.token
+      }
+    },
     computed: {
       logged: function () {
-        return loggedIn()
+        if (this.token) {
+          return true
+        }
       }
     }
   }
