@@ -8,12 +8,19 @@ import Login from './components/Login'
 import {loggedIn} from './api/config'
 import {isAdmin} from './api/auth'
 import VueValid from './plugins/vue-valid'
+import VueTouch from 'vue-touch'
 
 /* eslint-disable no-new */
 var Application = Vue.extend({
   components: { App }
 })
 
+VueTouch.registerCustomEvent('doubletap', {
+  type: 'tap',
+  taps: 2
+})
+
+Vue.use(VueTouch)
 Vue.use(VueValidator)
 Vue.use(VueRouter)
 Vue.use(VueValid)

@@ -72,7 +72,7 @@
     z-index: -99;
   }
   .logo {
-    width: 25%;
+    width: 60%;
     max-width: 250px;
     max-height: 350px;
     margin-bottom: 25px;
@@ -80,6 +80,7 @@
   .jumbotron {
     height: 100%;
     margin-bottom: 0;
+    padding: 10px;
   }
   .fafa-transition {
     transition: all .3s ease;

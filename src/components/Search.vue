@@ -40,7 +40,7 @@
       getResults: function () {
         var xmlHttp = new window.XMLHttpRequest()
         var self = this
-        let searchUrl = 'http://45.56.92.153:9200/standards/_search'
+        let searchUrl = 'http://45.56.92.153:50000/standards/_search'
         let search = {
           sort: [{_score: 'desc'}],
           query: {
