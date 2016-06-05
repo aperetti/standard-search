@@ -69,10 +69,9 @@
       blurResults: function () {
         var self = this
         if (window.document.activeElement.parentElement.id !== 'results') {
-          console.log(window.document.activeElement.parentElement.id)
           window.setTimeout(function () {
             self.showResults = false
-          }, 125)
+          }, 150)
         }
       }
     }

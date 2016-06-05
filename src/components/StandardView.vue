@@ -8,7 +8,7 @@
       </ul>
     </div>
     <div v-touch:doubletap="test" class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
-      <iframe v-if="!notFound" id='pdf' class='pdf-frame' :src="currentStandard" frameborder="0" wmode="transparent"></iframe>
+      <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="currentStandard" frameborder="0" wmode="transparent"></iframe>
       <img v-if="notFound" class="logo" class='photo' src="../assets/logo_s.png">
       <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
     </div>
@@ -21,6 +21,7 @@
   export default {
     ready: function () {
       this.minZoomRate()
+      this.notFound = false
       window.addEventListener('resize', this.minZoomRate)
       this.$watch('zoomRate', () => {
         window.document.getElementById('pdf').contentWindow.document.body.style = `zoom:${this.zoomRate * 100}%;`
@@ -41,6 +42,7 @@
       currentStandard: function () {
         let self = this
         let standard = this.$route.query.standard
+        console.log(standard)
         if (standard) {
           getHtmlStandard(standard).then((response) => {
             window.document.getElementById('pdf').contentWindow.document.open()
@@ -55,6 +57,10 @@
           })
         }
         return false
+      },
+      routeChange: function () {
+        console.log(this.$route.query.standard)
+        return
       }
     },
     methods: {
