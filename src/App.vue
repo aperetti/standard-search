@@ -56,20 +56,19 @@
 .router {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 50px);
   z-index: 0;
 }
 body {
   align-items: top;
   height: 100%;
-  width: 100%;
 }
 #app {
   font-family: Source Sans Pro, Helvetica, sans-serif;
   text-align: center;
   height: 100%;
   padding-top: 50px;
-  padding-bottom: 50px;
+  
 }
 .login {
   max-width: 400px;

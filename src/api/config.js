@@ -16,7 +16,7 @@ Vue.http.interceptors.push({
 
 export {Vue}
 
-export const apiBase = 'http://45.56.92.153:8080/api/'
+export const apiBase = 'http://45.56.92.153:50000/api/'
 export const apiAuth = apiBase + 'authenticate'
 export const apiStandardsBase = apiBase + 'standards/'
 export const apiAdminBase = apiBase + 'admin/'
@@ -29,7 +29,7 @@ export const apiLookupStandardRecord = (standard) => {
 }
 
 export const apiGetStandardHtml = (standard) => {
-  return apiStandardsBase + 'html/' + standard + '?token=' + token()
+  return apiStandardsBase + 'html/' + standard
 }
 
 // Used to determine if the current User is admin. Should only be used to affect display. All authentication

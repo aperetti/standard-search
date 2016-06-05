@@ -1,22 +1,22 @@
 <template>
-    <form class="form-horizontal" action="{{submitUrl}}" method="POST" enctype="multipart/form-data" v-on:submit.prevent="onSubmit">
-     
+    <form style="padding-left:20px;" class="form-horizontal" action="{{submitUrl}}" method="POST" enctype="multipart/form-data" v-on:submit.prevent="onSubmit">
+    <div class="page-header"><h2 class="text-left">Create Standard</h2></div>
       <div class="form-group {{$vd.code.$valid ? 'has-success' : 'has-error'}}">
-        <label for="inputStandard" class="col-sm-2 control-label">Standard Code</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Standard Code</label>
         <div class="col-sm-3 col-xs-10 col-xs-offset-1">
-          <input type="text" class="form-control" placeholder="Standard Code" v-model="code" @></input>
+            <input type="text" class="form-control" v-model="code" @></input>
         </div>
       </div>
       
       <div class="form-group {{$vd.desc.$valid ? 'has-success' : 'has-error'}}">
-        <label for="inputStandard" placeholder="One or Two Line Description" class="col-sm-2 control-label">Description</label>
+        <label for="inputStandard" placeholder="One or Two Line Description" class="col-sm-2 col-sm-offset-1 control-label">Description</label>
         <div class="col-sm-6 col-xs-10 col-xs-offset-1">
           <textarea rows="2" class="form-control" v-model="desc"></textarea>
         </div>
       </div>
-          
+      
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 control-label">Select Group</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Select Group</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group" >
             <div v-if="addGroup">
@@ -36,7 +36,7 @@
     </div>
     
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 control-label">Groups</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Groups</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <template v-for="(index, group) in menu" track-by="$index">
@@ -53,7 +53,7 @@
       </div>
       
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 control-label">File</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">File</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <label class="btn {{this.file && !this.fileConflict? 'btn-success' : 'btn-default'}} {{this.fileConflict ? 'btn-warning' : 'btn-default'}} btn-file pull-left">
@@ -88,6 +88,7 @@
 
 <script>
   import {apiAddStandard, withToken} from '../api/config'
+  import {tooltip} from 'vue-strap'
   import {validStandard, getStandard} from '../api/standard'
   import {hydrateMenu, menuLoading, setCurrentMenu, updateStandard} from '../vuex/actions'
   import equals from 'array-equal'
@@ -95,7 +96,6 @@
   export default {
     ready: function () {
       this.hydrateMenu()
-
       // Used to find a file conflict before uploading the file.
       // This will try to find the Mongo document. If found it will
       // return the document and the set fileConflict to true
@@ -130,6 +130,9 @@
           return
         })
       })
+    },
+    components: {
+      tooltip
     },
     data: function () {
       return {

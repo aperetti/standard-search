@@ -69,9 +69,4 @@
 </script>
 
 <style scoped>
-  .pdf-frame {
-    width: 100%;
-    height: 500px;
-    z-index: -99;
-  }
 </style>

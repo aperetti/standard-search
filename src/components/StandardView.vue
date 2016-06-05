@@ -8,13 +8,15 @@
       </ul>
     </div>
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
-      <iframe v-if="$route.query.standard !== undefined" id='pdf' class='pdf-frame' :src="currentStandard" frameborder="0" wmode="transparent"></iframe>
+      <iframe v-if="!notFound" id='pdf' class='pdf-frame' :src="currentStandard" frameborder="0" wmode="transparent"></iframe>
+      <img v-if="notFound" class="logo" class='photo' src="../assets/logo_s.png">
+      <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
     </div>
   </div>
 </template>
 
 <script>
-  import {apiGetStandardHtml} from '../api/config'
+  import {getHtmlStandard} from '../api/standard'
   import StandardMenu from './StandardMenu'
   export default {
     ready: function () {
@@ -31,12 +33,26 @@
       return {
         zoomRate: 1,
         minZoom: 1,
-        pdfWidth: 685
+        pdfWidth: 685,
+        notFound: false
       }
     },
     computed: {
       currentStandard: function () {
-        return apiGetStandardHtml(this.$route.query.standard)
+        let self = this
+        let standard = this.$route.query.standard
+        if (standard) {
+          getHtmlStandard(standard).then((response) => {
+            window.document.getElementById('pdf').contentWindow.document.open()
+            window.document.getElementById('pdf').contentWindow.document.write('data:text/html, ' + response.data)
+            window.document.getElementById('pdf').contentWindow.document.close()
+            return true
+          }, (response) => {
+            self.notFound = true
+            return false
+          })
+        }
+        return false
       }
     },
     methods: {
@@ -67,6 +83,13 @@
   .pdf-frame {
     width: 100%;
     height: 100%;
+  }
+  .row {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .logo {
+    max-width: 100% 
   }
 
 </style>
