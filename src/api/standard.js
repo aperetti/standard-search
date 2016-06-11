@@ -1,4 +1,4 @@
-import {apiLookupStandardRecord, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, Vue} from './config'
+import {apiLookupStandardRecord, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, apiGetStandardPdf, Vue} from './config'
 
 // Gets the specific Mongo standard document referenced by the filename
 // standard -> String (filename of the standard)
@@ -24,4 +24,8 @@ export const validStandard = (code) => {
 
 export const getHtmlStandard = (code) => {
   return Vue.http({url: apiGetStandardHtml(code), method: 'GET'})
+}
+
+export const getPdfStandard = (code) => {
+  return Vue.http({url: apiGetStandardPdf})
 }

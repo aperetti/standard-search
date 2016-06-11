@@ -32,6 +32,10 @@ export const apiGetStandardHtml = (standard) => {
   return apiStandardsBase + 'html/' + standard
 }
 
+export const apiGetStandardPdf = (standard) => {
+  return apiStandardsBase + 'pdf/' + standard
+}
+
 // Used to determine if the current User is admin. Should only be used to affect display. All authentication
 // should take place on the server.
 export const apiIsAdmin = apiAdminBase + 'is_admin'

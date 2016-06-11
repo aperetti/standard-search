@@ -1,14 +1,7 @@
 <template>
   <div class='row' style="height: 100%">
-    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap'>
-      <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">Messages</a></li>
-        <li v-touch:doubletap="test" role="presentation" @click="zoom(true)"><a href="#">Zoom In</a></li>
-        <li role="presentation" @click="zoom(false)"><a href="#">Zoom Out</a></li>
-      </ul>
-    </div>
-    <div v-touch:doubletap="test" class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
-      <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="currentStandard" frameborder="0" wmode="transparent"></iframe>
+    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
+      <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
       <img v-if="notFound" class="logo" class='photo' src="../assets/logo_s.png">
       <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
     </div>
@@ -16,72 +9,15 @@
 </template>
 
 <script>
-  import {getHtmlStandard} from '../api/standard'
+  import {withToken, apiGetStandardPdf} from '../api/config'
   import StandardMenu from './StandardMenu'
   export default {
-    ready: function () {
-      this.minZoomRate()
-      this.notFound = false
-      window.addEventListener('resize', this.minZoomRate)
-      this.$watch('zoomRate', () => {
-        window.document.getElementById('pdf').contentWindow.document.body.style = `zoom:${this.zoomRate * 100}%;`
-      })
-    },
-    beforeDestroy: function () {
-      window.removeEventListener('resize', this.handleResize)
-    },
-    data: function () {
-      return {
-        zoomRate: 1,
-        minZoom: 1,
-        pdfWidth: 685,
-        notFound: false
-      }
-    },
     computed: {
-      currentStandard: function () {
-        let self = this
-        let standard = this.$route.query.standard
-        console.log(standard)
-        if (standard) {
-          getHtmlStandard(standard).then((response) => {
-            window.document.getElementById('pdf').contentWindow.document.open()
-            window.document.getElementById('pdf').contentWindow.document.write('data:text/html, ' + response.data)
-            window.document.getElementById('pdf').contentWindow.document.close()
-            window.document.getElementById('pdf').contentWindow.document.body.style = `zoom:${self.zoomRate * 100}%;`
-            self.notFound = false
-            return true
-          }, (response) => {
-            self.notFound = true
-            return false
-          })
-        }
-        return false
-      },
-      routeChange: function () {
-        console.log(this.$route.query.standard)
-        return
-      }
-    },
-    methods: {
-      test: function (event) {
-        console.log('Swiped')
-      },
-      minZoomRate: function () {
-        let zoomRatio = window.innerWidth / this.pdfWidth
-        this.minZoom = zoomRatio > 1 ? 1 : zoomRatio
-        this.zoomRate = this.minZoom
-      },
-      zoom: function (zoomOut) {
-        if (zoomOut) {
-          this.zoomRate = this.zoomRate * 1.5
-        } else {
-          if (this.zoomRate < this.minZoom * 2) {
-            this.zoomRate = this.minZoom
-          } else {
-            this.zoomRate = this.zoomRate / 2
-          }
-        }
+      standardUrl: function () {
+        var standardUrl = withToken(apiGetStandardPdf(this.$route.query.standard))
+        var iFrameUrl = `http://docs.google.com/gview?url=${standardUrl}&embedded=true`
+        console.log(iFrameUrl)
+        return iFrameUrl
       }
     },
     components: {
