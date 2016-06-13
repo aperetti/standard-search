@@ -83,6 +83,6 @@
   .float {
     position: absolute;
     top: 40px;
-    z-index: 1000;
+    z-index: 500;
   }
 </style>

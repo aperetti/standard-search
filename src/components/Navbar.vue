@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
-      <a class="navbar-brand"><span class="glyphicon glyphicon-th"></span></a>
+      <a class="navbar-brand" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
       <button type="button" class="navbar-toggle" @click="open = !open">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
@@ -25,7 +25,9 @@
         </div>
       </form> 
     </div>
+    <standard-menu :enable='menuOpen' class="col-xs-12"></standard-menu>
   </nav>
+
 </template>
 
 <script>
@@ -49,6 +51,7 @@
     },
     data () {
       return {
+        menuOpen: true,
         open: false,
         admin: false
       }
@@ -66,10 +69,20 @@
       createStandard: function () {
         this.$route.router.go('/admin/standard/create')
         this.open = false
+      },
+      toggleMenu: function () {
+        console.log(this.menuOpen)
+        this.menuOpen = !this.menuOpen
       }
     }
   }
 </script>
 
 <style scoped>
+  .float {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    z-index: 1000;
+  }
 </style>

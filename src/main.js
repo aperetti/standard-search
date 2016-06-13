@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueValidator from 'vue-validator'
 import App from './App'
+import EditStandard from './components/EditStandard'
 import StandardView from './components/StandardView'
 import CreateStandard from './components/CreateStandard'
 import Login from './components/Login'
@@ -46,6 +47,10 @@ router.map({
   '/admin/standard/create': {
     name: 'createStandard',
     component: CreateStandard
+  },
+  '/admin/standard/edit': {
+    name: 'editStandard',
+    component: EditStandard
   }
 })
 
