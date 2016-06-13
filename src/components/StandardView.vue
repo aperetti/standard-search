@@ -15,7 +15,7 @@
     computed: {
       standardUrl: function () {
         var standardUrl = withToken(apiGetStandardPdf(this.$route.query.standard))
-        var iFrameUrl = `http://docs.google.com/gview?url=${standardUrl}&embedded=true`
+        var iFrameUrl = `https://docs.google.com/gview?url=${standardUrl}&embedded=true`
         console.log(iFrameUrl)
         return iFrameUrl
       }

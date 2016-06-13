@@ -16,7 +16,9 @@ Vue.http.interceptors.push({
 
 export {Vue}
 
-export const apiBase = 'http://45.56.92.153:50000/api/'
+export const domainBase = 'https://photoredux.com/'
+export const apiBase = domainBase + 'api/'
+export const elasticSearch = domainBase + 'standard/_search'
 export const apiAuth = apiBase + 'authenticate'
 export const apiStandardsBase = apiBase + 'standards/'
 export const apiAdminBase = apiBase + 'admin/'

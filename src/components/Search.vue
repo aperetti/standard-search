@@ -13,6 +13,7 @@
   import StandardView from './StandardView'
   import {updateStandard} from '../vuex/actions'
   import StandardMenu from './StandardMenu'
+  import {elasticSearch} from '../api/config'
   export default {
     data () {
       return {
@@ -40,7 +41,7 @@
       getResults: function () {
         var xmlHttp = new window.XMLHttpRequest()
         var self = this
-        let searchUrl = 'http://45.56.92.153:50000/standards/_search'
+        let searchUrl = elasticSearch
         let search = {
           sort: [{_score: 'desc'}],
           query: {
