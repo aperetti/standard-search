@@ -18,7 +18,7 @@ export {Vue}
 
 export const domainBase = 'https://photoredux.com/'
 export const apiBase = domainBase + 'api/'
-export const elasticSearch = domainBase + 'standard/_search'
+export const elasticSearch = domainBase + 'standards/_search'
 export const apiAuth = apiBase + 'authenticate'
 export const apiStandardsBase = apiBase + 'standards/'
 export const apiAdminBase = apiBase + 'admin/'

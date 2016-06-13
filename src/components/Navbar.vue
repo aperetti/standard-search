@@ -48,7 +48,10 @@
       StandardMenu
     },
     data () {
-      return {open: false, admin: false}
+      return {
+        open: false,
+        admin: false
+      }
     },
     vuex: {
       actions: {

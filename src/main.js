@@ -54,9 +54,9 @@ router.redirect({
 })
 
 router.beforeEach(function (transition) {
-  if (!loggedIn() && !transition.to.path.includes('/login')) {
+  if (!loggedIn() && transition.to.path.indexOf('/login') === -1) {
     transition.redirect('/login')
-  } else if (transition.to.path.includes('/admin')) {
+  } else if (transition.to.path.indexOf('/admin') !== -1) {
     let admin = isAdmin()
     admin.then(function (res) {
       if (res.status === 200) {
