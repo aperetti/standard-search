@@ -9,7 +9,9 @@ Vue.http.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getIt
 // The following intercepts any request and updates the Authorization token
 Vue.http.interceptors.push({
   request: (request) => {
-    request.headers.Authorization = 'Bearer ' + window.localStorage.getItem('token')
+    if (window.localStorage.getItem('token')) {
+      request.headers.Authorization = 'Bearer ' + window.localStorage.getItem('token')
+    }
     return request
   }
 })
