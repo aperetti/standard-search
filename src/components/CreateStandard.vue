@@ -67,7 +67,8 @@
       </div>
       
       <div class="form-group">
-        <input class="btn btn-primary" :disabled="!$vd.$valid" type="submit" value="Submit">
+        <button class='btn btn-primary' v-if='loading'><img src='../assets/loading.svg'> Uploading </img></button>
+        <input class="btn btn-primary" v-if='!loading' :disabled="!$vd.$valid" type="submit" value="Submit">
       </div>
       
       <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
@@ -145,7 +146,8 @@
         newGroup: '',
         menu: [],
         fileConflict: false,
-        fileConflictInfo: {}
+        fileConflictInfo: {},
+        loading: false
       }
     },
     validator: function () {
@@ -212,6 +214,8 @@
       },
       onSubmit: function (e) {
         var formData = new window.FormData()
+        this.loading = true
+        var self = this
         formData.append('path', this.menu.join('|'))
         formData.append('code', this.code)
         formData.append('desc', this.desc)
@@ -219,6 +223,7 @@
         var xhr = new window.XMLHttpRequest()
         xhr.open('POST', withToken(apiAddStandard), true)
         xhr.onload = function () {
+          self.loading = false
           if (xhr.status === 200) {
             console.log('Uploaded')
             console.log(xhr.response)
