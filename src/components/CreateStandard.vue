@@ -19,21 +19,20 @@
         <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Select Group</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group" >
-            <div v-if="addGroup">
+            <div class="input-group-btn"> 
+              <div v-if="addGroup">
               <div class="input-group-btn">
                 <input type="text" @keydown.enter="pushGroup(this.newGroup) | key enter" v-if="addGroup" id="group-add" class="form-control" placeholder="Group" v-model="newGroup">
                 <button @click.prevent="pushGroup(this.newGroup)" type="button" class="btn btn-default" aria-label="Add Customer Group"><span class="glyphicon glyphicon-plus"></span></button>
                 <button type="button" class="btn btn-default" aria-label="Help" @click.prevent="toggleGroup()"><span class="glyphicon glyphicon-remove"></span></button>
               </div>
-            </div>
-            <div class="input-group-btn">           
-              <button v-for="menu in menus" class='btn btn-primary pull-left' @click.prevent="pushGroup(menu)">{{menu}}</button>
-              <button v-if="!addGroup" @click.prevent="customGroup()" class="btn btn-default pull-left"><span class="glyphicon glyphicon-plus"></span> Custom</button>
+            </div>          
+            <button v-if="!addGroup" v-for="menu in menus" class='btn btn-primary pull-left' @click.prevent="pushGroup(menu)">{{menu}}</button>
+            <button v-if="!addGroup" @click.prevent="customGroup()" class="btn btn-default pull-left"><span class="glyphicon glyphicon-plus"></span> Custom</button>
             </div>
           </div>
         </div>
       </div>
-    </div>
     
       <div class="form-group">
         <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Groups</label>
@@ -69,6 +68,7 @@
       <div class="form-group">
         <button class='btn btn-primary' v-if='loading'><img src='../assets/loading.svg'> Uploading </img></button>
         <input class="btn btn-primary" v-if='!loading' :disabled="!$vd.$valid" type="submit" value="Submit">
+        <button class='btn btn-primary' v-if='!loading' @click='test'><img src='../assets/loading.svg'> Uploading </img></button>
       </div>
       
       <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
@@ -195,6 +195,9 @@
       }
     },
     methods: {
+      test: function () {
+        this.$route.router.go({path: '/admin/standard/edit', query: {standard: '12f401.pdf'}})
+      },
       toggleGroup: function () {
         this.addGroup = !this.addGroup
       },
@@ -227,6 +230,9 @@
           if (xhr.status === 200) {
             console.log('Uploaded')
             console.log(xhr.response)
+            var response = JSON.parse(xhr.response)
+            console.log(response.data.file)
+            self.$route.router.go({path: '/admin/standard/edit', query: {standard: response.data.file}})
           } else {
             console.log(xhr.response)
             console.log('Failed to Upload!')

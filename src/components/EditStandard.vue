@@ -16,7 +16,7 @@
       </div>
       
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Select Group</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Add Group</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group" >
             <div v-if="addGroup">
@@ -36,7 +36,7 @@
     </div>
     
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Groups</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Current Group</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <template v-for="(index, group) in menu" track-by="$index">
@@ -53,7 +53,7 @@
       </div>
       
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">File</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Change File</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <label class="btn {{this.file && !this.fileConflict? 'btn-success' : 'btn-default'}} {{this.fileConflict ? 'btn-warning' : 'btn-default'}} btn-file pull-left">
@@ -67,7 +67,22 @@
       </div>
       
       <div class="form-group">
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">References</label>
+        <div class="col-sm-8 col-xs-10 col-xs-offset-1">
+          <div class="input-group-btn">
+            <template v-for="(index, group) in references" track-by="$index">
+              <button  @click.prevent="removeRef(index)" class="btn btn-default pull-left">
+              <span  aria-hidden="true" class="glyphicon glyphicon glyphicon-remove-sign"></span>
+              &nbsp;&nbsp; {{group}} &nbsp;
+              </button>               
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
         <input class="btn btn-primary" :disabled="!$vd.$valid" type="submit" value="Submit">
+        <input class="btn btn-default" @click.prevent="loadDefaults" type="submit" value="Restore Defaults">
       </div>
       
       <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
@@ -79,7 +94,6 @@
             <li class="list-group-item" v-if="!$vd.desc.required.valid">Standard Description Required</li>
             <li class="list-group-item" v-if="!$vd.menu.required.valid">(1) Group Required</li>
             <li class="list-group-item" v-if="!$vd.menu.eachLength.valid(1)">Each Group Must Have a Name</li>
-            <li class="list-group-item" v-if="!$vd.file.required.valid">PDF Upload Required</li>
             <li class="list-group-item" v-if="!$vd.file.conflict.valid">PDF already exists under Standard: {{fileConflictInfo.code}}</li>
           </div>
         </div>
@@ -94,6 +108,22 @@
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
   export default {
+    route: {
+      data: function (transition) {
+        var file = getStandard(transition.to.query.standard)
+        return file.then((response) => {
+          var standard = response.data
+          console.log(standard)
+          return {
+            code: standard.code,
+            desc: standard.desc,
+            menu: standard.menu.slice(0),
+            references: standard.references.slice(0),
+            standard: standard
+          }
+        })
+      }
+    },
     ready: function () {
       this.hydrateMenu()
       // Used to find a file conflict before uploading the file.
@@ -138,14 +168,15 @@
       return {
         edit: false,
         code: '',
-        validCode: false,
         desc: '',
         file: '',
+        menu: [],
+        validCode: false,
         addGroup: false,
         newGroup: '',
-        menu: [],
         fileConflict: false,
-        fileConflictInfo: {}
+        fileConflictInfo: {},
+        standard: {}
       }
     },
     validator: function () {
@@ -153,7 +184,7 @@
         code: {
           $name: 'Code',
           required: {valid: this.code.length > 0, msg: 'Standard Code is required.'},
-          conflict: {valid: this.validCode || this.val, msg: 'Standard Code is already in use.'}
+          conflict: {valid: this.validCode || this.code === this.standard.code, msg: 'Standard Code is already in use.'}
         },
         desc: {
           $name: 'Description',
@@ -177,8 +208,7 @@
         },
         file: {
           $name: 'File Upload',
-          required: {valid: this.file.length > 0, msg: 'PDF Upload is Required'},
-          conflict: {valid: !this.fileConflict, msg: 'File is already in use'},
+          conflict: {valid: !this.fileConflict || this.file === this.standard.file, msg: 'File is already in use'},
           type: {
             valid: (extension) => {
               if (this.file.indexof(extension)) {
@@ -193,6 +223,12 @@
       }
     },
     methods: {
+      loadDefaults: function () {
+        this.code = this.standard.code
+        this.desc = this.standard.desc
+        this.menu = this.standard.menu.slice(0)
+        this.references = this.standard.references.slice(0)
+      },
       toggleGroup: function () {
         this.addGroup = !this.addGroup
       },
@@ -206,6 +242,9 @@
         this.$nextTick(function () {
           document.getElementById('group-add').focus()
         })
+      },
+      removeRef: function (index) {
+        this.references.splice(index, 1)
       },
       removeGroup: function (index) {
         this.menu.splice(index)

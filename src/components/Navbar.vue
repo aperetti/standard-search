@@ -51,7 +51,7 @@
     },
     data () {
       return {
-        menuOpen: true,
+        menuOpen: false,
         open: false,
         admin: false
       }

@@ -10,42 +10,42 @@
     },
     computed: {
       $vd: function () {
-        let obj = this.$options.validator.call(this)
+        let validation = this.$options.validator.call(this)
         if (!this.$options.validator) {
           return true
         }
 
-        for (var type in obj) {
-          if (type.indexOf('$') !== '0') {
-            let o = obj[type]
-            o.$valid = (function () {
-              for (var key in o) {
-                if (!o[key]) return false
-                else if (typeof o[key] === 'object' && !o[key].valid) return false
+        for (var group in validation) {
+          if (group.indexOf('$') !== '0') {
+            let vgroup = validation[group]
+            vgroup.$valid = (function () {
+              for (var key in vgroup) {
+                if (!vgroup[key]) return false
+                else if (typeof vgroup[key] === 'object' && !vgroup[key].valid) return false
               }
               return true
             })()
           }
         }
 
-        obj.$percent = (function () {
+        validation.$percent = (function () {
           let count = 0
-          for (var type in obj) {
-            if (obj[type].$valid) ++count
+          for (var type in validation) {
+            if (validation[type].$valid) ++count
           }
-          return count / Object.keys(obj).length
+          return count / Object.keys(validation).length
         })()
 
-        obj.$valid = (function () {
-          for (var type in obj) {
-            if (!obj[type].$valid && type.indexOf('$') !== 0) return false
+        validation.$valid = (function () {
+          for (var type in validation) {
+            if (!validation[type].$valid && type.indexOf('$') !== 0) return false
           }
           return true
         })()
 
         let debug = false
-        debug ? console.log(obj) : ''
-        return obj
+        debug ? console.log(validation) : ''
+        return validation
       }
     }
   }
