@@ -1,4 +1,5 @@
 <template>
+  <div @click='toggleMenu' v-if='menuOpen' class="dim"></div>
   <nav class="navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
       <a class="navbar-brand" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
@@ -71,8 +72,12 @@
         this.open = false
       },
       toggleMenu: function () {
-        console.log(this.menuOpen)
         this.menuOpen = !this.menuOpen
+      }
+    },
+    events: {
+      'link-clicked': function () {
+        this.menuOpen = false
       }
     }
   }
@@ -84,5 +89,18 @@
     top: 60px;
     width: 100%;
     z-index: 1000;
+  } 
+  .dim {
+    height:100%;
+    width:100%;
+    position:fixed;
+    left:0;
+    top:0;
+    z-index:1 !important;
+    background-color:black;
+    filter: alpha(opacity=75); /* internet explorer */
+    -khtml-opacity: 0.75;      /* khtml, old safari */
+      -moz-opacity: 0.75;      /* mozilla, netscape */
+           opacity: 0.75;      /* fx, safari, opera */
   }
 </style>

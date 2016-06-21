@@ -22,7 +22,7 @@
           <div class="panel-heading">{{currentMenu[currentMenu.length-1]}}</div>
             <div class="list-group">
               <template v-for='std in menuStandards'>
-                <a class="list-group-item" v-link="{path: '/search', query: {standard: std.file}}">
+                <a class="list-group-item" @click="$dispatch('link-clicked')" v-link="{path: '/search', query: {standard: std.file}}">
                   <h4 class="list-group-item-heading">{{std.code}}</h4>
                   <p class="list-group-item-text">{{std.desc}}</p>
                 </a>
@@ -33,6 +33,7 @@
       </div>
     </div>
   </div>
+  <div> 
 </template>
 
 <script>
@@ -93,4 +94,5 @@
     }
   }
 </script>
+
 

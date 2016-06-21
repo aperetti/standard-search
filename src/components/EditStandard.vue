@@ -16,7 +16,7 @@
       </div>
       
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Add Group</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Add Menu Item</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group" >
             <div v-if="addGroup">
@@ -36,7 +36,7 @@
     </div>
     
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Current Group</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Menu Path</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <template v-for="(index, group) in menu" track-by="$index">
@@ -81,15 +81,33 @@
       </div>
 
       <div class="form-group">
+      <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Set Status</label>
+        <div class="col-sm-8 col-xs-10 col-xs-offset-1">
+          <dropdown class="pull-left">
+            <button type="button" class="btn btn-default" data-toggle="dropdown">
+              {{status}}
+              <span class="caret"></span>
+            </button>
+            <ul slot="dropdown-menu" class="dropdown-menu">
+              <li><h6 class='dropdown-header'>Select Status</h6></li>
+              <li><a href='#' @click="setStatus('ACTIVE')">ACTIVE</a></li>
+              <li><a href='#' @click="setStatus('INACTIVE')">INACTIVE</a></li>
+              <li><a href='#' @click="setStatus('DELETED')">DELETED</a></li>             
+            </ul>
+          </dropdown>
+        </div>
+      </div>
+
+      <div class="form-group">
         <input class="btn btn-primary" :disabled="!$vd.$valid" type="submit" value="Submit">
-        <input class="btn btn-default" @click.prevent="loadDefaults" type="submit" value="Restore Defaults">
+        <input class="btn btn-default" @click="loadDefaults" type="submit" value="Restore Defaults">
       </div>
       
       <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
         <div class="panel panel-danger" v-if="!$vd.$valid">
           <div class="panel-heading">Errors</div>
           <div class="list-group">
-            <li class="list-group-item" v-if="!$vd.code.required.valid">Standard Code Required</li>
+            <li class="list-group-item" v-if="!$vd.code.required.valid">{{$vd.code.required.msg}}</li>
             <li class="list-group-item" v-if="!$vd.code.conflict.valid && code.length !== 0">Standard Name Already Used</li>
             <li class="list-group-item" v-if="!$vd.desc.required.valid">Standard Description Required</li>
             <li class="list-group-item" v-if="!$vd.menu.required.valid">(1) Group Required</li>
@@ -101,8 +119,8 @@
 </template>
 
 <script>
-  import {apiAddStandard, withToken} from '../api/config'
-  import {tooltip} from 'vue-strap'
+  import {apiEditStandard, withToken} from '../api/config'
+  import {tooltip, dropdown} from 'vue-strap'
   import {validStandard, getStandard} from '../api/standard'
   import {hydrateMenu, menuLoading, setCurrentMenu, updateStandard} from '../vuex/actions'
   import equals from 'array-equal'
@@ -119,6 +137,7 @@
             desc: standard.desc,
             menu: standard.menu.slice(0),
             references: standard.references.slice(0),
+            status: standard.status,
             standard: standard
           }
         })
@@ -162,7 +181,7 @@
       })
     },
     components: {
-      tooltip
+      tooltip, dropdown
     },
     data: function () {
       return {
@@ -171,6 +190,8 @@
         desc: '',
         file: '',
         menu: [],
+        status: '',
+        references: [],
         validCode: false,
         addGroup: false,
         newGroup: '',
@@ -228,6 +249,10 @@
         this.desc = this.standard.desc
         this.menu = this.standard.menu.slice(0)
         this.references = this.standard.references.slice(0)
+        this.status = this.standard.status
+      },
+      setStatus: function (value) {
+        this.status = value
       },
       toggleGroup: function () {
         this.addGroup = !this.addGroup
@@ -254,9 +279,14 @@
         formData.append('path', this.menu.join('|'))
         formData.append('code', this.code)
         formData.append('desc', this.desc)
-        formData.append('pdf', document.getElementById('pdfFile').files[0])
+        if (document.getElementById('pdfFile').files[0]) {
+          formData.append('pdf', document.getElementById('pdfFile').files[0])
+        }
+        formData.append('_id', this.standard._id)
+        formData.append('status', this.status)
+        formData.append('refs', this.references.join('|'))
         var xhr = new window.XMLHttpRequest()
-        xhr.open('POST', withToken(apiAddStandard), true)
+        xhr.open('POST', withToken(apiEditStandard), true)
         xhr.onload = function () {
           if (xhr.status === 200) {
             console.log('Uploaded')

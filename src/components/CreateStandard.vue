@@ -16,7 +16,7 @@
       </div>
       
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Select Group</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Add Menu Item</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group" >
             <div class="input-group-btn"> 
@@ -35,7 +35,7 @@
       </div>
     
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Groups</label>
+        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Menu Path</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <template v-for="(index, group) in menu" track-by="$index">
@@ -118,7 +118,7 @@
       // Watch for code to find a conflict with the Name of the standard.
       this.$watch('code', () => {
         var self = this
-        validStandard(this.code).then((response) => {
+        validStandard(encodeURIComponent(this.code)).then((response) => {
           if (!response.data.length) {
             self.validCode = true
             return

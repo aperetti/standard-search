@@ -63,6 +63,7 @@ export const loggedIn = () => {
 }
 
 export const apiAddStandard = apiAdminBase + 'add_standard'
+export const apiEditStandard = apiAdminBase + 'edit_standard'
 
 // appends the current token to the url string
 export const withToken = (url) => url + '?token=' + token()
