@@ -10,6 +10,7 @@ import {loggedIn} from './api/config'
 import {isAdmin} from './api/auth'
 import VueValid from './plugins/vue-valid'
 import VueTouch from 'vue-touch'
+import bus from './bus'
 
 /* eslint-disable no-new */
 var Application = Vue.extend({
@@ -59,6 +60,7 @@ router.redirect({
 })
 
 router.beforeEach(function (transition) {
+  bus.emit('page-reset')
   if (!loggedIn() && transition.to.path.indexOf('/login') === -1) {
     transition.redirect('/login')
   } else if (transition.to.path.indexOf('/admin') !== -1) {

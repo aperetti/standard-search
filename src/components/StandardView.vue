@@ -1,4 +1,9 @@
 <template>
+  <div class='row' style="height: 5%">
+    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
+      <add-to-project></add-to-project>
+    </div>
+  </div>
   <div class='row' style="height: 100%">
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
       <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
@@ -11,6 +16,7 @@
 <script>
   import {withToken, apiGetStandardPdf} from '../api/config'
   import StandardMenu from './StandardMenu'
+  import AddToProject from './dumb/AddToProject'
   export default {
     computed: {
       standardUrl: function () {
@@ -21,7 +27,8 @@
       }
     },
     components: {
-      StandardMenu
+      StandardMenu,
+      AddToProject
     }
   }
 </script>

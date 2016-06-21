@@ -36,10 +36,16 @@
   import {isAdmin} from '../api/auth'
   import Search from './Search'
   import StandardMenu from './StandardMenu'
+  import bus from '../bus'
+
   export default {
     ready: function () {
       let getAdmin = isAdmin()
       var self = this
+      bus.on('page-reset', function () {
+        self.menuOpen = false
+        self.open = false
+      })
       getAdmin.then(function (res) {
         if (res.status === 200) {
           self.admin = true
