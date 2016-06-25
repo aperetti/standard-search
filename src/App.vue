@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <navbar class='navbar' v-if='logged'></navbar>
-    <div class='navbar-fixed-top' style='position:absolute; height: 50px; width: 100%; background-color: #eee;'  v-else></div>
+    <navbar v-if='logged'></navbar>
+    <div class='navbar-fixed-top' style='position:absolute; height: 50px; width: 100%; background-color: #eee;' v-else></div>
     <div class='router'>
       <router-view></router-view>
     </div>  
@@ -13,6 +13,7 @@
   import {logout, setToken} from './vuex/actions'
   import Navbar from './components/Navbar'
   import {loggedIn} from './api/config'
+  import bus from './bus'
   export default {
     store,
     components: {
@@ -20,6 +21,16 @@
     },
     ready: function () {
       var self = this
+      bus.on('dim', function () {
+        console.log('dim')
+        self.dim = true
+      })
+      bus.on('!dim', function () {
+        self.dim = false
+      })
+      bus.on('page-reset', function () {
+        self.dim = false
+      })
       window.setInterval(function () {
         if (!loggedIn()) {
           self.$route.router.go('/login')
@@ -40,6 +51,11 @@
         logout,
         setToken
       }
+    },
+    data () {
+      return {
+        dim: false
+      }
     }
   }
 </script>
@@ -54,9 +70,9 @@
   z-index: 9999;
 }
 .router {
-  position: relative;
+  position: fixed;
   width: 100%;
-  height: calc(100% - 50px);
+  height: 100%;
   z-index: 0;
 }
 body {
@@ -67,8 +83,6 @@ body {
   font-family: Source Sans Pro, Helvetica, sans-serif;
   text-align: center;
   height: 100%;
-  padding-top: 50px;
-  
 }
 .login {
   max-width: 400px;
@@ -77,5 +91,18 @@ body {
 .header {
   margin-left: 10px;
   margin-right: 10px;
+}
+.dim {
+  height:100%;
+  width:100%;
+  position:fixed;
+  left:0;
+  top:0;
+  z-index:1 !important;
+  background-color:black;
+  filter: alpha(opacity=75); /* internet explorer */
+  -khtml-opacity: 0.75;      /* khtml, old safari */
+    -moz-opacity: 0.75;      /* mozilla, netscape */
+          opacity: 0.75;      /* fx, safari, opera */
 }
 </style>

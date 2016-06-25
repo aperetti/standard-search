@@ -1,16 +1,16 @@
 <template>
-  <div @click='toggleMenu' v-if='menuOpen' class="dim"></div>
+  <div class="navbar">
   <nav class="navbar-default navbar-fixed-top" role="navigation">
-    <div class="navbar-header">
+    <div class="navbar-header">         
       <a class="navbar-brand" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
-      <button type="button" class="navbar-toggle" @click="open = !open">
+      <button type="button" class="navbar-toggle" @click="optionOpen = !optionOpen">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
     </div>
-    <div class="{{ open ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
+    <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
       <ul class="nav navbar-nav">
         <li><a @click.prevent='proccessLogout'>Logout</a></li>
       </ul>
@@ -26,9 +26,10 @@
         </div>
       </form> 
     </div>
-    <standard-menu :enable='menuOpen' class="col-xs-12"></standard-menu>
+    <standard-menu :enable='menuOpen' class="col-xs-12 menu"></standard-menu> 
   </nav>
-
+  <div class="dim" @click="close" v-if="menuOpen || optionOpen"></div>
+  </div> 
 </template>
 
 <script>
@@ -44,7 +45,7 @@
       var self = this
       bus.on('page-reset', function () {
         self.menuOpen = false
-        self.open = false
+        self.optionOpen = false
       })
       getAdmin.then(function (res) {
         if (res.status === 200) {
@@ -59,7 +60,7 @@
     data () {
       return {
         menuOpen: false,
-        open: false,
+        optionOpen: false,
         admin: false
       }
     },
@@ -69,21 +70,20 @@
       }
     },
     methods: {
+      close: function () {
+        this.optionOpen = false
+        this.menuOpen = false
+      },
       proccessLogout: function () {
         this.logout()
         this.$route.router.go('/login')
       },
       createStandard: function () {
         this.$route.router.go('/admin/standard/create')
-        this.open = false
+        this.optionOpen = false
       },
       toggleMenu: function () {
         this.menuOpen = !this.menuOpen
-      }
-    },
-    events: {
-      'link-clicked': function () {
-        this.menuOpen = false
       }
     }
   }

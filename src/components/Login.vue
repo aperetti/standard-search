@@ -78,7 +78,9 @@
     margin-bottom: 25px;
   }
   .jumbotron {
+    position: fixed;
     height: 100%;
+    width: 100%;
     margin-bottom: 0;
     padding: 10px;
   }

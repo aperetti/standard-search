@@ -3,7 +3,7 @@
   <div>
     <div class='list-group float' id='results' v-show='showResults'>
       <template v-for='item in searchResults'>
-        <a @blur="blurResults" v-link="{ path: '/search', query:{standard: item._source.file} }"  class='list-group-item text-left'>{{item._source.code}} - {{item._source.desc}}</a>
+        <a @blur="blurResults" v-link="{ path: '/search', query:{standard: item._id} }"  class='list-group-item text-left'>{{item._source.code}} - {{item._source.desc}}</a>
       </template>
     </div>
   </div>

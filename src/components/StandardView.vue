@@ -1,11 +1,10 @@
 <template>
-  <div class='row' style="height: 5%">
-    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
+  <div class="fluid-container" style="height: 100%">
+  <div class='row' style="height: 95%; min-height: 95%;">
+    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: 50px; z-index: 10 !important; position: relative;">
       <add-to-project></add-to-project>
     </div>
-  </div>
-  <div class='row' style="height: 100%">
-    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset wrap' style="height: 100%">
+    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
       <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
       <img v-if="notFound" class="logo" class='photo' src="../assets/logo_s.png">
       <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
@@ -42,8 +41,8 @@
     margin-left: 0px;
     margin-right: 0px;
   }
-  .logo {
-    max-width: 100% 
-  }
+  .div-pdf {
+    position: relative;
 
+  }
 </style>
