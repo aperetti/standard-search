@@ -61,22 +61,21 @@ router.redirect({
 
 router.beforeEach(function (transition) {
   bus.emit('page-reset')
-  if (!loggedIn() && transition.to.path.indexOf('/login') === -1) {
-    transition.redirect('/login')
-  } else if (transition.to.path.indexOf('/admin') !== -1) {
+  if (!loggedIn() && transition.to.path.indexOf('/login') === -1) return transition.redirect('/login')
+  if (transition.to.path.indexOf('/admin') !== -1) {
     let admin = isAdmin()
     admin.then(function (res) {
       if (res.status === 200) {
-        transition.next()
+        return transition.next()
       } else {
-        transition.redirect('/')
+        return transition.redirect('/')
       }
     }, function (res) {
-      transition.abort()
+      return transition.abort()
     })
-  } else {
-    transition.next()
   }
+  if (transition.to.path.indexOf('/login') !== -1 && loggedIn()) return transition.abort()
+  transition.next()
 })
 
 router.start(Application, 'body')

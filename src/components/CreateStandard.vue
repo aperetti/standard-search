@@ -196,7 +196,7 @@
     },
     methods: {
       test: function () {
-        this.$route.router.go({path: '/admin/standard/edit', query: {standard: '12f401.pdf'}})
+        this.$route.router.go({path: '/admin/standard/edit', query: {standard: '576859209d46a0342545c4ae'}})
       },
       toggleGroup: function () {
         this.addGroup = !this.addGroup
@@ -232,7 +232,7 @@
             console.log(xhr.response)
             var response = JSON.parse(xhr.response)
             console.log(response.data.file)
-            self.$route.router.go({path: '/admin/standard/edit', query: {standard: response.data.file}})
+            self.$route.router.go({path: '/admin/standard/edit', query: {standard: response.data._id}})
           } else {
             console.log(xhr.response)
             console.log('Failed to Upload!')

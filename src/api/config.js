@@ -25,6 +25,7 @@ export const apiAuth = apiBase + 'authenticate'
 export const apiStandardsBase = apiBase + 'standards/'
 export const apiAdminBase = apiBase + 'admin/'
 export const apiGetMenus = apiStandardsBase + 'menu'
+export const apiProjectsBase = apiBase + 'user/projects/'
 
 // Gets the specific Mongo standard document referenced by the filename
 // standard -> String (filename of the standard)
