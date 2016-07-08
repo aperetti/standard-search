@@ -2,7 +2,7 @@
   <div class="navbar">
   <nav class="navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">         
-      <a class="navbar-brand" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
+      <a class="navbar-brand cursor" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
       <button type="button" class="navbar-toggle" @click="optionOpen = !optionOpen">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
@@ -12,10 +12,11 @@
     </div>
     <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
       <ul class="nav navbar-nav">
-        <li><a @click.prevent='proccessLogout'>Logout</a></li>
+        <li><a @click.prevent='proccessLogout' class='cursor'>Logout</a></li>
       </ul>
       <ul v-if="admin" class="nav navbar-nav">
-        <li><a @click.prevent="createStandard()"><span class="glyphicon glyphicon-plus"></span></span> Add New Standard</a></li>
+        <li><a @click.prevent="createStandard()" class='cursor'><span class="glyphicon glyphicon-plus"></span> Add New Standard</a></li>
+        <li v-if="$route.params.standardId"><a v-link="{ name: 'editStandard', params: { standardId: $route.params.standardId }}" class='cursor'><span class="glyphicon glyphicon-pencil"></span> Edit Standard</a></li>
       </ul>
       <form class="navbar-form">
         <div class="form-group" style="display:inline;">
@@ -69,6 +70,12 @@
         logout
       }
     },
+    computed: {
+      editStandard () {
+        var standardId = this.$route.params.standardId
+        return `{name: "editStandard", params:{standardId: "${standardId}"}}`
+      }
+    },
     methods: {
       close: function () {
         this.optionOpen = false
@@ -108,5 +115,8 @@
     -khtml-opacity: 0.75;      /* khtml, old safari */
       -moz-opacity: 0.75;      /* mozilla, netscape */
            opacity: 0.75;      /* fx, safari, opera */
+  }
+  .cursor {
+    cursor: pointer;
   }
 </style>

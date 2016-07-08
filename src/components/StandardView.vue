@@ -2,7 +2,7 @@
   <div class="fluid-container" style="height: 100%">
   <div class='row' style="height: 95%; min-height: 95%;">
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: 50px; z-index: 10 !important; position: relative;">
-      <add-to-project></add-to-project>
+      <add-to-project :standard="routerStandard"></add-to-project>
     </div>
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
       <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
@@ -15,14 +15,17 @@
 <script>
   import {withToken, apiGetStandardPdf} from '../api/config'
   import StandardMenu from './StandardMenu'
-  import AddToProject from './dumb/AddToProject'
+  import AddToProject from './widget/AddToProject'
   export default {
     computed: {
       standardUrl: function () {
-        var standardUrl = withToken(apiGetStandardPdf(this.$route.query.standard))
+        var standardUrl = withToken(apiGetStandardPdf(this.$route.params.standardId))
         var iFrameUrl = `https://docs.google.com/gview?url=${standardUrl}&embedded=true`
         console.log(iFrameUrl)
         return iFrameUrl
+      },
+      routerStandard: function () {
+        return this.$route.params.standardId
       }
     },
     components: {

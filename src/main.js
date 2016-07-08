@@ -5,6 +5,7 @@ import App from './App'
 import EditStandard from './components/EditStandard'
 import StandardView from './components/StandardView'
 import CreateStandard from './components/CreateStandard'
+import Landing from './components/Landing'
 import Login from './components/Login'
 import {loggedIn} from './api/config'
 import {isAdmin} from './api/auth'
@@ -34,11 +35,12 @@ var router = new VueRouter({
 })
 
 router.map({
-  '/search': {
-    name: 'search',
-    component: StandardView
+  '/': {
+    name: 'landing',
+    component: Landing
   },
-  '/search/:standard': {
+  '/standard/:standardId': {
+    name: 'standard',
     component: StandardView
   },
   '/login': {
@@ -49,14 +51,10 @@ router.map({
     name: 'createStandard',
     component: CreateStandard
   },
-  '/admin/standard/edit': {
+  '/admin/standard/edit/:standardId': {
     name: 'editStandard',
     component: EditStandard
   }
-})
-
-router.redirect({
-  '/': '/search'
 })
 
 router.beforeEach(function (transition) {

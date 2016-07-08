@@ -2,9 +2,7 @@
   <input autocomplete="off" placeholder='Search for...' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="showResults = true" @blur="blurResults" />
   <div>
     <div class='list-group float' id='results' v-show='showResults'>
-      <template v-for='item in searchResults'>
-        <a @blur="blurResults" v-link="{ path: '/search', query:{standard: item._id} }"  class='list-group-item text-left'>{{item._source.code}} - {{item._source.desc}}</a>
-      </template>
+        <a v-for='item in searchResults' id='results-{{$index}}' @blur="blurResults" v-link="{ name: 'standard', params: { standardId: item._id }}"  class='list-group-item text-left'>{{item._source.code}} - {{item._source.desc}}</a>
     </div>
   </div>
 </template>
@@ -14,7 +12,13 @@
   import {updateStandard} from '../vuex/actions'
   import StandardMenu from './StandardMenu'
   import {elasticSearch} from '../api/config'
+  import bus from '../bus'
   export default {
+    ready () {
+      bus.on('page-reset', () => {
+        this.showResults = false
+      })
+    },
     data () {
       return {
         searchInput: '',
@@ -69,11 +73,13 @@
       },
       blurResults: function () {
         var self = this
-        if (window.document.activeElement.parentElement.id !== 'results') {
-          window.setTimeout(function () {
-            self.showResults = false
-          }, 150)
-        }
+        window.setTimeout(function () {
+          if (window.document.activeElement.id.indexOf('results') === -1) {
+            window.setTimeout(function () {
+              self.showResults = false
+            }, 50)
+          }
+        }, 100)
       }
     }
   }

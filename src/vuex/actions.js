@@ -15,10 +15,13 @@ export const updateStandard = ({dispatch}, standard) => {
 
 export const hydrateMenu = ({dispatch}) => {
   let menu = getMenu()
+  dispatch(types.MENU_LOADING, true)
   menu.then((response) => {
     dispatch(types.HYDRATE_MENU, response.data)
+    dispatch(types.MENU_LOADING, false)
   }, (response) => {
     console.log('Failed Hydrate Menu')
+    dispatch(types.MENU_LOADING, false)
     dispatch(types.HYDRATE_MENU, [])
   })
 }

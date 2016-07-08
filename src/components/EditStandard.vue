@@ -128,7 +128,7 @@
   export default {
     route: {
       data: function (transition) {
-        var file = getStandard(transition.to.query.standard)
+        var file = getStandard(transition.to.params.standardId)
         return file.then((response) => {
           var standard = response.data
           console.log(standard)
