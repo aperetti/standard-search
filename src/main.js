@@ -12,6 +12,7 @@ import {isAdmin} from './api/auth'
 import VueValid from './plugins/vue-valid'
 import VueTouch from 'vue-touch'
 import bus from './bus'
+import VueAnimatedList from 'vue-animated-list'
 
 /* eslint-disable no-new */
 var Application = Vue.extend({
@@ -27,7 +28,7 @@ Vue.use(VueTouch)
 Vue.use(VueValidator)
 Vue.use(VueRouter)
 Vue.use(VueValid)
-
+Vue.use(VueAnimatedList)
 var router = new VueRouter({
   history: true,
   hashbang: false,

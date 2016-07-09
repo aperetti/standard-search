@@ -24,16 +24,25 @@
         </div>
       </div>
     <div class = 'col-xs-6 col-md-6'>
-      <div class="panel panel-default" v-if="menuStandards.length != 0 || standardsLoading">
-        <div class="panel-heading">{{currentPath[currentPath.length-1]}}</div>
+      <img v-if='standardsLoading' class='loader' src='../assets/greyLoading.svg' style="z-index:100;" transition='item'></img>
+      <div class="panel panel-default" v-if="menuStandards.length === 0">
+        <div class="panel-heading" v-if='currentPath.length > 0'>{{currentPath[currentPath.length-1]}}</div>
+        <div class="panel-heading" v-else>Root</div> 
         <div class="list-group">
-            <img v-if='standardsLoading' src='../assets/greyLoading.svg'></img>             
+            <a v-if='menuStandards.length === 0' class="list-group-item" transition='item'>
+              <h4 class="list-group-item-heading" transition='item'><span class="glyphicon glyphicon-sunglasses glyphicon" transition='item'></span></h4>
+              <p class="list-group-item-text" transition='item'>No Standards</p>
+            </a>
+        </div>
+      </div>
+      <div class="panel panel-default" v-if="menuStandards.length != 0">
+        <div class="panel-heading">{{currentPath[currentPath.length-1]}}</div>
+        <div class="list-group">             
           <template v-for='std in menuStandards'>
-            <a class="list-group-item" v-link="{name: 'standard', params: {standardId: std._id}}">
+            <a class="list-group-item" v-link="{name: 'standard', params: {standardId: std._id}}" transition='item'>
               <h4 class="list-group-item-heading">{{std.code}}</h4>
               <p class="list-group-item-text">{{std.desc}}</p>
             </a>
-
           </template>
         </div>
       </div>
@@ -106,7 +115,6 @@ export default {
     })
     this.$watch('currentPath', () => {
       this.standardsLoading = true
-      this.menuStandards = []
       let standards = getStandardsByMenu(this.currentPath)
       standards.then((response) => {
         this.standardsLoading = false
@@ -120,4 +128,37 @@ export default {
 }
 </script>
 
-
+<style scoped>
+    .loader {
+      position: absolute;
+      margin: auto;
+      top: 0; left: 0; bottom: 0; right: 0;
+    }
+    .grey {
+      opacity: .15;
+      background-color: #000;
+      position: absolute;
+      margin: auto;
+      top: 0; left: 0; bottom: 0; right: 0;
+    }
+    .item {
+     
+    }
+    .item-transition {
+      -webkit-transition: opacity .25s ease-in-out;
+      -moz-transition: opacity .25s ease-in-out;
+      -o-transition: opacity .25s ease-in-out;
+      transition: opacity .25s ease-in-out;
+    }
+    .item-enter {
+      filter: alpha(opacity=0);
+      height: 0;
+      opacity: 0;
+    }
+    .item-leave {
+      filter: alpha(opacity=0);
+      opacity: 0;
+      height: 0;
+      position: absolute; /* important for removal move to work */
+    }
+</style>
