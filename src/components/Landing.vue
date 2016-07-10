@@ -1,21 +1,32 @@
 <template>
-  <div class='row'>
-    <div class='col-xs-10'>
-      <div style='margin-top:40px'>
-        <div> The HTML contents are as follows:</div>
-        <hr>
-        <div >{{{text}}}</div>
-      </div>
-      </div>
-  </div>
+  <markdown></markdown>
 </template>
 
 <script>
+  import markdown from './widget/markdown'
   export default {
-    data () {
-      return {
-        text: ''
-      }
+    components: {
+      markdown
     }
   }
 </script>
+
+<style scoped>
+
+textarea {
+    border: none;
+    border-right: 1px solid #ccc;
+    resize: none;
+    outline: none;
+    background-color: #f6f6f6;
+    font-size: 14px;
+    font-family: 'Monaco', courier, monospace;
+    padding: 20px;
+}
+.form-control {
+  height: 100%;
+}
+code {
+    color: #f66;
+}
+  </style>

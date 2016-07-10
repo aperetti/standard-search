@@ -1,6 +1,5 @@
 <template>
-  <div class="navbar">
-  <nav class="navbar-default navbar-fixed-top" role="navigation">
+  <nav class=" navbar navbar-default" role="navigation">
     <div class="navbar-header">         
       <a class="navbar-brand cursor" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
       <button type="button" class="navbar-toggle" @click="optionOpen = !optionOpen">
@@ -30,7 +29,6 @@
     <standard-menu :enable='menuOpen' class="col-xs-12 menu"></standard-menu> 
   </nav>
   <div class="dim" @click="close" v-if="menuOpen || optionOpen"></div>
-  </div> 
 </template>
 
 <script>

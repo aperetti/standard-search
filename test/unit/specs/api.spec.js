@@ -1,6 +1,5 @@
 import Vue from 'vue'
-import Hello from 'src/components/Hello'
-
+import {getStandard} from '/src/api/standard'
 describe('Hello.vue', () => {
   it('should render correct contents', () => {
     const vm = new Vue({
@@ -10,3 +9,4 @@ describe('Hello.vue', () => {
     expect(vm.$el.querySelector('.hello h1').textContent).to.contain('Hello World!')
   })
 })
+

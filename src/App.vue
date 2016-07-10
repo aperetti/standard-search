@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navbar v-if='logged'></navbar>
-    <div class='navbar-fixed-top' style='position:absolute; height: 50px; width: 100%; background-color: #eee;' v-else></div>
+    <div class='container-fluid' style='position:absolute; height: 50px; width: 100%; background-color: #eee;' v-else></div>
     <div class='router'>
       <router-view></router-view>
     </div>  
@@ -62,7 +62,6 @@
 
 <style>
  @import'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css';
-
  html {
   height: 100%;
 }
@@ -70,9 +69,10 @@
   z-index: 9999;
 }
 .router {
-  position: fixed;
+  position: relative;
   width: 100%;
-  height: 100%;
+  top: 0;
+  bottom: 0;
   z-index: 0;
 }
 body {

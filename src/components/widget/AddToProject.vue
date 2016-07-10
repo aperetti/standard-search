@@ -1,5 +1,5 @@
 <template>
-    <div class="col-xs-12 col-md-8">
+    <div class="col-xs-12 col-md-4">
       <div v-if="open" class='btn-group-vertical' style='width: 100%;'>
         <button type="button"@click='toggleMenu' class="btn btn-large btn-block btn-primary"><span class="glyphicon glyphicon-chevron-down pull-right"></span>Close</button>
         <button v-for='project in projects' @click='toggle(project._id, $index)' class='btn btn-large btn-block btn-default'>

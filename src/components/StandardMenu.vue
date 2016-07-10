@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-show="enable">
     <div class='row'>
-      <div class='col-12'>
+      <div class='col-md-6'>
         <h4>Standards Menu</h4>
         <ol class="breadcrumb">
           <li class="active"><template  v-if='currentPath.length > 0'><a @click='currentPath = []'>Root</a></template><template v-else>Root</template></li>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class='row' >
-      <div class = 'col-xs-6 col-md-6'>
+      <div class = 'col-xs-6 col-md-3'>
         <div class="panel panel-default">
           <div class="panel-heading" style="cursor: pointer"  @click='currentPath = currentPath.slice(0, -1)'><span class='glyphicon glyphicon-level-up'></span></div></li>
           <div>
@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-    <div class = 'col-xs-6 col-md-6'>
+    <div class = 'col-xs-6 col-md-3'>
       <img v-if='standardsLoading' class='loader' src='../assets/greyLoading.svg' style="z-index:100;" transition='item'></img>
       <div class="panel panel-default" v-if="menuStandards.length === 0">
         <div class="panel-heading" v-if='currentPath.length > 0'>{{currentPath[currentPath.length-1]}}</div>

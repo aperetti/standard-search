@@ -90,7 +90,7 @@
 <script>
   import {apiAddStandard, withToken} from '../api/config'
   import {tooltip} from 'vue-strap'
-  import {validStandard, getStandard} from '../api/standard'
+  import {validStandard, getStandardByFile} from '../api/standard'
   import {hydrateMenu, menuLoading, setCurrentMenu, updateStandard} from '../vuex/actions'
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
@@ -103,7 +103,7 @@
       this.$watch('file', () => {
         var self = this
         console.log(this.fileName)
-        getStandard(this.fileName + '.pdf').then((response) => {
+        getStandardByFile(this.fileName + '.pdf').then((response) => {
           console.log(response)
           if (response.data) {
             self.fileConflict = true

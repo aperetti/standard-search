@@ -1,6 +1,5 @@
 <template>
-  <div class="fluid-container" style="height: 100%">
-  <div class='row' style="height: 95%; min-height: 95%;">
+  <div class='row' style="position: fixed; height: 95%; min-height: 95%; width: 100%;">
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: 50px; z-index: 10 !important; position: relative;">
       <add-to-project :standard="routerStandard"></add-to-project>
     </div>
@@ -9,7 +8,6 @@
       <img v-if="notFound" class="logo" class='photo' src="../assets/logo_s.png">
       <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -46,6 +44,5 @@
   }
   .div-pdf {
     position: relative;
-
   }
 </style>
