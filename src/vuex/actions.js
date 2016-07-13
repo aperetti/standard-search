@@ -1,10 +1,10 @@
 import * as types from './mutation-types'
 import {getMenu} from '../api/menu'
-import {getStandard, getStandardsByMenu} from '../api/standard'
+import {getStandardDoc, getStandardsByMenu} from '../api/standard'
 
 export const updateStandard = ({dispatch}, standard) => {
   dispatch(types.UPDATE_STANDARD, standard)
-  let standardObject = getStandard(standard)
+  let standardObject = getStandardDoc(standard)
   standardObject.then((response) => {
     dispatch(types.SET_STANDARD_OBJECT, response.data)
     dispatch(types.SET_CURRENT_MENU, response.data.menu)

@@ -163,7 +163,7 @@
         },
         menu: {
           $name: 'Groups',
-          required: {valid: this.menu.length > 0, msg: 'Standard must contain (1) Group.'},
+          required: {valid: this.menu.length > 0, msg: 'Standard must contain (1) Menu Item.'},
           eachLength: {
             valid: (min) => {
               for (var el in this.menu) {
@@ -174,7 +174,7 @@
                 }
               }
             },
-            msg: 'One of the Standard Groups does not contain a name'
+            msg: 'One of the Standard Menu does not contain a name'
           }
         },
         file: {
@@ -196,7 +196,7 @@
     },
     methods: {
       test: function () {
-        this.$route.router.go({path: '/admin/standard/edit', query: {standard: '576859209d46a0342545c4ae'}})
+        this.$route.router.go({path: '/admin/standard/edit', params: {standard: '576859209d46a0342545c4ae'}})
       },
       toggleGroup: function () {
         this.addGroup = !this.addGroup
@@ -232,7 +232,7 @@
             console.log(xhr.response)
             var response = JSON.parse(xhr.response)
             console.log(response.data.file)
-            self.$route.router.go({path: '/admin/standard/edit', query: {standard: response.data._id}})
+            self.$route.router.go({path: '/admin/standard/edit', param: {standard: response.data._id}})
           } else {
             console.log(xhr.response)
             console.log('Failed to Upload!')

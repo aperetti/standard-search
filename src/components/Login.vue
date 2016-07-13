@@ -10,7 +10,7 @@
       <label class='sr-only' for='loginPassword'>Password</label>
       <input id='loginPassword' class='form-control' @keyup.13='processLogin' v-model='password' type='password' placeholder='Password'/>
       <br />
-      <button class='btn btn-primary btn-block' @click.prevent='processLogin' type='button'>{{loading ? 'Loading...' : 'Sign in'}}</button>
+      <button class='btn btn-primary btn-block' @click.prevent='processLogin' type='button'>{{loading ? 'Loading' : 'Sign in'}}</button>
     </div>
     <div v-show='failed' transition="fafa" class='alert alert-danger'>
       {{message}}
