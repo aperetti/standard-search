@@ -4,7 +4,6 @@ import VueResource from 'vue-resource'
 import {setToken} from '../vuex/actions'
 
 Vue.use(VueResource)
-Vue.http.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getItem('token')
 
 // The following intercepts any request and updates the Authorization token
 Vue.http.interceptors.push({
