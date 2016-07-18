@@ -1,17 +1,17 @@
 <template>
-    <div class="col-xs-12 col-md-4">
       <div v-if="open" class='btn-group-vertical' style='width: 100%;'>
         <button type="button"@click='toggleMenu' class="btn btn-large btn-block btn-primary"><span class="glyphicon glyphicon-chevron-down pull-right"></span>Close</button>
         <button v-for='project in projects' @click='toggle(project._id, $index)' class='btn btn-large btn-block btn-default'>
-          <span v-if='!project.hasStandard' class="glyphicon glyphicon-plus pull-right"></span>
-          <span v-if='project.hasStandard' class="glyphicon glyphicon-ok pull-right"></span>
+          <span v-if='!project.hasStandard && !project.loading' class="glyphicon glyphicon-plus pull-right"></span>
+          <img src='../../assets/greyLoading18.svg' class='pull-right' v-if='project.loading'>
+          <span v-if='project.hasStandard && !project.loading' class="glyphicon glyphicon-ok pull-right"></span>
           {{project.name}}
         </button>
         <button class="btn btn-large btn-block btn-default">
           <div class="form-group" style="display:inline;">
             <div class="input-group" style="display:table;">
-              <span class="input-group-addon" style="width:1%;"><span class="glyphicon glyphicon-plus"></span></span>
-              <input placeholder="Add New Group..." class='form-control'></input>
+              <span class="input-group-addon" style="width:1%;" @click='confirm = true'><span class="glyphicon glyphicon-plus"></span></span>
+              <input placeholder="Add New Group..." class='form-control' v-model='newProject' @keyup.enter='confirm = true'></input>
             </div>
           </div>
         </button>
@@ -19,12 +19,34 @@
       <div v-if="!open" class='btn-group-vertical' style='width: 100%;'>
         <button type="button" class="btn btn-large btn-block btn-default" @click='toggleMenu' ><span class="glyphicon glyphicon-chevron-up pull-right"></span>Add to Project</button>
       </div>
+
+      <!-- MODAL -->
+      <div class="col-xs-12 col-md-4">
+      <div class="modal fade in" tabindex="-1" role="dialog" v-if='confirm' style='display:block; margin-top: 50px;'>
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" @click='confirm = false' data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Add Group {{newProject}}</h4>
+            </div>
+            <div class="modal-body">
+              <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default"  @click='confirm = false' data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" @click='addProject()' @keyup.enter='addProject()'>Add Project</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
   </div>    
 </template>
 
 <script>
-  import {getProjects, toggleStandard} from '../../api/project'
+  import {getProjects, toggleStandard, createProject} from '../../api/project'
   import bus from '../../bus'
+  import {alert} from 'vue-strap'
   export default {
     props: ['standard'],
     route: {
@@ -36,13 +58,20 @@
       this.open = false
     },
     methods: {
+      addProject () {
+        createProject(this.newProject).then((result) => {
+          this.refreshProjects()
+        }).catch((e) => {
+          this.error = true
+        })
+      },
       toggleMenu () {
         this.open = !this.open
       },
       toggle: function (project, i) {
         this.projects[i].loading = true
         toggleStandard(project, this.standard).then((response) => {
-          this.projects[i].loading = true
+          this.projects[i].loading = false
           this.projects[i].hasStandard = !this.projects[i].hasStandard
         })
       },
@@ -62,8 +91,14 @@
     data () {
       return {
         open: false,
-        projects: []
+        projects: [],
+        newProject: '',
+        confirm: true,
+        error: false
       }
+    },
+    components: {
+      alert
     }
   }
 </script>

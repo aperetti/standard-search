@@ -23,6 +23,8 @@ var testStandard = {
   menu: [ 'Assembly', 'Overhead' ],
   __v: 0 }
 
+var testStandard2 = {_id: '5784702ecd8f4c92123fdd06'}
+
 describe('Connecting and Saving Token...', function () {
   before(function (done) {
     console.log(`Getting Token! with ${creds.username} using ${creds.password}`)
@@ -130,6 +132,21 @@ describe('Connecting and Saving Token...', function () {
         expect(e.data).to.be.a('string')
         expect(e.status).to.equal(400)
         done()
+      })
+    })
+  })
+
+  describe('addHistory', () => {
+    it(`Testing multiple History Entries ${testStandard._id} and ${testStandard2._id}`, (done) => {
+      addHistory(testStandard._id).then((result) => {
+        addHistory(testStandard2._id).then((result2) => {
+          expect(result.data[0]).to.equal(testStandard._id)
+          expect(result2.data[0]).to.equal(testStandard2._id)
+          expect(result2.data[1]).to.equal(testStandard._id)
+          done()
+        })
+      }).catch((e) => {
+        throw new Error(e.status + '-' + e.data)
       })
     })
   })
