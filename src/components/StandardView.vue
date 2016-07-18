@@ -12,14 +12,21 @@
 
 <script>
   import {withToken, apiGetStandardPdf} from '../api/config'
+  import {addHistory} from '../api/standard'
   import StandardMenu from './StandardMenu'
   import AddToProject from './widget/AddToProject'
   export default {
+    route: {
+      data: function (transition) {
+        addHistory(transition.to.params.standardId).then((res) => {
+          console.log('Placeholder: ', res)
+        }).catch(e => console.log('Add History Error!', e))
+      }
+    },
     computed: {
       standardUrl: function () {
         var standardUrl = withToken(apiGetStandardPdf(this.$route.params.standardId))
         var iFrameUrl = `https://docs.google.com/gview?url=${standardUrl}&embedded=true`
-        console.log(iFrameUrl)
         return iFrameUrl
       },
       routerStandard: function () {

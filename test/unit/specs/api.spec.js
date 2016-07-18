@@ -1,5 +1,5 @@
 // import Vue from 'vue'
-import {getStandardById, getStandardByFile, getStandardsByMenu} from 'src/api/standard.js'
+import {getStandardById, getStandardByFile, getStandardsByMenu, addHistory} from 'src/api/standard.js'
 import {getToken} from 'src/api/auth.js'
 import creds from '../../apiCredentials.js'
 // describe('Hello.vue', () => {
@@ -23,7 +23,7 @@ var testStandard = {
   menu: [ 'Assembly', 'Overhead' ],
   __v: 0 }
 
-describe('Connection', function () {
+describe('Connecting and Saving Token...', function () {
   before(function (done) {
     console.log(`Getting Token! with ${creds.username} using ${creds.password}`)
     getToken(creds.username, creds.password).then(function (response) {
@@ -35,67 +35,101 @@ describe('Connection', function () {
       console.log('Please check your username and password in ../apiCredentials.js')
     })
   })
+
   describe('getStandardById', () => {
-    var standard = {}
-    beforeEach(function (done) {
-      console.log(window.localStorage.getItem('token'))
-      var testApi = getStandardById(testStandard._id)
-      testApi.then((result) => {
-        console.log(result)
-        standard = result.data
+    it(`Get Standard Standard ID ${testStandard._id}`, (done) => {
+      getStandardById(testStandard._id).then((res) => {
+        expect(res.data._id).to.equal(testStandard._id)
+        expect(res.status).to.equal(200)
         done()
-      }, (e) => {
-        console.log(e)
-      })
-    })
-    it(`Using test Standard ${testStandard._id}`, () => {
-      expect(standard._id).to.equal(testStandard._id)
+      }).catch(done)
     })
   })
 
   describe('getStandardById', () => {
-    it('Using random string for id returns undefined', () => {
-      var testApi = getStandardById('random_string')
-      testApi.then((result) => {
-        expect(result.data._id).to.equal(undefined)
+    it('Using random string for id returns undefined', (done) => {
+      getStandardById('random_string').then((result) => {
+        expect(result.data).to.equal(null)
+        expect(result.data).to.be.a('object')
+        expect(result.status).to.equal(400)
+        done()
+      }).catch(result => {
+        expect(result.data).to.equal(null)
+        expect(result.status).to.equal(400)
+        done()
       })
     })
   })
 
   describe('getStandardByFile', () => {
-    it(`Using test Standard ${testStandard._id}`, () => {
-      var testApi = getStandardByFile(testStandard.file)
-      testApi.then((result) => {
+    it(`Using test Standard ${testStandard._id}`, (done) => {
+      getStandardByFile(testStandard.file).then((result) => {
+        expect(result.data).to.be.an('object')
         expect(result.data._id).to.equal(testStandard._id)
+        done()
       })
     })
   })
 
   describe('getStandardByFile', () => {
-    it('Using random string for file returns undefined', () => {
-      var testApi = getStandardByFile('fake_file.pdf')
-      testApi.then((result) => {
-        expect(result.data._id).to.equal(undefined)
+    it('Using random string for file returns undefined', (done) => {
+      getStandardByFile('fake_file.pdf').then((result) => {
+        done()
+      }).catch(result => {
+        expect(result.data).to.equal(null)
+        expect(result.status).to.equal(400)
+        done()
       })
     })
   })
 
   describe('getStandardsByMenu', () => {
-    it('Using test Standard Menu', () => {
-      var testApi = getStandardsByMenu(testStandard.menu)
-      testApi.then((result) => {
-        return expect(result.data).to.equal(1)
-      }, (e) => {
-        return expect(false).to.equal(true)
+    it('Using test Standard Menu', (done) => {
+      getStandardsByMenu(testStandard.menu).then((result) => {
+        expect(result.data).to.be.a('array')
+        expect(result.data.length).to.be.above(0)
+        done()
+      }).catch((e) => {
+        done(new Error(e.status))
       })
     })
   })
 
   describe('getStandardsByMenu', () => {
-    it('Using random string for menu returns undefined', () => {
-      var testApi = getStandardsByMenu('fake_file.pdf')
-      testApi.then((result) => {
-        expect(result.data._id).to.equal(undefined)
+    it('Using random string for menu returns undefined', (done) => {
+      getStandardsByMenu('fake_file.pdf').then((result) => {
+        throw new Error(`Received successful API Code: ${result.status}`)
+      }).catch((e) => {
+        if (e && Error === e.constructor) {
+          done(e)
+        }
+        expect(e.data).to.be.a('string')
+        expect(e.status).to.equal(400)
+        done()
+      })
+    })
+  })
+
+  describe('addHistory', () => {
+    it('Add Valid Standard to User History', (done) => {
+      addHistory(testStandard._id).then((result) => {
+        expect(result.data).to.be.a('array')
+        expect(result.data[0]).to.equal(testStandard._id)
+        done()
+      }).catch((e) => {
+        done(new Error(e.status + '-' + e.data))
+      })
+    })
+  })
+
+  describe('addHistory', () => {
+    it('Improper Standard ID', (done) => {
+      addHistory('1251').then((result) => {
+        throw new Error(`Received successful API Code: ${result.status}`)
+      }).catch((e) => {
+        expect(e.data).to.be.a('string')
+        expect(e.status).to.equal(400)
+        done()
       })
     })
   })

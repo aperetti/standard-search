@@ -40,7 +40,6 @@
         this.open = !this.open
       },
       toggle: function (project, i) {
-        console.log(project, i)
         this.projects[i].loading = true
         toggleStandard(project, this.standard).then((response) => {
           this.projects[i].loading = true
@@ -49,7 +48,6 @@
       },
       refreshProjects () {
         getProjects().then((response) => {
-          console.log(response)
           var temp = response.data
           temp.forEach((project, i, arr) => {
             project.loading = false

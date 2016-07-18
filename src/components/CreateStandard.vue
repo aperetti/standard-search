@@ -231,10 +231,8 @@
             console.log('Uploaded')
             console.log(xhr.response)
             var response = JSON.parse(xhr.response)
-            console.log(response.data.file)
             self.$route.router.go({path: '/admin/standard/edit', param: {standard: response.data._id}})
           } else {
-            console.log(xhr.response)
             console.log('Failed to Upload!')
           }
         }
