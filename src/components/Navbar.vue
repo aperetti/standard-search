@@ -2,7 +2,7 @@
   <nav class=" navbar navbar-default" role="navigation">
     <div class="navbar-header">         
       <a class="navbar-brand cursor" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
-      <button type="button" class="navbar-toggle" @click="optionOpen = !optionOpen">
+      <button type="button" class="navbar-toggle" @click="toggleOption">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -26,8 +26,8 @@
         </div>
       </form> 
     </div>
-    <standard-menu :enable='menuOpen' class="col-xs-12 menu"></standard-menu> 
   </nav>
+  <standard-menu :enable='menuOpen' class="col-xs-12 col-md-6 float"></standard-menu> 
   <div class="dim" @click="close" v-if="menuOpen || optionOpen"></div>
 </template>
 
@@ -75,6 +75,11 @@
       }
     },
     methods: {
+      toggleOption: function () {
+        let tempStatus = !this.optionOpen
+        bus.emit('page-reset')
+        this.optionOpen = tempStatus
+      },
       close: function () {
         this.optionOpen = false
         this.menuOpen = false
@@ -88,7 +93,9 @@
         this.optionOpen = false
       },
       toggleMenu: function () {
-        this.menuOpen = !this.menuOpen
+        let tempStatus = !this.menuOpen
+        bus.emit('page-reset')
+        this.menuOpen = tempStatus
       }
     }
   }
@@ -98,7 +105,6 @@
   .float {
     position: absolute;
     top: 60px;
-    width: 100%;
     z-index: 1000;
   } 
   .dim {

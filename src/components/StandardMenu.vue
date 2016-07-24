@@ -1,9 +1,11 @@
 <template>
-  <div class="container" v-show="enable">
+  <div class=" navbar navbar-default" v-show="enable">
     <div class='row'>
-      <div class='col-md-6'>
-        <h4>Standards Menu</h4>
-        <ol class="breadcrumb">
+      <div class='col-xs-12 col-md-4'>
+        <h4 class='pull-left'>Standards Menu</h4>
+        </div>
+        <div class='col-xs-12 col-md-12 text-left'>
+        <ol class="breadcrumb" style='margin-bottom: 5px; padding-left: 0px'>
           <li class="active"><template  v-if='currentPath.length > 0'><a @click='currentPath = []'>Root</a></template><template v-else>Root</template></li>
           <li v-for='path in currentPath' class="active" @click='currentPath = currentPath.slice(0,$index + 1)'>
             <template  v-if='currentPath.length > $index + 1'><a class='$index === currentPath.length - 1 ? active : ""'>{{path}}</a></template>
@@ -13,7 +15,7 @@
       </div>
     </div>
     <div class='row' >
-      <div class = 'col-xs-6 col-md-3'>
+      <div class = 'col-xs-5 col-md-4'>
         <div class="panel panel-default">
           <div class="panel-heading" style="cursor: pointer"  @click='currentPath = currentPath.slice(0, -1)'><span class='glyphicon glyphicon-level-up'></span></div></li>
           <div>
@@ -23,7 +25,7 @@
           </div>
         </div>
       </div>
-    <div class = 'col-xs-6 col-md-3'>
+    <div class = 'col-xs-7 col-md-8'>
       <img v-if='standardsLoading' class='loader' src='../assets/greyLoading.svg' style="z-index:100;" transition='item'></img>
       <div class="panel panel-default" v-if="menuStandards.length === 0">
         <div class="panel-heading" v-if='currentPath.length > 0'>{{currentPath[currentPath.length-1]}}</div>
