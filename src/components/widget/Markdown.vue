@@ -66,7 +66,10 @@ textarea {
 .form-control {
   height: 100%;
 }
-code {
+.code {
     color: #f66;
+}
+.row {
+  width: 100%;
 }
   </style>

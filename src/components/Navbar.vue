@@ -12,10 +12,10 @@
     <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
       <ul class="nav navbar-nav">
         <li><a @click.prevent='proccessLogout' class='cursor'>Logout</a></li>
+        <history></history>
       </ul>
       <ul v-if="admin" class="nav navbar-nav">
-        <li><a @click.prevent="createStandard()" class='cursor'><span class="glyphicon glyphicon-plus"></span> Add New Standard</a></li>
-        <li v-if="$route.params.standardId"><a v-link="{ name: 'editStandard', params: { standardId: $route.params.standardId }}" class='cursor'><span class="glyphicon glyphicon-pencil"></span> Edit Standard</a></li>
+        <admin></admin>
       </ul>
       <form class="navbar-form">
         <div class="form-group" style="display:inline;">
@@ -36,15 +36,17 @@
   import {isAdmin} from '../api/auth'
   import Search from './Search'
   import StandardMenu from './StandardMenu'
+  import History from './widget/History'
+  import Admin from './widget/Admin'
   import bus from '../bus'
 
   export default {
     ready: function () {
       let getAdmin = isAdmin()
       var self = this
-      bus.on('page-reset', function () {
+      bus.on('page-reset', function (arg) {
+        if (arg !== 'navbar-dropdown') self.optionOpen = false
         self.menuOpen = false
-        self.optionOpen = false
       })
       getAdmin.then(function (res) {
         if (res.status === 200) {
@@ -54,7 +56,9 @@
     },
     components: {
       Search,
-      StandardMenu
+      StandardMenu,
+      History,
+      Admin
     },
     data () {
       return {
@@ -90,7 +94,6 @@
       },
       createStandard: function () {
         this.$route.router.go('/admin/standard/create')
-        this.optionOpen = false
       },
       toggleMenu: function () {
         let tempStatus = !this.menuOpen

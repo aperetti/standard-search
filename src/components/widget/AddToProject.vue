@@ -53,7 +53,11 @@
       canReuse: false
     },
     ready () {
-      bus.on('page-reset', () => this.refreshProjects())
+      bus.on('page-reset', () => {
+        this.refreshProjects()
+        this.open = false
+        this.confirm = false
+      })
       this.refreshProjects()
       this.open = false
     },
@@ -66,7 +70,9 @@
         })
       },
       toggleMenu () {
-        this.open = !this.open
+        var temp = !this.open
+        bus.emit('page-reset')
+        this.open = temp
       },
       toggle: function (project, i) {
         this.projects[i].loading = true
@@ -93,7 +99,7 @@
         open: false,
         projects: [],
         newProject: '',
-        confirm: true,
+        confirm: false,
         error: false
       }
     },

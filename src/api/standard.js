@@ -1,4 +1,4 @@
-import {apiAddHistory, apiLookupStandardById, apiLookupStandardByFile, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, apiGetStandardPdf, Vue} from './config'
+import {apiAddHistory, apiGetHistory, apiLookupStandardById, apiLookupStandardByFile, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, apiGetStandardPdf, Vue} from './config'
 
 // Gets the specific Mongo standard document referenced by the filename
 // standard -> String (filename of the standard)
@@ -39,4 +39,8 @@ export const getPdfStandard = (code) => {
 // Takes the current standardId and adds it to the user's history
 export const addHistory = (standardId) => {
   return Vue.http({url: apiAddHistory + standardId, method: 'POST'})
+}
+
+export const getHistory = () => {
+  return Vue.http({url: apiGetHistory})
 }

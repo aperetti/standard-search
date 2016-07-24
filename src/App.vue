@@ -82,7 +82,7 @@ body {
 #app {
   font-family: Source Sans Pro, Helvetica, sans-serif;
   text-align: center;
-  height: 100%;
+  height: 100%;;
 }
 .login {
   max-width: 400px;

@@ -26,6 +26,7 @@ export const apiAdminBase = apiBase + 'admin/'
 export const apiGetMenus = apiStandardsBase + 'menu'
 export const apiUserBase = apiBase + 'user/'
 export const apiAddHistory = apiUserBase + 'add_history/'
+export const apiGetHistory = apiUserBase + 'get_history/'
 export const apiProjectsBase = apiBase + 'user/projects/'
 
 // Gets the specific Mongo standard document referenced by the filename
