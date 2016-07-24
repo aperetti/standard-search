@@ -41,6 +41,8 @@ export default {
   methods: {
     toggle () {
       var temp = !this.open
+      // Passes navbar-dropdown as an arguemnt to prevent the mobile dropdown menu from closing
+      // See Navbar.vue ready->bus.on
       bus.emit('page-reset', 'navbar-dropdown')
       this.open = temp
     }

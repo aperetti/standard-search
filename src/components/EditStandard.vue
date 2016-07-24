@@ -1,22 +1,26 @@
 <template>
     <form style="padding-left:20px;" class="form-horizontal" action="{{submitUrl}}" method="POST" enctype="multipart/form-data" v-on:submit.prevent="onSubmit">
     <div class="page-header"><h2 class="text-left">Edit Standard</h2></div>
+      
+      <!-- STANDARD CODE FORM GROUP -->
       <div class="form-group {{$vd.code.$valid ? 'has-success' : 'has-error'}}">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Standard Code</label>
+        <label for="code" class="col-sm-2 col-sm-offset-1 control-label">Standard Code</label>
         <div class="col-sm-3 col-xs-10 col-xs-offset-1">
             <input type="text" class="form-control" v-model="code" @></input>
         </div>
       </div>
       
+      <!-- DESCRIPTION FORM GROUP -->
       <div class="form-group {{$vd.desc.$valid ? 'has-success' : 'has-error'}}">
-        <label for="inputStandard" placeholder="One or Two Line Description" class="col-sm-2 col-sm-offset-1 control-label">Description</label>
+        <label for="description" placeholder="One or Two Line Description" class="col-sm-2 col-sm-offset-1 control-label">Description</label>
         <div class="col-sm-6 col-xs-10 col-xs-offset-1">
           <textarea rows="2" class="form-control" v-model="desc"></textarea>
         </div>
       </div>
       
+      <!-- ADD MENU ITEM TOOL-->
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Add Menu Item</label>
+        <label for="addMenu" class="col-sm-2 col-sm-offset-1 control-label">Add Menu Item</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group" >
             <div v-if="addGroup">
@@ -34,9 +38,10 @@
         </div>
       </div>
     </div>
-    
+
+      <!-- MENU FORM GROUP -->
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Menu Path</label>
+        <label for="menu" class="col-sm-2 col-sm-offset-1 control-label">Menu Path</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <template v-for="(index, group) in menu" track-by="$index">
@@ -52,8 +57,9 @@
         </div>
       </div>
       
+      <!-- FILE UPLOAD FORM GROUP -->
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Change File</label>
+        <label for="file" class="col-sm-2 col-sm-offset-1 control-label">Change File</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <label class="btn {{this.file && !this.fileConflict? 'btn-success' : 'btn-default'}} {{this.fileConflict ? 'btn-warning' : 'btn-default'}} btn-file pull-left">
@@ -65,9 +71,10 @@
           </div>
         </div>
       </div>
-      
+
+      <!-- REFERENCES FORM GROUP -->
       <div class="form-group">
-        <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">References</label>
+        <label for="references" class="col-sm-2 col-sm-offset-1 control-label">References</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
             <template v-for="(index, group) in references" track-by="$index">
@@ -78,10 +85,12 @@
             </template>
           </div>
         </div>
+      
       </div>
 
+      <!-- STATUS FORM GROUP -->
       <div class="form-group">
-      <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Set Status</label>
+      <label for="status" class="col-sm-2 col-sm-offset-1 control-label">Set Status</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <dropdown class="pull-left">
             <button type="button" class="btn btn-default" data-toggle="dropdown">
@@ -95,6 +104,14 @@
               <li><a href='#' @click="setStatus('DELETED')">DELETED</a></li>             
             </ul>
           </dropdown>
+        </div>
+      </div>
+
+      <!-- CHANGE LOG FORM GROUP -->
+      <div class="form-group {{changelog.length > 0 ? 'has-success' : 'has-warning'}}">
+        <label for="changelog" placeholder="One or Two Line Description of Changes" class="col-sm-2 col-sm-offset-1 control-label">Changelog</label>
+        <div class="col-sm-6 col-xs-10 col-xs-offset-1">
+          <textarea rows="2" class="form-control" v-model="changelog"></textarea>
         </div>
       </div>
 
@@ -115,6 +132,14 @@
             <li class="list-group-item" v-if="!$vd.file.conflict.valid">PDF already exists under Standard: {{fileConflictInfo.code}}</li>
           </div>
         </div>
+
+      <div class="col-sm-10 col-sm-offset-1 col-xs-12">
+        <div class="panel panel-warning" v-if="changelog.length === 0">
+          <div class="panel-heading">Warning</div>
+          <div class="list-group">
+            <li class="list-group-item" v-if="changelog.length === 0">It is recommended to add a changelog entry!</li>
+          </div>
+        </div>
       </div>
 </template>
 
@@ -126,6 +151,24 @@
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
   export default {
+    data: function () {
+      return {
+        changelog: '',
+        edit: false,
+        code: '',
+        desc: '',
+        file: '',
+        menu: [],
+        status: '',
+        references: [],
+        validCode: false,
+        addGroup: false,
+        newGroup: '',
+        fileConflict: false,
+        fileConflictInfo: {},
+        standard: {}
+      }
+    },
     route: {
       data: function (transition) {
         var file = getStandardById(transition.to.params.standardId)
@@ -183,23 +226,6 @@
     components: {
       tooltip, dropdown
     },
-    data: function () {
-      return {
-        edit: false,
-        code: '',
-        desc: '',
-        file: '',
-        menu: [],
-        status: '',
-        references: [],
-        validCode: false,
-        addGroup: false,
-        newGroup: '',
-        fileConflict: false,
-        fileConflictInfo: {},
-        standard: {}
-      }
-    },
     validator: function () {
       return {
         code: {
@@ -229,7 +255,7 @@
         },
         file: {
           $name: 'File Upload',
-          conflict: {valid: !this.fileConflict || this.file === this.standard.file, msg: 'File is already in use'},
+          conflict: {valid: !this.fileConflict || this.file === this.standard.file, msg: 'File is already in use.'},
           type: {
             valid: (extension) => {
               if (this.file.indexof(extension)) {
