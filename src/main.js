@@ -59,7 +59,7 @@ router.map({
 })
 
 router.beforeEach(function (transition) {
-  bus.emit('page-reset')
+  bus.emit('page-reset', 'beforeRoute')
   if (!loggedIn() && transition.to.path.indexOf('/login') === -1) return transition.redirect('/login')
   if (transition.to.path.indexOf('/admin') !== -1) {
     let admin = isAdmin()
@@ -74,6 +74,7 @@ router.beforeEach(function (transition) {
     })
   }
   if (transition.to.path.indexOf('/login') !== -1 && loggedIn()) return transition.abort()
+
   transition.next()
 })
 

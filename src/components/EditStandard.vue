@@ -121,14 +121,14 @@
 <script>
   import {apiEditStandard, withToken} from '../api/config'
   import {tooltip, dropdown} from 'vue-strap'
-  import {validStandard, getStandard} from '../api/standard'
+  import {validStandard, getStandardById, getStandardByFile} from '../api/standard'
   import {hydrateMenu, menuLoading, setCurrentMenu, updateStandard} from '../vuex/actions'
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
   export default {
     route: {
       data: function (transition) {
-        var file = getStandard(transition.to.params.standardId)
+        var file = getStandardById(transition.to.params.standardId)
         return file.then((response) => {
           var standard = response.data
           console.log(standard)
@@ -151,7 +151,7 @@
       this.$watch('file', () => {
         var self = this
         console.log(this.fileName)
-        getStandard(this.fileName + '.pdf').then((response) => {
+        getStandardByFile(this.fileName + '.pdf').then((response) => {
           console.log(response)
           if (response.data) {
             self.fileConflict = true
@@ -284,7 +284,7 @@
         }
         formData.append('_id', this.standard._id)
         formData.append('status', this.status)
-        formData.append('refs', this.references.join('|'))
+        if (this.references.length > 0) formData.append('refs', this.references.join('|'))
         var xhr = new window.XMLHttpRequest()
         xhr.open('POST', withToken(apiEditStandard), true)
         xhr.onload = function () {

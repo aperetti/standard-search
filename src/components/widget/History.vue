@@ -20,14 +20,16 @@ export default {
     }, (response) => {
       self.history = []
     })
-    bus.on('page-reset', function () {
+    bus.on('page-reset', function (arg) {
       self.open = false
-      let history = getHistory()
-      history.then((response) => {
-        self.history = response.data.history
-      }, (response) => {
-        self.history = []
-      })
+      if (arg === 'beforeRoute') {
+        let history = getHistory()
+        history.then((response) => {
+          self.history = response.data.history
+        }, (response) => {
+          self.history = []
+        })
+      }
     })
   },
   data () {

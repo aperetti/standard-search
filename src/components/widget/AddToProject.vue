@@ -27,10 +27,10 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" @click='confirm = false' data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Add Group {{newProject}}</h4>
+              <h4 class="modal-title">Create Project: {{newProject}}?</h4>
             </div>
             <div class="modal-body">
-              <p>One fine body&hellip;</p>
+              <p>You are about to create a new project would you like to procede?</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default"  @click='confirm = false' data-dismiss="modal">Close</button>
@@ -65,6 +65,7 @@
       addProject () {
         createProject(this.newProject).then((result) => {
           this.refreshProjects()
+          this.configm = false
         }).catch((e) => {
           this.error = true
         })

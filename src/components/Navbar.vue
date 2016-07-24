@@ -105,10 +105,14 @@
 </script>
 
 <style scoped>
+  .navbar {
+    border-radius: 0 !important;
+  }
   .float {
     position: absolute;
-    top: 60px;
+    top: 50px;
     z-index: 1000;
+    border-radius: 0;
   } 
   .dim {
     height:100%;
