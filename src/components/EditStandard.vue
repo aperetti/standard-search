@@ -310,6 +310,7 @@
         }
         formData.append('_id', this.standard._id)
         formData.append('status', this.status)
+        if (this.changelog.length > 0) formData.append('changelog', this.changelog)
         if (this.references.length > 0) formData.append('refs', this.references.join('|'))
         var xhr = new window.XMLHttpRequest()
         xhr.open('POST', withToken(apiEditStandard), true)

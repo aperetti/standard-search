@@ -1,16 +1,4 @@
 <template>
-      <li v-bind:class="this.open ? 'dropdown open' : 'dropdown'">
-        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @click="toggleMenu" aria-expanded="{{open}}">Add to Project<span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li v-for='project in projects' @click='toggle(project._id, $index)'>
-            <a>{{project.name}}
-             <span v-if='!project.hasStandard && !project.loading' class="glyphicon glyphicon-plus pull-right"></span>
-          <img src='../../assets/greyLoading18.svg' class='pull-right' v-if='project.loading'>
-          <span v-if='project.hasStandard && !project.loading' class="glyphicon glyphicon-ok pull-right"></span>
-            </a></li>
-        </ul>
-      </li>
-      <!---
       <div v-if="open" class='btn-group-vertical' style='width: 100%;'>
         <button type="button" @click='toggleMenu' class="btn btn-large btn-block btn-primary"><span class="glyphicon glyphicon-chevron-down pull-right"></span>Close</button>
         <button v-for='project in projects' @click='toggle(project._id, $index)' class='btn btn-large btn-block btn-default'>
@@ -31,7 +19,7 @@
       <div v-if="!open" class='btn-group-vertical' style='width: 100%;'>
         <button type="button" class="btn btn-large btn-block btn-default" @click='toggleMenu' ><span class="glyphicon glyphicon-chevron-up pull-right"></span>Add to Project</button>
       </div>
-      -->
+
       <!-- MODAL -->
       <div class="col-xs-12 col-md-4">
       <div class="modal fade in" tabindex="-1" role="dialog" v-if='confirm' style='display:block; margin-top: 50px;'>
@@ -65,8 +53,8 @@
       canReuse: false
     },
     ready () {
-      bus.on('page-reset', (arg) => {
-        if (arg !== 'addToProject') this.refreshProjects()
+      bus.on('page-reset', () => {
+        this.refreshProjects()
         this.open = false
         this.confirm = false
       })
@@ -77,14 +65,14 @@
       addProject () {
         createProject(this.newProject).then((result) => {
           this.refreshProjects()
-          this.confirm = false
+          this.configm = false
         }).catch((e) => {
           this.error = true
         })
       },
       toggleMenu () {
         var temp = !this.open
-        bus.emit('page-reset', 'addToProject')
+        bus.emit('page-reset')
         this.open = temp
       },
       toggle: function (project, i) {
