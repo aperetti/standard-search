@@ -11,7 +11,6 @@
     </div>
     <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
       <ul class="nav navbar-nav">
-        <li><a class='cursor'>Logout</a></li>
         <add-to-project :standard="routerStandard"></add-to-project>
       </ul>
     </div>

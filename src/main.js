@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueValidator from 'vue-validator'
 import App from './App'
+import Projects from './components/Projects'
 import EditStandard from './components/EditStandard'
 import StandardView from './components/StandardView'
 import CreateStandard from './components/CreateStandard'
@@ -55,6 +56,10 @@ router.map({
   '/admin/standard/edit/:standardId': {
     name: 'editStandard',
     component: EditStandard
+  },
+  'user/project/:project': {
+    name: 'userProjects',
+    component: Projects
   }
 })
 

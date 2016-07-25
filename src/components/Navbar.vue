@@ -12,11 +12,13 @@
     <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
       <ul class="nav navbar-nav">
         <li><a @click.prevent='proccessLogout' class='cursor'>Logout</a></li>
-        <history></history>
+        <nav-history></nav-history>
+        <nav-user></nav-user>
       </ul>
       <ul v-if="admin" class="nav navbar-nav">
-        <admin></admin>
+        <nav-admin></nav-admin>
       </ul>
+
       <form class="navbar-form">
         <div class="form-group" style="display:inline;">
           <div class="input-group" style="display:table;">
@@ -36,8 +38,9 @@
   import {isAdmin} from '../api/auth'
   import Search from './Search'
   import StandardMenu from './StandardMenu'
-  import History from './widget/History'
-  import Admin from './widget/Admin'
+  import NavHistory from './widget/NavHistory'
+  import NavAdmin from './widget/NavAdmin'
+  import NavUser from './widget/NavUser'
   import bus from '../bus'
 
   export default {
@@ -57,8 +60,9 @@
     components: {
       Search,
       StandardMenu,
-      History,
-      Admin
+      NavHistory,
+      NavAdmin,
+      NavUser
     },
     data () {
       return {
