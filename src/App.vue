@@ -22,7 +22,6 @@
     ready: function () {
       var self = this
       bus.on('dim', function () {
-        console.log('dim')
         self.dim = true
       })
       bus.on('!dim', function () {

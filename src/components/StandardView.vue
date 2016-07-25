@@ -16,6 +16,7 @@
       </ul>
     </div>
 </nav>
+<!-- Standard PDF Viewer -->
   <div class='row' style="position: fixed; height: 95%; min-height: 95%; width: 100%;">
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: 50px; z-index: 10 !important; position: relative;">
       <add-to-project :standard="routerStandard"></add-to-project>
@@ -32,7 +33,14 @@
   import {addHistory} from '../api/standard'
   import StandardMenu from './StandardMenu'
   import AddToProject from './widget/AddToProject'
+  import bus from '../bus'
+
   export default {
+    ready: function () {
+      bus.on('page-reset', (arg) => {
+        if (arg !== 'addToProject') this.optionOpen = false
+      })
+    },
     route: {
       data: function (transition) {
         addHistory(transition.to.params.standardId).then((res) => {
@@ -48,6 +56,18 @@
       },
       routerStandard: function () {
         return this.$route.params.standardId
+      }
+    },
+    methods: {
+      toggleOption () {
+        var temp = !this.optionOpen
+        bus.emit('page-reset', 'standardView')
+        this.optionOpen = temp
+      }
+    },
+    data () {
+      return {
+        optionOpen: false
       }
     },
     components: {

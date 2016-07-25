@@ -10,28 +10,7 @@
             </a></li>
         </ul>
       </li>
-      <!---
-      <div v-if="open" class='btn-group-vertical' style='width: 100%;'>
-        <button type="button" @click='toggleMenu' class="btn btn-large btn-block btn-primary"><span class="glyphicon glyphicon-chevron-down pull-right"></span>Close</button>
-        <button v-for='project in projects' @click='toggle(project._id, $index)' class='btn btn-large btn-block btn-default'>
-          <span v-if='!project.hasStandard && !project.loading' class="glyphicon glyphicon-plus pull-right"></span>
-          <img src='../../assets/greyLoading18.svg' class='pull-right' v-if='project.loading'>
-          <span v-if='project.hasStandard && !project.loading' class="glyphicon glyphicon-ok pull-right"></span>
-          {{project.name}}
-        </button>
-        <button class="btn btn-large btn-block btn-default">
-          <div class="form-group" style="display:inline;">
-            <div class="input-group" style="display:table;">
-              <span class="input-group-addon" style="width:1%;" @click='confirm = true'><span class="glyphicon glyphicon-plus"></span></span>
-              <input placeholder="Add New Group..." class='form-control' v-model='newProject' @keyup.enter='confirm = true'></input>
-            </div>
-          </div>
-        </button>
-      </div>
-      <div v-if="!open" class='btn-group-vertical' style='width: 100%;'>
-        <button type="button" class="btn btn-large btn-block btn-default" @click='toggleMenu' ><span class="glyphicon glyphicon-chevron-up pull-right"></span>Add to Project</button>
-      </div>
-      -->
+
       <!-- MODAL -->
       <div class="col-xs-12 col-md-4">
       <div class="modal fade in" tabindex="-1" role="dialog" v-if='confirm' style='display:block; margin-top: 50px;'>

@@ -102,9 +102,7 @@
       // return the document and the set fileConflict to true
       this.$watch('file', () => {
         var self = this
-        console.log(this.fileName)
         getStandardByFile(this.fileName + '.pdf').then((response) => {
-          console.log(response)
           if (response.data) {
             self.fileConflict = true
             self.fileConflictInfo = response.data
