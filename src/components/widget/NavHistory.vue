@@ -1,6 +1,6 @@
 <template>
-        <li v-bind:class="this.open ? 'dropdown open' : 'dropdown'" v-if="history.length > 0" >
-          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @click="toggle" aria-expanded="{{open}}">History <span class="caret"></span></a>
+        <li tabindex="-1" @blur='toggle("open", 100)' v-bind:class="this.open ? 'dropdown open' : 'dropdown'" v-show="history.length > 0" >
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @click="toggle('open')" aria-expanded="{{open}}">History <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li v-for='standard in history'><a v-link="{ name: 'standard', params: { standardId: standard._id }}" >{{standard.code}}</a></li>
           </ul>
@@ -10,8 +10,9 @@
 <script>
 import {getHistory} from '../../api/standard'
 import bus from '../../bus'
-
+import {toggle} from '../../plugins/mixins'
 export default {
+  mixins: [toggle],
   ready: function () {
     var self = this
     let history = getHistory()
@@ -21,7 +22,6 @@ export default {
       self.history = []
     })
     bus.on('page-reset', function (arg) {
-      self.open = false
       if (arg === 'beforeRoute') {
         let history = getHistory()
         history.then((response) => {
@@ -37,19 +37,12 @@ export default {
       history: [],
       open: false
     }
-  },
-  methods: {
-    toggle () {
-      var temp = !this.open
-      // Passes navbar-dropdown as an arguemnt to prevent the mobile dropdown menu from closing
-      // See Navbar.vue ready->bus.on
-      bus.emit('page-reset', 'navbar-dropdown')
-      this.open = temp
-    }
   }
 }
 </script>
 
 <style scoped>
-  
+  li {
+   outline: none !important;
+  }
 </style>

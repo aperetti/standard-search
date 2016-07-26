@@ -92,7 +92,6 @@
   height: 50px;
   background-color: #428bca;
 }
-
 .divide-text{
     color:#fff;
     line-height: 20px;

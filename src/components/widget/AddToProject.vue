@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import {getProjects, toggleStandard, createProject} from '../../api/project'
+  import {getProjects, toggleStandard} from '../../api/project'
   import bus from '../../bus'
   import {alert} from 'vue-strap'
   export default {
@@ -45,22 +45,13 @@
     },
     ready () {
       bus.on('page-reset', (arg) => {
-        if (arg !== 'addToProject') this.refreshProjects()
+        if (arg === 'addToProject') this.refreshProjects()
         this.open = false
         this.confirm = false
       })
-      this.refreshProjects()
       this.open = false
     },
     methods: {
-      addProject () {
-        createProject(this.newProject).then((result) => {
-          this.refreshProjects()
-          this.confirm = false
-        }).catch((e) => {
-          this.error = true
-        })
-      },
       toggleMenu () {
         var temp = !this.open
         bus.emit('page-reset', 'addToProject')
