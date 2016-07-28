@@ -15,7 +15,8 @@
         <nav-projects :projects='projects'></nav-projects>
       </ul>
     </div>
-</nav>
+  </nav>
+
   <div class='container'>
     <div class='row'>
       <h2>Hello Projects</h2>

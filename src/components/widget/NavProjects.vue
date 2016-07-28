@@ -2,7 +2,7 @@
   <li tabindex="-1" @blur='toggle("open")' v-bind:class="this.open ? 'dropdown open' : 'dropdown'">
     <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @click="toggle('open')" aria-expanded="{{open}}">Projects<span class="caret"></span></a>
     <ul class="dropdown-menu">
-      <li v-for='project in projects' v-link="{name: 'userProjects'}">
+      <li v-for='project in projects' v-link="{name:'projects', params:{projectId: project._id}}">
             <a>{{project.name}}
       </a></li>
     </ul>

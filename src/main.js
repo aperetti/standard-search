@@ -57,8 +57,8 @@ router.map({
     name: 'editStandard',
     component: EditStandard
   },
-  'user/project/:project': {
-    name: 'userProjects',
+  'user/project/:projectId': {
+    name: 'projects',
     component: Projects
   }
 })
