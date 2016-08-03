@@ -108,7 +108,7 @@
       </div>
 
       <!-- CHANGE LOG FORM GROUP -->
-      <div class="form-group {{changelog.length > 0 ? 'has-success' : 'has-warning'}}">
+      <div v-if='showChangelog' class="form-group {{changelog.length > 0 ? 'has-success' : 'has-warning'}}">
         <label for="changelog" placeholder="One or Two Line Description of Changes" class="col-sm-2 col-sm-offset-1 control-label">Changelog</label>
         <div class="col-sm-6 col-xs-10 col-xs-offset-1">
           <textarea rows="2" class="form-control" v-model="changelog"></textarea>
@@ -134,10 +134,10 @@
         </div>
 
       <div class="col-sm-10 col-sm-offset-1 col-xs-12">
-        <div class="panel panel-warning" v-if="changelog.length === 0">
+        <div class="panel panel-warning" v-if="!$vd.file.changelog.valid">
           <div class="panel-heading">Warning</div>
           <div class="list-group">
-            <li class="list-group-item" v-if="changelog.length === 0">It is recommended to add a changelog entry!</li>
+            <li class="list-group-item" v-if="!$vd.file.changelog.valid">It is recommended to add a changelog entry!</li>
           </div>
         </div>
       </div>
@@ -146,7 +146,7 @@
 <script>
   import {apiEditStandard, withToken} from '../api/config'
   import {tooltip, dropdown} from 'vue-strap'
-  import {validStandard, getStandardById, getStandardByFile} from '../api/standard'
+  import {validStandard, getStandardById} from '../api/standard'
   import {hydrateMenu, menuLoading, setCurrentMenu, updateStandard} from '../vuex/actions'
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
@@ -166,6 +166,7 @@
         newGroup: '',
         fileConflict: false,
         fileConflictInfo: {},
+        showChangelog: false,
         standard: {}
       }
     },
@@ -187,23 +188,13 @@
       }
     },
     ready: function () {
-      this.hydrateMenu()
-      // Used to find a file conflict before uploading the file.
-      // This will try to find the Mongo document. If found it will
-      // return the document and the set fileConflict to true
+      // If a file is upload then it is recommended to add a changelog.
       this.$watch('file', () => {
-        var self = this
-        console.log(this.fileName)
-        getStandardByFile(this.fileName + '.pdf').then((response) => {
-          console.log(response)
-          if (response.data) {
-            self.fileConflict = true
-            self.fileConflictInfo = response.data
-          } else {
-            self.fileConflict = false
-            self.fileConflictInfo = {}
-          }
-        })
+        if (this.fileName) {
+          this.showChangelog = true
+        } else {
+          this.showChangelog = false
+        }
       })
 
       // Watch for code to find a conflict with the Name of the standard.
@@ -256,6 +247,7 @@
         file: {
           $name: 'File Upload',
           conflict: {valid: !this.fileConflict || this.file === this.standard.file, msg: 'File is already in use.'},
+          changelog: {valid: !this.showChangelog || this.changelog.length !== 0, msg: 'It is recommended to add a changelog entry!', warning: true},
           type: {
             valid: (extension) => {
               if (this.file.indexof(extension)) {

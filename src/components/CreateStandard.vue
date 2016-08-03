@@ -68,7 +68,6 @@
       <div class="form-group">
         <button class='btn btn-primary' v-if='loading'><img src='../assets/loading.svg'> Uploading </img></button>
         <input class="btn btn-primary" v-if='!loading' :disabled="!$vd.$valid" type="submit" value="Submit">
-        <button class='btn btn-primary' v-if='!loading' @click='test'><img src='../assets/loading.svg'> Uploading </img></button>
       </div>
       
       <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
@@ -81,7 +80,6 @@
             <li class="list-group-item" v-if="!$vd.menu.required.valid">(1) Group Required</li>
             <li class="list-group-item" v-if="!$vd.menu.eachLength.valid(1)">Each Group Must Have a Name</li>
             <li class="list-group-item" v-if="!$vd.file.required.valid">PDF Upload Required</li>
-            <li class="list-group-item" v-if="!$vd.file.conflict.valid">PDF already exists under Standard: {{fileConflictInfo.code}}</li>
           </div>
         </div>
       </div>
@@ -90,28 +88,13 @@
 <script>
   import {apiAddStandard, withToken} from '../api/config'
   import {tooltip} from 'vue-strap'
-  import {validStandard, getStandardByFile} from '../api/standard'
+  import {validStandard} from '../api/standard'
   import {hydrateMenu, menuLoading, setCurrentMenu, updateStandard} from '../vuex/actions'
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
   export default {
     ready: function () {
       this.hydrateMenu()
-      // Used to find a file conflict before uploading the file.
-      // This will try to find the Mongo document. If found it will
-      // return the document and the set fileConflict to true
-      this.$watch('file', () => {
-        var self = this
-        getStandardByFile(this.fileName + '.pdf').then((response) => {
-          if (response.data) {
-            self.fileConflict = true
-            self.fileConflictInfo = response.data
-          } else {
-            self.fileConflict = false
-            self.fileConflictInfo = {}
-          }
-        })
-      })
 
       // Watch for code to find a conflict with the Name of the standard.
       this.$watch('code', () => {
@@ -143,7 +126,6 @@
         addGroup: false,
         newGroup: '',
         menu: [],
-        fileConflict: false,
         fileConflictInfo: {},
         loading: false
       }
@@ -178,7 +160,6 @@
         file: {
           $name: 'File Upload',
           required: {valid: this.file.length > 0, msg: 'PDF Upload is Required'},
-          conflict: {valid: !this.fileConflict, msg: 'File is already in use'},
           type: {
             valid: (extension) => {
               if (this.file.indexof(extension)) {
@@ -226,10 +207,10 @@
         xhr.onload = function () {
           self.loading = false
           if (xhr.status === 200) {
-            console.log('Uploaded')
-            console.log(xhr.response)
             var response = JSON.parse(xhr.response)
-            self.$route.router.go({path: '/admin/standard/edit', param: {standard: response.data._id}})
+            console.log('Uploaded')
+            console.log(response)
+            self.$route.router.go({path: '/admin/standard/edit', param: {standard: xhr.response.data._id}})
           } else {
             console.log('Failed to Upload!')
           }
