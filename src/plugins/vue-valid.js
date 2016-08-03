@@ -15,13 +15,17 @@
           return true
         }
 
+        // Will check each validation group and make sure all of the $valid rules
+        // are upheld. If the validation group starts with '$' they will be ignored
+        // $valid wil be a reflect of the validation group (i.e. if any are false $valid == false).
+        // If the warning flag is set on one of the validation items, then that rule will not cause $valid to fail.
         for (var group in validation) {
           if (group.indexOf('$') !== '0') {
             let vgroup = validation[group]
             vgroup.$valid = (function () {
               for (var key in vgroup) {
                 if (!vgroup[key]) return false
-                else if (typeof vgroup[key] === 'object' && !vgroup[key].valid) return false
+                else if (typeof vgroup[key] === 'object' && !vgroup[key].valid && !vgroup[key].warning) return false
               }
               return true
             })()

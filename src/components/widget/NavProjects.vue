@@ -10,17 +10,10 @@
 </template>
 
 <script>
-import bus from '../../bus'
-import {toggle} from '../../plugins/mixins'
+import {togglers} from '../../plugins/mixins'
 export default {
-  mixins: [toggle],
+  mixins: [togglers],
   props: ['projects'],
-  ready: function () {
-    var self = this
-    bus.on('page-reset', function () {
-      self.open = false
-    })
-  },
   data () {
     return {
       open: false

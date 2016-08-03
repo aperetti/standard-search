@@ -11,15 +11,12 @@
     </div>
     <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
       <ul class="nav navbar-nav">
-        <add-to-project :standard="routerStandard"></add-to-project>
+        <nav-add-to-project :standard="routerStandard"></nav-add-to-project>
       </ul>
     </div>
 </nav>
 <!-- Standard PDF Viewer -->
   <div class='row' style="position: fixed; height: 95%; min-height: 95%; width: 100%;">
-    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: 50px; z-index: 10 !important; position: relative;">
-      <add-to-project :standard="routerStandard"></add-to-project>
-    </div>
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
       <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
       <img v-if="notFound" class="logo" class='photo' src="../assets/logo_s.png">
@@ -31,7 +28,7 @@
   import {withToken, apiGetStandardPdf} from '../api/config'
   import {addHistory} from '../api/standard'
   import StandardMenu from './StandardMenu'
-  import AddToProject from './widget/AddToProject'
+  import NavAddToProject from './widget/NavAddToProject'
   import bus from '../bus'
 
   export default {
@@ -71,7 +68,7 @@
     },
     components: {
       StandardMenu,
-      AddToProject
+      NavAddToProject
     }
   }
 </script>
@@ -80,6 +77,7 @@
   .pdf-frame {
     width: 100%;
     height: 100%;
+    margin-top: 50px;
   }
   .row {
     margin-left: 0px;

@@ -1,5 +1,5 @@
 <template>
-        <li tabindex="-1" @blur='toggle("open", 100)' v-bind:class="this.open ? 'dropdown open' : 'dropdown'">
+        <li tabindex="-1" @blur='toggleDown("open", 100)' v-bind:class="this.open ? 'dropdown open' : 'dropdown'">
           <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @click="toggle('open')" aria-expanded="{{open}}">Admin <span class="caret"></span></a>
           <ul class="dropdown-menu" >
             <li><a v-link="{ name: 'createStandard' }" class='cursor'><span class="glyphicon glyphicon-plus"></span> Add New Standard</a></li>
@@ -9,9 +9,9 @@
 </template>
 
 <script>
-import {toggle} from '../../plugins/mixins'
+import {togglers} from '../../plugins/mixins'
 export default {
-  mixins: [toggle],
+  mixins: [togglers],
   data () {
     return {
       open: false

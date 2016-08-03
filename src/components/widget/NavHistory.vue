@@ -1,5 +1,5 @@
 <template>
-        <li tabindex="-1" @blur='toggle("open", 100)' v-bind:class="this.open ? 'dropdown open' : 'dropdown'" v-show="history.length > 0" >
+        <li tabindex="-1" @blur='toggleDown("open", 100)' v-bind:class="this.open ? 'dropdown open' : 'dropdown'" v-show="history.length > 0" >
           <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @click="toggle('open')" aria-expanded="{{open}}">History <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li v-for='standard in history'><a v-link="{ name: 'standard', params: { standardId: standard._id }}" >{{standard.code}}</a></li>
@@ -10,9 +10,9 @@
 <script>
 import {getHistory} from '../../api/standard'
 import bus from '../../bus'
-import {toggle} from '../../plugins/mixins'
+import {togglers} from '../../plugins/mixins'
 export default {
-  mixins: [toggle],
+  mixins: [togglers],
   ready: function () {
     var self = this
     let history = getHistory()

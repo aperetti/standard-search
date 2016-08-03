@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import {toggle} from '../../plugins/mixins'
+import {togglers} from '../../plugins/mixins'
 export default {
-  mixins: [toggle],
+  mixins: [togglers],
   data () {
     return {
       open: false
