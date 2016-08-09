@@ -9,7 +9,6 @@
 
 <script>
   import StandardView from './StandardView'
-  import {updateStandard} from '../vuex/actions'
   import StandardMenu from './StandardMenu'
   import {elasticSearch} from '../api/config'
   import bus from '../bus'
@@ -28,12 +27,7 @@
         searchCode: true,
         searchDesc: true
       }
-    },
-    vuex: {
-      actions: {
-        updateStandard
-      }
-    },
+    }
     components: {
       StandardView,
       StandardMenu
