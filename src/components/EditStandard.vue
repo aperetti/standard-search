@@ -147,7 +147,7 @@
   import {apiEditStandard, withToken} from '../api/config'
   import {tooltip, dropdown} from 'vue-strap'
   import {validStandard, getStandardById} from '../api/standard'
-  import {hydrateMenu, menuLoading, setCurrentMenu, updateStandard} from '../vuex/actions'
+  import {hydrateMenu} from '../vuex/actions'
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
   export default {
@@ -342,10 +342,7 @@
     },
     vuex: {
       actions: {
-        hydrateMenu,
-        menuLoading,
-        setCurrentMenu,
-        updateStandard
+        hydrateMenu
       },
       getters: {
         allMenus: state => state.standard.menus

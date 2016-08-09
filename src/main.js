@@ -77,10 +77,11 @@ router.beforeEach(function (transition) {
     }, function (res) {
       return transition.abort()
     })
-  }
-  if (transition.to.path.indexOf('/login') !== -1 && loggedIn()) return transition.abort()
+  } else {
+    if (transition.to.path.indexOf('/login') !== -1 && loggedIn()) return transition.abort()
 
-  transition.next()
+    return transition.next()
+  }
 })
 
 router.start(Application, 'body')

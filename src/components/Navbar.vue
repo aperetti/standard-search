@@ -42,6 +42,8 @@
   import NavAdmin from './widget/NavAdmin'
   import NavUser from './widget/NavUser'
   import bus from '../bus'
+  import {setActiveMenu} from 'actions'
+  import {getActiveMenu} from 'getters'
 
   export default {
     ready: function () {
@@ -55,6 +57,8 @@
         if (res.status === 200) {
           self.admin = true
         }
+      }).catch(function (e) {
+        self.admin = false
       })
     },
     components: {
@@ -66,6 +70,7 @@
     },
     data () {
       return {
+        _stdDir: 'STANDARD_DIRECTORY',
         menuOpen: false,
         optionOpen: false,
         admin: false
@@ -73,7 +78,11 @@
     },
     vuex: {
       actions: {
-        logout
+        logout,
+        setActiveMenu
+      },
+      getters: {
+        getActiveMenu
       }
     },
     computed: {
@@ -84,6 +93,7 @@
     },
     methods: {
       toggleOption: function () {
+        this.setActiveMenu(this._stdDir)
         let tempStatus = !this.optionOpen
         bus.emit('page-reset')
         this.optionOpen = tempStatus
