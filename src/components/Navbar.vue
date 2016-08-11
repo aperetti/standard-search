@@ -42,15 +42,15 @@
   import NavAdmin from './widget/NavAdmin'
   import NavUser from './widget/NavUser'
   import bus from '../bus'
-  import {setActiveMenu} from 'actions'
-  import {getActiveMenu} from 'getters'
+  import {togglers} from '../plugins/mixins'
 
   export default {
+    mixins: [togglers],
     ready: function () {
       let getAdmin = isAdmin()
       var self = this
       bus.on('page-reset', function (arg) {
-        if (arg !== 'navbar-dropdown') self.optionOpen = false
+        if (['navbar-dropdown', 'nav-history', 'nav-user', 'nav-admin'].indexOf(arg) === -1) self.optionOpen = false
         self.menuOpen = false
       })
       getAdmin.then(function (res) {
@@ -70,19 +70,15 @@
     },
     data () {
       return {
-        _stdDir: 'STANDARD_DIRECTORY',
         menuOpen: false,
+        mobileNav: false,
         optionOpen: false,
         admin: false
       }
     },
     vuex: {
       actions: {
-        logout,
-        setActiveMenu
-      },
-      getters: {
-        getActiveMenu
+        logout
       }
     },
     computed: {
@@ -93,7 +89,6 @@
     },
     methods: {
       toggleOption: function () {
-        this.setActiveMenu(this._stdDir)
         let tempStatus = !this.optionOpen
         bus.emit('page-reset')
         this.optionOpen = tempStatus

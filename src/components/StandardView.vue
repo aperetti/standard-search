@@ -40,8 +40,8 @@
     route: {
       data: function (transition) {
         addHistory(transition.to.params.standardId).then((res) => {
-          console.log('Placeholder: ', res)
-        }).catch(e => console.log('Add History Error!', e))
+        }).catch(e => console.log('Failed to add Histroy'))
+        // TODO: HANDLE ERROR WHEN STANDARD IS NOT ADDED. IS THIS NEEDED?)
       }
     },
     computed: {

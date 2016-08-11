@@ -27,7 +27,7 @@
         searchCode: true,
         searchDesc: true
       }
-    }
+    },
     components: {
       StandardView,
       StandardMenu

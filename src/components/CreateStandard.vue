@@ -208,22 +208,20 @@
           self.loading = false
           if (xhr.status === 200) {
             var response = JSON.parse(xhr.response)
-            console.log('Uploaded')
-            console.log(response)
-            self.$route.router.go({path: '/admin/standard/edit', param: {standard: xhr.response.data._id}})
+            self.$route.router.go({path: '/admin/standard/edit', param: {standard: response.data._id}})
           } else {
-            console.log('Failed to Upload!')
+            // TODO: HANDLE FAILED STANDARD CREATION
           }
         }
         xhr.send(formData)
-        console.log('Submit Pushed')
+        // TODO: CREATE CONFIRMATION THAT BUTTON HAS BEEN SUBMITTED?
       }
     },
     computed: {
       fileName: function () {
         let array = this.file.split(/(\/|\\)/).slice(-1)[0].split('.')
         array.pop()
-        console.log(array)
+
         return array[0].toLowerCase()
       },
       menus: function () {
