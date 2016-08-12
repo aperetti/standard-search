@@ -34,7 +34,8 @@
   export default {
     ready: function () {
       bus.on('page-reset', (arg) => {
-        if (arg !== 'addToProject') this.optionOpen = false
+        console.log(arg)
+        if (arg !== 'nav-add-to-project') this.optionOpen = false
       })
     },
     route: {

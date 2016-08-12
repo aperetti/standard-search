@@ -1,6 +1,9 @@
 <template>
   <div id="app">
     <navbar v-if='logged'></navbar>
+    <template id="modals">
+
+    </template>
     <div class='container-fluid' style='position:absolute; height: 50px; width: 100%; background-color: #eee;' v-else></div>
     <div class='router'>
       <router-view></router-view>
@@ -14,10 +17,12 @@
   import Navbar from './components/Navbar'
   import {loggedIn} from './api/config'
   import bus from './bus'
+  import CreateProject from 'components/modals/CreateProject'
   export default {
     store,
     components: {
-      Navbar
+      Navbar,
+      CreateProject
     },
     ready: function () {
       var self = this

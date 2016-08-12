@@ -1,29 +1,4 @@
 <template>
-    <!-- Standard subnav -->
-  <nav class="navbar navbar-inverse affix" role="navigation">
-  <div class="container-fluid">
-    <div class="navbar-header">         
-      <a class="navbar-brand">Projects</a>
-      <button type="button" class="navbar-toggle" @click="toggleOption">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="caret caret-mod"></span>
-      </button>
-    </div>
-    <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
-      <ul class="nav navbar-nav">
-        <li><a @click='confirm=true' class='cursor'>Create Project</a></li>
-        <nav-projects :projects='projects'></nav-projects>
-      </ul>
-    </div>
-  </nav>
-
-  <div class='container'>
-    <div class='row'>
-      <h2>Projects</h2>
-      <ul
-    </div>  
-  </div>
-
   <!-- MODAL -->
   <div class="col-xs-12 col-md-4">
     <div class="modal fade in" tabindex="-1" role="dialog" v-if='confirm' style='display:block; margin-top: 100px;'>
@@ -51,27 +26,13 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+  </div>
 </template>
 
 <script>
-  import {getProjects, createProject} from '../api/project'
-  import NavProjects from './widget/NavProjects'
-  import bus from '../bus'
-  import {affix} from 'vue-strap'
+  import {createProject} from '../../api/project'
+  import bus from '../../bus'
   export default {
-    components: {
-      NavProjects,
-      affix
-    },
-    ready () {
-      if (this.$route.query.createProject) this.confirm = true
-      getProjects().then((res) => {
-        this.projects = res.data
-      }).catch((e) => {
-        bus.emit('error', 'Failed to get project results', true)
-        this.projects = []
-      })
-    },
     data () {
       return {
         projects: [],
@@ -92,21 +53,6 @@
           this.error = true
           bus.emit('error', 'Failed to create project. Please try again.')
         })
-      },
-      refreshProjects () {
-        getProjects().then((response) => {
-          var temp = response.data
-          temp.forEach((project, i, arr) => {
-            project.loading = false
-            project.hasStandard = !(project.standards.indexOf(this.standard) === -1)
-          })
-          this.projects = temp
-        })
-      },
-      toggleOption () {
-        var temp = !this.optionOpen
-        bus.emit('page-reset', 'standardView')
-        this.optionOpen = temp
       }
     }
   }

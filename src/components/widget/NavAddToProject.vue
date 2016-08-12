@@ -1,17 +1,23 @@
 <template>
       <li v-bind:class="this.open ? 'dropdown open' : 'dropdown'" >
-        <a tabindex='-1' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @blur="toggleDown('open', 50, 'projects')"  @click="toggle('open')" aria-expanded="{{open}}">Add to Project<span class="caret"></span></a>
-        <ul class="dropdown-menu">
+        <a tabindex='-1' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @blur="toggleDown('open', 50, 'projects')"  @click="toggle('open')" aria-expanded="{{open}}">
+          Add to Project
+          <span v-if='loading === false' class="caret"></span>
+          <span v-if='loading === true'></span>
+          <img v-if='loading' src='../../assets/greyLoading18.svg'>
+        </a>
+        <ul class="dropdown-menu" v-show='!loading'>
           <li v-show='projects.length === 0' class="dropdown-header">No Projects</li>
-          <li v-show='projects.length === 0' >
-            <a tabindex='-1' v-link="{ name: 'projects'}" id='projects-{{$index}}' @blur="toggleDown('open', 100, 'proj', $event)"> Create One?</a>
+          <li  v-show='projects.length === 0'>
+            <a tabindex='-1' v-link="{ name: 'projectsHome', query:{createProject: true}}" id='projects-{{$index}}' @blur="toggleDown('open', 100, 'proj', $event)"> Create One?</a>
           </li>
-          <li v-for='project in projects' >
+          <li v-for='project in projects'>
             <a tabindex='-1'  @click='toggleProject(project._id, $index)' id='projects-{{$index}}' @blur="toggleDown('open', 100, 'proj', $event)">{{project.name}}
              <span v-if='!project.hasStandard && !project.loading' class="glyphicon glyphicon-plus pull-right"></span>
-          <img src='../../assets/greyLoading18.svg' class='pull-right' v-if='project.loading'>
+          
           <span v-if='project.hasStandard && !project.loading' class="glyphicon glyphicon-ok pull-right"></span>
-            </a></li>
+            </a>
+          </li>
         </ul>
       </li>
   </div>    
@@ -31,8 +37,7 @@
     },
     ready () {
       bus.on('page-reset', (arg) => {
-        if (arg === this.$options.name) {
-          this.loading = true
+        if (arg === this.$options.name && !this.open) {
           this.refreshProjects()
         }
       })
@@ -47,7 +52,9 @@
         })
       },
       refreshProjects () {
+        this.loading = true
         getProjects().then((response) => {
+          this.loading = false
           var temp = response.data
           temp.forEach((project, i, arr) => {
             project.loading = false
@@ -90,6 +97,9 @@
   }
   .cursor {
     cursor: pointer;
+  }
+  li a {
+   outline: none !important;
   }
 
 </style>

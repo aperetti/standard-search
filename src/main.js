@@ -60,6 +60,10 @@ router.map({
   'user/project/:projectId': {
     name: 'projects',
     component: Projects
+  },
+  'user/project/': {
+    name: 'projectsHome',
+    component: Projects
   }
 })
 
