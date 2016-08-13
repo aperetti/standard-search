@@ -9,12 +9,11 @@
         <ul class="dropdown-menu" v-show='!loading'>
           <li v-show='projects.length === 0' class="dropdown-header">No Projects</li>
           <li  v-show='projects.length === 0'>
-            <a tabindex='-1' v-link="{ name: 'projectsHome', query:{createProject: true}}" id='projects-{{$index}}' @blur="toggleDown('open', 100, 'proj', $event)"> Create One?</a>
+            <a tabindex='-1' @click='close' id='projects-{{$index}}' @blur="toggleDown('open', 100, 'proj', $event)"> Create One?</a>
           </li>
           <li v-for='project in projects'>
             <a tabindex='-1'  @click='toggleProject(project._id, $index)' id='projects-{{$index}}' @blur="toggleDown('open', 100, 'proj', $event)">{{project.name}}
-             <span v-if='!project.hasStandard && !project.loading' class="glyphicon glyphicon-plus pull-right"></span>
-          
+             <span v-if='!project.hasStandard && !project.loading' class="glyphicon glyphicon-plus pull-right"></span>      
           <span v-if='project.hasStandard && !project.loading' class="glyphicon glyphicon-ok pull-right"></span>
             </a>
           </li>
@@ -28,8 +27,14 @@
   import bus from '../../bus'
   import {alert} from 'vue-strap'
   import {togglers} from '../../plugins/mixins'
+  import {setCreateProject} from 'src/vuex/actions'
 
   export default {
+    vuex: {
+      actions: {
+        setCreateProject
+      }
+    },
     mixins: [togglers],
     props: ['standard'],
     route: {
@@ -62,6 +67,9 @@
           })
           this.projects = temp
         })
+      },
+      close () {
+        this.setCreateProject(true)
       }
     },
     computed: {

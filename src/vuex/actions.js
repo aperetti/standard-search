@@ -41,3 +41,7 @@ export const login = ({dispatch}, response) => {
   let token = {token: response.data.token, expiration: response.data.expires}
   dispatch(types.SET_TOKEN, token)
 }
+
+export const setCreateProject = ({dispatch}, set) => {
+  dispatch(types.SET_CREATEPROJECT, set)
+}

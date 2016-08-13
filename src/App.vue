@@ -1,10 +1,11 @@
 <template>
   <div id="app">
     <navbar v-if='logged'></navbar>
-    <template id="modals">
-
-    </template>
     <div class='container-fluid' style='position:absolute; height: 50px; width: 100%; background-color: #eee;' v-else></div>
+
+    <!-- MODALS -->
+    <create-project v-if='modals.CreateProject.enabled'></create-project>
+
     <div class='router'>
       <router-view></router-view>
     </div>  
@@ -15,9 +16,10 @@
   import store from './vuex/store'
   import {logout, setToken} from './vuex/actions'
   import Navbar from './components/Navbar'
+  // MODAL Components
+  import CreateProject from 'components/modals/CreateProject'
   import {loggedIn} from './api/config'
   import bus from './bus'
-  import CreateProject from 'components/modals/CreateProject'
   export default {
     store,
     components: {
@@ -49,7 +51,8 @@
     },
     vuex: {
       getters: {
-        expiration: state => state.standard.token.expiration
+        expiration: state => state.standard.token.expiration,
+        modals: state => state.modals
       },
       actions: {
         logout,

@@ -175,7 +175,6 @@
         var file = getStandardById(transition.to.params.standardId)
         return file.then((response) => {
           var standard = response.data
-          console.log(standard)
           return {
             code: standard.code,
             desc: standard.desc,
@@ -308,22 +307,19 @@
         xhr.open('POST', withToken(apiEditStandard), true)
         xhr.onload = function () {
           if (xhr.status === 200) {
-            console.log('Uploaded')
-            console.log(xhr.response)
+            // TODO: PROVIDE CONFIRMATION THAT THE STANDARD HAS BEEN EDITED
           } else {
-            console.log(xhr.response)
-            console.log('Failed to Upload!')
+            // TODO: HANDLE ERROR WHEN EDITING STANDARD FAILS (NOTIFICATION)
           }
         }
         xhr.send(formData)
-        console.log('Submit Pushed')
+        // TODO: PROVIDE CONFIRMATION THE STANDARD EDIT IS BEING SAVED
       }
     },
     computed: {
       fileName: function () {
         let array = this.file.split(/(\/|\\)/).slice(-1)[0].split('.')
         array.pop()
-        console.log(array)
         return array[0].toLowerCase()
       },
       menus: function () {

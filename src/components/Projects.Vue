@@ -11,7 +11,7 @@
     </div>
     <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
       <ul class="nav navbar-nav">
-        <li><a @click='confirm=true' class='cursor'>Create Project</a></li>
+        <li><a @click='createProject' class='cursor'>Create Project</a></li>
         <nav-projects :projects='projects'></nav-projects>
       </ul>
     </div>
@@ -54,7 +54,8 @@
 </template>
 
 <script>
-  import {getProjects, createProject} from '../api/project'
+  import {getProjects} from 'src/api/project'
+  import {setCreateProject} from 'src/vuex/actions'
   import NavProjects from './widget/NavProjects'
   import bus from '../bus'
   import {affix} from 'vue-strap'
@@ -62,6 +63,11 @@
     components: {
       NavProjects,
       affix
+    },
+    vuex: {
+      actions: {
+        setCreateProject
+      }
     },
     ready () {
       if (this.$route.query.createProject) this.confirm = true
@@ -74,24 +80,12 @@
     },
     data () {
       return {
-        projects: [],
-        newProject: '',
-        projectDesc: '',
-        confirm: false,
         optionOpen: false
       }
     },
     methods: {
-      addProject () {
-        createProject(this.newProject, this.projectDesc).then((result) => {
-          this.newProject = ''
-          this.projectDesc = ''
-          this.refreshProjects()
-          this.confirm = false
-        }).catch((e) => {
-          this.error = true
-          bus.emit('error', 'Failed to create project. Please try again.')
-        })
+      createProject () {
+        this.setCreateProject(true)
       },
       refreshProjects () {
         getProjects().then((response) => {

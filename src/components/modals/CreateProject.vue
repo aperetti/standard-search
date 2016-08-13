@@ -1,11 +1,11 @@
 <template>
   <!-- MODAL -->
   <div class="col-xs-12 col-md-4">
-    <div class="modal fade in" tabindex="-1" role="dialog" v-if='confirm' style='display:block; margin-top: 100px;'>
+    <div class="modal fade in" tabindex="-1" role="dialog" style='display:block; margin-top: 100px;'>
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" @click='confirm = false' data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" @click='close' data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">Create Project</h4>
           </div>
           <div class="modal-body">
@@ -20,7 +20,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default"  @click='confirm = false' data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default"  @click='close' data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" @click='addProject()' @keyup.enter='addProject()'>Add Project</button>
           </div>
         </div><!-- /.modal-content -->
@@ -30,9 +30,15 @@
 </template>
 
 <script>
-  import {createProject} from '../../api/project'
-  import bus from '../../bus'
+  import {createProject} from 'src/api/project'
+  import bus from 'src/bus'
+  import {setCreateProject} from 'src/vuex/actions'
   export default {
+    vuex: {
+      actions: {
+        setCreateProject
+      }
+    },
     data () {
       return {
         projects: [],
@@ -49,10 +55,14 @@
           this.projectDesc = ''
           this.refreshProjects()
           this.confirm = false
+          this.setCreateProject = false
         }).catch((e) => {
-          this.error = true
+          this.setCreateProject = false
           bus.emit('error', 'Failed to create project. Please try again.')
         })
+      },
+      close () {
+        this.setCreateProject(false)
       }
     }
   }
