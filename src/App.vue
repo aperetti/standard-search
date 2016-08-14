@@ -1,10 +1,11 @@
 <template>
   <div id="app">
+    <create-project class='modal-dimmer' v-if='modals.CreateProject.enabled'></create-project>
     <navbar v-if='logged'></navbar>
     <div class='container-fluid' style='position:absolute; height: 50px; width: 100%; background-color: #eee;' v-else></div>
 
     <!-- MODALS -->
-    <create-project v-if='modals.CreateProject.enabled'></create-project>
+    
 
     <div class='router'>
       <router-view></router-view>
@@ -73,7 +74,10 @@
   height: 100%;
 }
 .navbar {
-  z-index: 9999;
+  z-index: 99;
+}
+.modal-dimmer {
+  z-index: 999;
 }
 .router {
   position: relative;

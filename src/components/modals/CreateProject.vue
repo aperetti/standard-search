@@ -1,51 +1,33 @@
 <template>
-  <!-- MODAL -->
-  <div class="col-xs-12 col-md-4">
-    <div class="modal fade in" tabindex="-1" role="dialog" style='display:block; margin-top: 100px;'>
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" @click='close' data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Create Project</h4>
-          </div>
-          <div class="modal-body">
-            <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">Project</span>
-              <input type="text" class="form-control" placeholder="Name of your project..." aria-describedby="basic-addon1" v-model="newProject">
-            </div>
-            <br>
-            <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">Description</span>
-              <input type="text" class="form-control" placeholder="Short description..." aria-describedby="basic-addon1" v-model="projectDesc">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default"  @click='close' data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" @click='addProject()' @keyup.enter='addProject()'>Add Project</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-  </div>
+  <base-modal :callback='addProject' v-ref:basemodal>
+    <template slot='title'>Create Project</template>
+    <template slot='body'>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Project</span>
+        <input type="text" class="form-control" placeholder="Name of your project..." aria-describedby="basic-addon1" v-model="newProject">
+      </div>
+      <br>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Description</span>
+        <input type="text" class="form-control" placeholder="Short description..." aria-describedby="basic-addon1" v-model="projectDesc">
+      </div>
+    </template>
+    <template slot='button'><button type="button" class="btn btn-primary" @click='addProject' @keyup.enter='addProject'>Add Project</button></template>
+  </base-modal>
 </template>
 
 <script>
   import {createProject} from 'src/api/project'
+  import BaseModal from './BaseModal'
   import bus from 'src/bus'
-  import {setCreateProject} from 'src/vuex/actions'
   export default {
-    vuex: {
-      actions: {
-        setCreateProject
-      }
+    components: {
+      BaseModal
     },
     data () {
       return {
-        projects: [],
         newProject: '',
-        projectDesc: '',
-        confirm: false,
-        optionOpen: false
+        projectDesc: ''
       }
     },
     methods: {
@@ -53,25 +35,17 @@
         createProject(this.newProject, this.projectDesc).then((result) => {
           this.newProject = ''
           this.projectDesc = ''
-          this.refreshProjects()
-          this.confirm = false
-          this.setCreateProject = false
-        }).catch((e) => {
-          this.setCreateProject = false
-          bus.emit('error', 'Failed to create project. Please try again.')
+          this.$refs.basemodal.close()
+        }).catch((er) => {
+          bus.emit('bus-error', 'Could not create Proect')
+          this.$refs.basemodal.close()
         })
-      },
-      close () {
-        this.setCreateProject(false)
       }
     }
   }
 </script>
 
 <style scoped>
-.container {
-  margin-top: 50px;
-}
 .affix {
   top: 50px;
   width:100%;

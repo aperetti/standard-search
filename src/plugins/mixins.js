@@ -1,4 +1,5 @@
 import bus from '../bus'
+import * as types from 'src/vuex/mutation-types'
 
 export const togglers = {
   methods: {
@@ -14,7 +15,7 @@ export const togglers = {
         }
       }
 
-      bus.emit('page-reset', this.$options.name)
+      bus.emit('page-reset', this.$options.name, !next)
       setTimeout(() => {
         this.$set(arg, next)
       }, time + 50)
@@ -35,3 +36,13 @@ export const togglers = {
     }
   }
 }
+
+export const modals = {
+  vuex: {
+    actions: {
+      openCreateProject: ({dispatch}) => dispatch(types.SET_CREATEPROJECT, true),
+      closeCreateProject: ({dispatch}) => dispatch(types.SET_CREATEPROJECT, false)
+    }
+  }
+}
+

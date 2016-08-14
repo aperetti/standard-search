@@ -1,19 +1,32 @@
 <template>
-  <li tabindex="-1" @blur='toggleDown("open")' v-bind:class="this.open ? 'dropdown open' : 'dropdown'">
-    <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @click="toggle('open')" aria-expanded="{{open}}">Projects<span class="caret"></span></a>
-    <ul class="dropdown-menu">
-      <li v-for='project in projects' v-link="{name:'projects', params:{projectId: project._id}}">
-            <a>{{project.name}}
-      </a></li>
-    </ul>
-  </li>
+  <drop-down>
+    <template slot='title'>Projects</template>
+    <template slot='dropdown'>
+    <li v-show='projects.length === 0' class="dropdown-header">No Projects</li>
+        <li  v-show='projects.length === 0'>
+          <a tabindex='-1' @click=''> Create One?</a>
+        </li>
+        <li v-for='project in projects' v-link="{name:'projects', params:{projectId: project._id}}">
+          <a>{{project.name}}</a>
+    </template>
+  </drop-down>
 </template>
 
 <script>
-import {togglers} from '../../plugins/mixins'
+import {modals} from '../../plugins/mixins'
+import DropDown from 'components/widget/DropDown'
+
 export default {
-  mixins: [togglers],
-  props: ['projects'],
+  components: {
+    DropDown
+  },
+  mixins: [modals],
+  props: {
+    projects: {
+      type: Array,
+      default: () => []
+    }
+  },
   data () {
     return {
       open: false

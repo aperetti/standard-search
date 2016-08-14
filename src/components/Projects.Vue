@@ -11,8 +11,8 @@
     </div>
     <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
       <ul class="nav navbar-nav">
-        <li><a @click='createProject' class='cursor'>Create Project</a></li>
-        <nav-projects :projects='projects'></nav-projects>
+        <li><a @click='openCreateProject' class='cursor'>Create Project</a></li>
+        <nav-projects @click='refreshProjects' :projects='projects'></nav-projects>
       </ul>
     </div>
   </nav>
@@ -23,34 +23,6 @@
       <ul
     </div>  
   </div>
-
-  <!-- MODAL -->
-  <div class="col-xs-12 col-md-4">
-    <div class="modal fade in" tabindex="-1" role="dialog" v-if='confirm' style='display:block; margin-top: 100px;'>
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" @click='confirm = false' data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Create Project</h4>
-          </div>
-          <div class="modal-body">
-            <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">Project</span>
-              <input type="text" class="form-control" placeholder="Name of your project..." aria-describedby="basic-addon1" v-model="newProject">
-            </div>
-            <br>
-            <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1">Description</span>
-              <input type="text" class="form-control" placeholder="Short description..." aria-describedby="basic-addon1" v-model="projectDesc">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default"  @click='confirm = false' data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" @click='addProject()' @keyup.enter='addProject()'>Add Project</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 </template>
 
 <script>
@@ -58,11 +30,11 @@
   import {setCreateProject} from 'src/vuex/actions'
   import NavProjects from './widget/NavProjects'
   import bus from '../bus'
-  import {affix} from 'vue-strap'
+  import {modals} from 'src/plugins/mixins'
   export default {
+    mixins: [modals],
     components: {
-      NavProjects,
-      affix
+      NavProjects
     },
     vuex: {
       actions: {
@@ -70,7 +42,6 @@
       }
     },
     ready () {
-      if (this.$route.query.createProject) this.confirm = true
       getProjects().then((res) => {
         this.projects = res.data
       }).catch((e) => {
@@ -80,7 +51,8 @@
     },
     data () {
       return {
-        optionOpen: false
+        optionOpen: false,
+        projects: []
       }
     },
     methods: {
@@ -89,12 +61,7 @@
       },
       refreshProjects () {
         getProjects().then((response) => {
-          var temp = response.data
-          temp.forEach((project, i, arr) => {
-            project.loading = false
-            project.hasStandard = !(project.standards.indexOf(this.standard) === -1)
-          })
-          this.projects = temp
+          this.projects = response.data
         })
       },
       toggleOption () {

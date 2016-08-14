@@ -1,48 +1,39 @@
 <template>
-      <li v-bind:class="this.open ? 'dropdown open' : 'dropdown'" >
-        <a tabindex='-1' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @blur="toggleDown('open', 50, 'projects')"  @click="toggle('open')" aria-expanded="{{open}}">
-          Add to Project
-          <span v-if='loading === false' class="caret"></span>
-          <span v-if='loading === true'></span>
-          <img v-if='loading' src='../../assets/greyLoading18.svg'>
-        </a>
-        <ul class="dropdown-menu" v-show='!loading'>
-          <li v-show='projects.length === 0' class="dropdown-header">No Projects</li>
-          <li  v-show='projects.length === 0'>
-            <a tabindex='-1' @click='close' id='projects-{{$index}}' @blur="toggleDown('open', 100, 'proj', $event)"> Create One?</a>
-          </li>
-          <li v-for='project in projects'>
-            <a tabindex='-1'  @click='toggleProject(project._id, $index)' id='projects-{{$index}}' @blur="toggleDown('open', 100, 'proj', $event)">{{project.name}}
-             <span v-if='!project.hasStandard && !project.loading' class="glyphicon glyphicon-plus pull-right"></span>      
-          <span v-if='project.hasStandard && !project.loading' class="glyphicon glyphicon-ok pull-right"></span>
-            </a>
-          </li>
-        </ul>
-      </li>
-  </div>    
+    <drop-down :loading='loading' persistant='projects'>
+      <template slot='title'>Add To Project</template>
+      <template slot='dropdown'>
+        <li v-show='projects.length === 0' class="dropdown-header">No Projects</li>
+        <li  v-show='projects.length === 0'>
+          <a tabindex='-1' @click='openCreateProject()' id='projects-{{$index}}'> Create One?</a>
+        </li>
+        <li v-show='projects.length !== 0' class="dropdown-header">Click a Project to add or remove this Standard</li>
+        <li v-for='project in projects'>
+          <a tabindex='-1'  @click='toggleProject(project._id, $index)' id='projects-{{$index}}' style='display:inline; margin-bottom: 10px;'>{{project.name}}
+            <span class='pull-right'>
+              <span v-if='!project.hasStandard && !project.loading' class="glyphicon glyphicon-plus" ></span>      
+              <span v-if='project.hasStandard && !project.loading' class="glyphicon glyphicon-ok" ></span>
+            </span>
+          </a>
+        </li>
+      </template>
+    </drop-down>
 </template>
 
 <script>
   import {getProjects, toggleStandard} from '../../api/project'
   import bus from '../../bus'
-  import {alert} from 'vue-strap'
-  import {togglers} from '../../plugins/mixins'
-  import {setCreateProject} from 'src/vuex/actions'
+  import {modals} from 'src/plugins/mixins'
+  import DropDown from 'components/widget/DropDown'
 
   export default {
-    vuex: {
-      actions: {
-        setCreateProject
-      }
-    },
-    mixins: [togglers],
+    mixins: [modals],
     props: ['standard'],
     route: {
       canReuse: false
     },
     ready () {
-      bus.on('page-reset', (arg) => {
-        if (arg === this.$options.name && !this.open) {
+      bus.on('page-reset', (trail, prev) => {
+        if (!prev) {
           this.refreshProjects()
         }
       })
@@ -68,7 +59,7 @@
           this.projects = temp
         })
       },
-      close () {
+      openCreateProject () {
         this.setCreateProject(true)
       }
     },
@@ -76,14 +67,12 @@
     },
     data () {
       return {
-        open: false,
         projects: [],
-        error: false,
         loading: false
       }
     },
     components: {
-      alert
+      DropDown
     }
   }
 </script>
