@@ -7,8 +7,8 @@
           <a tabindex='-1' @click='openCreateProject()' id='projects-{{$index}}'> Create One?</a>
         </li>
         <li v-show='projects.length !== 0' class="dropdown-header">Click a Project to add or remove this Standard</li>
-        <li v-for='project in projects'>
-          <a tabindex='-1'  @click='toggleProject(project._id, $index)' id='projects-{{$index}}' style='display:inline; margin-bottom: 10px;'>{{project.name}}
+        <li v-for='project in projects'  @click='toggleProject(project._id, $index)'>
+          <a tabindex='-1' id='projects-{{$index}}' style='display:inline; margin-bottom: 10px; width:100%;'>{{project.name}}
             <span class='pull-right'>
               <span v-if='!project.hasStandard && !project.loading' class="glyphicon glyphicon-plus" ></span>      
               <span v-if='project.hasStandard && !project.loading' class="glyphicon glyphicon-ok" ></span>

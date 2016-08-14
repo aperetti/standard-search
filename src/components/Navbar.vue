@@ -47,12 +47,14 @@
   export default {
     mixins: [togglers],
     ready: function () {
+      bus.on('page-reset', (arg) => {
+        if (arg !== 'drop-down') {
+          this.optionOpen = false
+          this.menuOpen = false
+        }
+      })
       let getAdmin = isAdmin()
       var self = this
-      bus.on('page-reset', function (arg) {
-        if (['navbar-dropdown', 'nav-history', 'nav-user', 'nav-admin'].indexOf(arg) === -1) self.optionOpen = false
-        self.menuOpen = false
-      })
       getAdmin.then(function (res) {
         if (res.status === 200) {
           self.admin = true

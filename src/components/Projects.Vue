@@ -41,6 +41,11 @@
       }
     },
     ready () {
+      bus.on('page-reset', (arg) => {
+        if (arg !== 'drop-down') {
+          this.optionOpen = false
+        }
+      })
       getProjects().then((res) => {
         this.projects = res.data
       }).catch((e) => {

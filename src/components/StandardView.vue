@@ -32,12 +32,6 @@
   import bus from '../bus'
 
   export default {
-    ready: function () {
-      bus.on('page-reset', (arg) => {
-        console.log(arg)
-        if (arg !== 'nav-add-to-project') this.optionOpen = false
-      })
-    },
     route: {
       data: function (transition) {
         addHistory(transition.to.params.standardId).then((res) => {

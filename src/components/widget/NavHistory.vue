@@ -1,17 +1,21 @@
 <template>
-        <li tabindex="-1" @blur='toggleDown("open", 100)' v-bind:class="this.open ? 'dropdown open' : 'dropdown'" v-show="history.length > 0" >
-          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" @click="toggle('open')" aria-expanded="{{open}}">History <span class="caret"></span></a>
-          <ul class="dropdown-menu">
+        <drop-down v-show="history.length > 0">
+          <template slot='title'>History</template>
+          <template slot='dropdown'>
             <li v-for='standard in history'><a v-link="{ name: 'standard', params: { standardId: standard._id }}" >{{standard.code}}</a></li>
-          </ul>
-        </li>
+          </template>
+        </drop-down>
 </template>
 
 <script>
 import {getHistory} from '../../api/standard'
 import bus from '../../bus'
 import {togglers} from '../../plugins/mixins'
+import DropDown from 'components/widget/DropDown'
 export default {
+  components: {
+    DropDown
+  },
   mixins: [togglers],
   ready: function () {
     var self = this
