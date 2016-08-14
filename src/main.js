@@ -52,11 +52,13 @@ router.map({
     name: 'createStandard',
     component: function (resolve) {
       require(['components/CreateStandard'], resolve)
+    }
   },
   '/admin/standard/edit/:standardId': {
     name: 'editStandard',
     component: function (resolve) {
       require(['components/EditStandard'], resolve)
+    }
   },
   'user/project/:projectId': {
     name: 'projects',
