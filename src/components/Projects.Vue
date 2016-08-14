@@ -45,7 +45,7 @@
       getProjects().then((res) => {
         this.projects = res.data
       }).catch((e) => {
-        bus.emit('error', 'Failed to get project results', true)
+        bus.emit('alert', 'danger', 'Failed to get project results', true)
         this.projects = []
       })
     },

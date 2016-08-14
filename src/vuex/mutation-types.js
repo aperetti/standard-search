@@ -5,4 +5,5 @@ export const MENU_LOADING = 'MENU_LOADING'
 export const SET_MENU_STANDARDS = 'SET_MENU_STANDARDS'
 
 // Modals
+export const CLOSE_MODALS = 'CLOSE_MODALS'
 export const SET_CREATEPROJECT = 'SET_CREATEPROJECT'

@@ -22,16 +22,16 @@
 </template>
 
 <script>
-  import {setCreateProject} from 'src/vuex/actions'
+  import {closeModals} from 'src/vuex/actions'
   export default {
     vuex: {
       actions: {
-        setCreateProject
+        closeModals
       }
     },
     methods: {
       close () {
-        this.setCreateProject(false)
+        this.closeModals()
       }
     }
   }

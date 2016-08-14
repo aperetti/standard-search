@@ -58,7 +58,7 @@
           this.setCreateProject = false
         }).catch((e) => {
           this.setCreateProject = false
-          bus.emit('error', 'Failed to create project. Please try again.')
+          bus.emit('alert', 'danger', 'Failed to create project. Please try again.')
         })
       },
       close () {

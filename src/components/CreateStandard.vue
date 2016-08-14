@@ -1,5 +1,5 @@
 <template>
-    <form style="padding-left:20px;" class="form-horizontal" action="{{submitUrl}}" method="POST" enctype="multipart/form-data" v-on:submit.prevent="onSubmit">
+    <form class="form-horizontal well" action="{{submitUrl}}" method="POST" enctype="multipart/form-data" v-on:submit.prevent="onSubmit">
     <div class="page-header"><h2 class="text-left">Create Standard</h2></div>
       <div class="form-group {{$vd.code.$valid ? 'has-success' : 'has-error'}}">
         <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Standard Code</label>
@@ -70,16 +70,18 @@
         <input class="btn btn-primary" v-if='!loading' :disabled="!$vd.$valid" type="submit" value="Submit">
       </div>
       
-      <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
-        <div class="panel panel-danger" v-if="!$vd.$valid">
-          <div class="panel-heading">Errors</div>
-          <div class="list-group">
-            <li class="list-group-item" v-if="!$vd.code.required.valid">Standard Code Required</li>
-            <li class="list-group-item" v-if="!$vd.code.conflict.valid && code.length !== 0">Standard Name Already Used</li>
-            <li class="list-group-item" v-if="!$vd.desc.required.valid">Standard Description Required</li>
-            <li class="list-group-item" v-if="!$vd.menu.required.valid">(1) Group Required</li>
-            <li class="list-group-item" v-if="!$vd.menu.eachLength.valid(1)">Each Group Must Have a Name</li>
-            <li class="list-group-item" v-if="!$vd.file.required.valid">PDF Upload Required</li>
+      <div class="form-group">
+        <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+          <div class="panel panel-danger" v-if="!$vd.$valid">
+            <div class="panel-heading">Errors</div>
+            <div class="list-group">
+              <li class="list-group-item" v-if="!$vd.code.required.valid">Standard Code Required</li>
+              <li class="list-group-item" v-if="!$vd.code.conflict.valid && code.length !== 0">Standard Name Already Used</li>
+              <li class="list-group-item" v-if="!$vd.desc.required.valid">Standard Description Required</li>
+              <li class="list-group-item" v-if="!$vd.menu.required.valid">(1) Group Required</li>
+              <li class="list-group-item" v-if="!$vd.menu.eachLength.valid(1)">Each Group Must Have a Name</li>
+              <li class="list-group-item" v-if="!$vd.file.required.valid">PDF Upload Required</li>
+            </div>
           </div>
         </div>
       </div>
@@ -250,9 +252,19 @@
 </script>
 
 <style scoped>
-  .pdf-frame {
-    width: 100%;
-    height: 100%;
+  .form-group {
+    margin-right: 0px;
+    margin-left: 0px;
   }
+  .form-horizontal {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .well {
+   background-color: rgba(248, 248, 248, 0.32);
+   margin: 5px;
+}
 </style>
 

@@ -45,3 +45,7 @@ export const login = ({dispatch}, response) => {
 export const setCreateProject = ({dispatch}, set) => {
   dispatch(types.SET_CREATEPROJECT, set)
 }
+
+export const closeModals = ({dispatch}) => {
+  dispatch(types.CLOSE_MODALS)
+}
