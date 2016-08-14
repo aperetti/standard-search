@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <create-project class='modal-dimmer' v-if='modals.CreateProject.enabled'></create-project>
+    <create-project v-if='modals.CreateProject.enabled'></create-project>
     <navbar v-if='logged'></navbar>
     <div class='container-fluid' style='position:absolute; height: 50px; width: 100%; background-color: #eee;' v-else></div>
 

@@ -20,7 +20,6 @@
   <div class='container'>
     <div class='row'>
       <h2>Projects</h2>
-      <ul
     </div>  
   </div>
 </template>

@@ -5,7 +5,6 @@ import App from './App'
 import Projects from './components/Projects'
 import EditStandard from './components/EditStandard'
 import StandardView from './components/StandardView'
-import CreateStandard from './components/CreateStandard'
 import Landing from './components/Landing'
 import Login from './components/Login'
 import {loggedIn} from './api/config'
@@ -51,11 +50,13 @@ router.map({
   },
   '/admin/standard/create': {
     name: 'createStandard',
-    component: CreateStandard
+    component: function (resolve) {
+      require(['components/CreateStandard'], resolve)
   },
   '/admin/standard/edit/:standardId': {
     name: 'editStandard',
-    component: EditStandard
+    component: function (resolve) {
+      require(['components/EditStandard'], resolve)
   },
   'user/project/:projectId': {
     name: 'projects',

@@ -12,8 +12,8 @@ const mutations = {
   },
   [t.CLOSE_MODALS] (state) {
     for (var key in state) {
-      if (state[key].enable) {
-        state[key].enable = false
+      if (state[key].enabled) {
+        state[key].enabled = false
       }
     }
   }
