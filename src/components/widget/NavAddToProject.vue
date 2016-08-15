@@ -49,12 +49,12 @@
       },
       refreshProjects () {
         this.loading = true
-        getProjects().then((response) => {
+        getProjects(this.$route.params.standardId).then((response) => {
           this.loading = false
           var temp = response.data
           temp.forEach((project, i, arr) => {
             project.loading = false
-            project.hasStandard = !(project.standards.indexOf(this.standard) === -1)
+            // project.hasStandard = !(project.standards.indexOf(this.standard) === -1)
           })
           this.projects = temp
         })

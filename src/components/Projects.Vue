@@ -20,12 +20,31 @@
   <div class='container'>
     <div class='row'>
       <h2>Projects</h2>
+      <ul class="list-group" v-if='!$route.params.projectId'>
+        <li v-for='project in projects' class="list-group-item">
+          <span class="pull-right glyphicon glyphicon-trash" @click='delProject(project._id)'></span>
+          <a  v-link="{name:'projects', params:{projectId: project._id}}">{{project.name}}</a>
+        </li>
+      </ul>
+      <!-- FOR WHEN PROJECT IS SELECTED --> 
+      <div class="panel panel-default" v-if='$route.params.projectId'>
+        <div class="panel-heading">
+          <h3 class="panel-title">Panel title</h3>
+        </div>
+        <div class="panel-body">
+          Panel content
+        </div>
+      </div>
+
+
+
+
     </div>  
   </div>
 </template>
 
 <script>
-  import {getProjects} from 'src/api/project'
+  import {getProjects, getProject, deleteProject} from 'src/api/project'
   import {setCreateProject} from 'src/vuex/actions'
   import NavProjects from './widget/NavProjects'
   import bus from '../bus'
@@ -41,11 +60,17 @@
       }
     },
     ready () {
+      // For mobile menu prevent closing
       bus.on('page-reset', (arg) => {
         if (arg !== 'drop-down') {
           this.optionOpen = false
         }
       })
+      if (this.$route.params.projectId) {
+        getProject(this.$route.params.projectId).then((res) => {
+          this.currentProject = res.data
+        })
+      }
       getProjects().then((res) => {
         this.projects = res.data
       }).catch((e) => {
@@ -56,12 +81,19 @@
     data () {
       return {
         optionOpen: false,
-        projects: []
+        projects: [],
+        currentProject: {}
       }
     },
     methods: {
       createProject () {
         this.setCreateProject(true)
+      },
+      delProject (projectId) {
+        deleteProject(projectId).then((res) => {
+          bus.emit('alert', 'success', 'Project Succesfully Delete. Refreshing Projects!')
+          this.refreshProjects()
+        })
       },
       refreshProjects () {
         getProjects().then((response) => {
@@ -73,6 +105,9 @@
         bus.emit('page-reset', 'standardView')
         this.optionOpen = temp
       }
+    },
+    computed: {
+
     }
   }
 </script>

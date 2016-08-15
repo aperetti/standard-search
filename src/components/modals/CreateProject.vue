@@ -37,7 +37,7 @@
           this.projectDesc = ''
           this.$refs.basemodal.close()
         }).catch((er) => {
-          bus.emit('bus-error', 'Could not create Proect')
+          bus.emit('aleret', 'danger', 'Could not create Proect')
           this.$refs.basemodal.close()
         })
       }
