@@ -1,7 +1,7 @@
 <template>
   <div class='login-bg'>  </div>
   <div class='jumbotron'>
-    <div style='overflow-y: scroll; height: 100%;'>
+    <div style='overflow-y: auto; height: 100%; width: 100%;'>
     <div class=' col-xs-12 col-md-4 col-md-offset-4' style='margin-top:50px;margin-bottom:50px;'>
       <div class='well'>
         <img class="logo" src="../assets/logo_s.png">
@@ -22,6 +22,7 @@
         </form>
       </div>
     </div>
+  </div>
   </div>
 
 </template>
@@ -104,7 +105,6 @@
   }
   .well {
     background-color: rgba(254,254,254,.65);
-    overflow: auto;
   }
   .login-bg {
      background: #bdc3c7; /* fallback for old browsers */

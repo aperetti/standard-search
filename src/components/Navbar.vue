@@ -50,8 +50,8 @@
       bus.on('page-reset', (arg) => {
         if (arg !== 'drop-down') {
           this.optionOpen = false
-          this.menuOpen = false
         }
+        this.menuOpen = false
       })
       let getAdmin = isAdmin()
       var self = this

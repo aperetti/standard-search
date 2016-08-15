@@ -1,5 +1,6 @@
 <template>
   <!-- MODAL -->
+  <div v-if='dim' class='modal-dim'></div>
   <div class="col-xs-12 col-md-4">
     <div class="modal fade in" tabindex="-1" role="dialog" style='display:block; padding-top: 100px;'>
       <div class="modal-dialog">
@@ -24,6 +25,12 @@
 <script>
   import {closeModals} from 'src/vuex/actions'
   export default {
+    props: {
+      dim: {
+        type: 'Boolean',
+        default: true
+      }
+    },
     vuex: {
       actions: {
         closeModals
@@ -78,4 +85,19 @@
     border-right: 8px solid transparent;
     border-left: 8px solid transparent;
 }
+
+.modal-dim {
+  height: 100%;
+  width: 100%;
+  top: 0%;
+  right: 0%;
+  position:fixed;
+  z-index:1000;
+  background-color:black;
+  filter: alpha(opacity=50); /* internet explorer */
+  -khtml-opacity: 0.50;      /* khtml, old safari */
+    -moz-opacity: 0.50;      /* mozilla, netscape */
+          opacity: 0.50;      /* fx, safari, opera */
+}
+
 </style>
