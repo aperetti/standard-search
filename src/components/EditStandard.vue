@@ -148,7 +148,7 @@
   import {apiEditStandard, withToken} from '../api/config'
   import {tooltip, dropdown} from 'vue-strap'
   import {validStandard, getStandardById} from '../api/standard'
-  import {hydrateMenu} from '../vuex/actions'
+  import {getMenu} from 'src/api/menu'
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
   export default {
@@ -167,7 +167,7 @@
         newGroup: '',
         fileConflict: false,
         fileConflictInfo: {},
-        showChangelog: false,
+        showChangelog: true,
         standard: {}
       }
     },
@@ -188,6 +188,12 @@
       }
     },
     ready: function () {
+      let menu = getMenu()
+      menu.then((response) => {
+        this.allMenus = response.data
+      }, (response) => {
+        this.allMenus = []
+      })
       // If a file is upload then it is recommended to add a changelog.
       this.$watch('file', () => {
         if (this.fileName) {
@@ -306,8 +312,9 @@
         if (this.references.length > 0) formData.append('refs', this.references.join('|'))
         var xhr = new window.XMLHttpRequest()
         xhr.open('POST', withToken(apiEditStandard), true)
-        xhr.onload = function () {
+        xhr.onload = () => {
           if (xhr.status === 200) {
+            this.$route.router.go({name: 'standard', params: {standardId: this.$route.params.standardId}})
             // TODO: PROVIDE CONFIRMATION THAT THE STANDARD HAS BEEN EDITED
           } else {
             // TODO: HANDLE ERROR WHEN EDITING STANDARD FAILS (NOTIFICATION)
@@ -327,22 +334,16 @@
         let allMenus = this.allMenus
         let path = this.menu
         let menus = []
-        allMenus.forEach((menu) => {
-          if (menus.indexOf(menu[path.length]) === -1) {
-            if ((equals(path, menu.slice(0, path.length)) || path.length === 0) && menu.length !== path.length) {
-              menus.push(menu[path.length])
+        if (allMenus) {
+          allMenus.forEach((menu) => {
+            if (menus.indexOf(menu[path.length]) === -1) {
+              if ((equals(path, menu.slice(0, path.length)) || path.length === 0) && menu.length !== path.length) {
+                menus.push(menu[path.length])
+              }
             }
-          }
-        })
+          })
+        }
         return menus.sort(naturalSort)
-      }
-    },
-    vuex: {
-      actions: {
-        hydrateMenu
-      },
-      getters: {
-        allMenus: state => state.standard.menus
       }
     }
   }

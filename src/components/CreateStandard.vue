@@ -91,13 +91,17 @@
   import {apiAddStandard, withToken} from '../api/config'
   import {tooltip} from 'vue-strap'
   import {validStandard} from '../api/standard'
-  import {hydrateMenu} from '../vuex/actions'
+  import {getMenu} from 'src/api/menu'
   import equals from 'array-equal'
   import naturalSort from 'javascript-natural-sort'
   export default {
     ready: function () {
-      this.hydrateMenu()
-
+      let menu = getMenu()
+      menu.then((response) => {
+        this.allMenus = response.data
+      }, (response) => {
+        this.allMenus = []
+      })
       // Watch for code to find a conflict with the Name of the standard.
       this.$watch('code', () => {
         var self = this
@@ -129,7 +133,8 @@
         newGroup: '',
         menu: [],
         fileConflictInfo: {},
-        loading: false
+        loading: false,
+        allMenus: []
       }
     },
     validator: function () {
@@ -176,9 +181,6 @@
       }
     },
     methods: {
-      test: function () {
-        this.$route.router.go({path: '/admin/standard/edit', params: {standard: '576859209d46a0342545c4ae'}})
-      },
       toggleGroup: function () {
         this.addGroup = !this.addGroup
       },
@@ -210,7 +212,8 @@
           self.loading = false
           if (xhr.status === 200) {
             var response = JSON.parse(xhr.response)
-            self.$route.router.go({path: '/admin/standard/edit', param: {standard: response.data._id}})
+            console.log(response)
+            self.$route.router.go({name: 'editStandard', params: {standardId: response.data._id}})
           } else {
             // TODO: HANDLE FAILED STANDARD CREATION
           }
@@ -238,14 +241,6 @@
           }
         })
         return menus.sort(naturalSort)
-      }
-    },
-    vuex: {
-      actions: {
-        hydrateMenu
-      },
-      getters: {
-        allMenus: state => state.standard.menus
       }
     }
   }

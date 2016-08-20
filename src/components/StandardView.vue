@@ -33,7 +33,6 @@
   import bus from '../bus'
 
   export default {
-    props: ['standard'],
     route: {
       data: function (transition) {
         addHistory(transition.to.params.standardId).then((res) => {

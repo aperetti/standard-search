@@ -17,15 +17,12 @@ export const togglers = {
 
       var blur = (event) => {
         var el = event.srcElement
-        console.log(event)
         while (el.parentNode) {
           el = el.parentNode
           if (el.className && el.className.indexOf('dropdown open') !== -1) {
-            console.log('found', el)
             return
           }
         }
-        console.log('setting')
         this.$set(arg, false)
         window.document.removeEventListener('click', blur)
       }
@@ -35,7 +32,6 @@ export const togglers = {
       setTimeout(() => {
         this.$set(arg, next)
         if (next) {
-          console.log('added Event')
           window.document.addEventListener('click', blur)
         }
       }, time + 50)
