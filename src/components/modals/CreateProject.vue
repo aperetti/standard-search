@@ -1,5 +1,5 @@
 <template>
-  <base-modal :callback='addProject' v-ref:basemodal>
+  <base-modal :callback='addProject' v-ref:basemodal @submit='addProject'>
     <template slot='title'>Create Project</template>
     <template slot='body'>
       <div class="input-group">
@@ -12,7 +12,7 @@
         <input type="text" class="form-control" placeholder="Short description..." aria-describedby="basic-addon1" v-model="projectDesc">
       </div>
     </template>
-    <template slot='button'><button type="button" class="btn btn-primary" @click='addProject' @keyup.enter='addProject'>Add Project</button></template>
+    <template slot='button'>Add Project</template>
   </base-modal>
 </template>
 
@@ -20,6 +20,7 @@
   import {createProject} from 'src/api/project'
   import BaseModal from './BaseModal'
   import bus from 'src/bus'
+
   export default {
     components: {
       BaseModal
@@ -35,10 +36,9 @@
         createProject(this.newProject, this.projectDesc).then((result) => {
           this.newProject = ''
           this.projectDesc = ''
-          this.$refs.basemodal.close()
+          bus.emit('project-created')
         }).catch((er) => {
-          bus.emit('aleret', 'danger', 'Could not create Proect')
-          this.$refs.basemodal.close()
+          bus.emit('alert', 'danger', 'Could not create Proect')
         })
       }
     }

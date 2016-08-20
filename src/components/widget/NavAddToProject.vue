@@ -86,6 +86,9 @@
     margin-left: 0px;
     margin-right: 0px;
   }
+  .glyphicon {
+    padding-right: 20px;
+  }
   .logo {
     max-width: 100% 
   }

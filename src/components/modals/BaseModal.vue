@@ -14,7 +14,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default"  @click='close' data-dismiss="modal">Cancel</button>
-            <slot name='button'><button type="button" class="btn btn-primary" @click='close' @keyup.enter='close'>Button</button></slot>
+            <button type="button" class="btn btn-primary" @click='submit' @keyup.enter='submit'><slot name='button'>Button</slot></button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -39,53 +39,16 @@
     methods: {
       close () {
         this.closeModals()
+      },
+      submit () {
+        this.$emit('submit')
+        this.closeModals()
       }
     }
   }
 </script>
 
 <style scoped>
-.affix {
-  top: 50px;
-  width:100%;
-}
-.navbar {
-  border-radius: 0px;
-}
-.filler{
-  min-height: 2000px;
-}
-
-.navbar-form {
-   padding-left: 0;
-}
-
-.navbar-collapse{
-   padding-left:0; 
-}
-.cursor {
-    cursor: pointer;
-  }
-.navbar-toggle {
-  margin-top: 12px;
-  padding: 9px 12px;
-}
-
-.navbar-toggle:hover {
-    background-color: #808080;
-}
-.caret-mod {
-    display: block;
-    width: 0;
-    height: 0;
-    margin-left: 2px;
-    vertical-align: middle;
-    border-top: 8px dashed;
-    border-top: 8px solid;
-    border-right: 8px solid transparent;
-    border-left: 8px solid transparent;
-}
-
 .modal-dim {
   height: 100%;
   width: 100%;

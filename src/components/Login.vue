@@ -107,7 +107,7 @@
     background-color: rgba(254,254,254,.65);
   }
   .login-bg {
-     background: #bdc3c7; /* fallback for old browsers */
+    background: #bdc3c7; /* fallback for old browsers */
     background: -webkit-linear-gradient(to left, #bdc3c7 , #2c3e50); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to left, #bdc3c7 , #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     position: fixed;

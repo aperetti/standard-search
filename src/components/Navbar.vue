@@ -117,7 +117,7 @@
 
 <style scoped>
   .navbar {
-    border-radius: 0 !important;
+    margin-bottom:0px;
   }
   .float {
     position: absolute;

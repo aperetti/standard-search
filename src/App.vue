@@ -28,6 +28,11 @@
       CreateProject
     },
     ready: function () {
+      document.addEventListener('keyup', (e) => {
+        if (e.keyCode === 27) {
+          bus.emit('page-reset')
+        }
+      })
       var self = this
       bus.on('dim', function () {
         self.dim = true
