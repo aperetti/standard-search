@@ -1,10 +1,23 @@
 <template>
-  <markdown></markdown>
+  <div class='container view'>
+  <markdown :admin='admin'></markdown>
+  </div>
 </template>
 
 <script>
   import markdown from './widget/markdown'
+  import {isAdmin} from '../api/auth'
   export default {
+    ready () {
+      isAdmin().then((res) => {
+        this.admin = true
+      })
+    },
+    data () {
+      return {
+        admin: false
+      }
+    },
     components: {
       markdown
     }
@@ -12,7 +25,9 @@
 </script>
 
 <style scoped>
-
+.view {
+  margin-top: 10px;
+}
 textarea {
     border: none;
     border-right: 1px solid #ccc;

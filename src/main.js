@@ -59,6 +59,12 @@ router.map({
       require(['components/EditStandard'], resolve)
     }
   },
+  'admin/settings': {
+    name: 'adminSettings',
+    component: function (resolve) {
+      require(['components/AdminSettings'], resolve)
+    }
+  },
   'user/project/:projectId': {
     name: 'projects',
     component: Projects

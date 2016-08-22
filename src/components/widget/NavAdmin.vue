@@ -2,8 +2,9 @@
   <drop-down>
     <template slot='title'>Admin</template>
     <template slot='dropdown'>
-      <li><a v-link="{ name: 'createStandard' }" class='cursor'><span class="glyphicon glyphicon-plus"></span> Add New Standard</a></li>
+      <li><a v-link="{ name: 'createStandard' }" class='cursor'><span class="glyphicon glyphicon-plus"></span>Add New Standard</a></li>
       <li v-if="$route.params.standardId"><a v-link="{ name: 'editStandard', params: { standardId: $route.params.standardId }}" class='cursor'><span class="glyphicon glyphicon-pencil"></span> Edit Standard</a></li>
+      <li><a v-link="{ name: 'adminSettings' }" class='cursor'><span class="glyphicon glyphicon-wrench"></span>Settings</a></li>
     </template>
   </drop-down>
 </template>
@@ -18,6 +19,9 @@ export default {
 </script>
 
 <style scoped>
+  .glyphicon {
+    padding-right: 8px;
+  }
   li {
    outline: none !important;
   }

@@ -2,9 +2,11 @@
 <!-- Standard PDF Viewer -->
 
   <div class='row' style="position: fixed; height: 100%; min-height: 95%; width: 100%; z-index: 9999">
+    
     <div class='dim' @click='$emit("close")'></div>
+    <div class='close' @click='$emit("close")'><span class='glyphicon glyphicon-remove-circle'></span></div>
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
-
+      
       <iframe id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
       
       <img v-if="notFound" class="logo" class='photo' src="../../assets/logo_s.png">
@@ -42,10 +44,18 @@
 </script>
 
 <style scoped>
+.close {
+  margin-top: 50px;
+  color: #fff;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 10000;
+}
 .pdf-frame {
   position: absolute;
   right: 0;
-  margin-top: 75px;
+  margin-top: 100px;
   width: 100%;
   height: 100%;
   z-index: 2;

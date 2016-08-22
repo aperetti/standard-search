@@ -1,10 +1,17 @@
 <template>
-  <div class='row'>
-    <div id="editor" class=col-xs-6>
-      <textarea v-model="input" class="form-control" rows="25"></textarea>
-    </div>
-    <div class="col-xs-6">
-      <div v-html="input | marked"></div>
+  <div class='container'>
+    <div class='row'>
+       <template v-if='admin'>
+          <div class='close' v-if='!edit' @click='edit = true'><small><span class='glyphicon glyphicon-edit'></span></small></div>
+          <div class='close' v-else @click='edit = false'><small><span class='glyphicon glyphicon-floppy-saved'></span></small></div>
+        </template>
+      <div id="editor" class='col-xs-12' v-if='edit'>
+        <textarea v-model="input" class="form-control" rows="25"></textarea>
+      </div>
+      <div class="{{edit ? 'col-xs-12'' : 'col-xs-12''}}">
+       
+        <div v-html="input | marked"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -12,6 +19,12 @@
 <script>
   import marked from 'marked'
   export default {
+    props: {
+      admin: {
+        default: false,
+        type: Boolean
+      }
+    },
     data () {
       return {
         input: `

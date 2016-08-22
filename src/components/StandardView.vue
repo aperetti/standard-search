@@ -25,6 +25,9 @@
   </div>
 </template>
 
+<!-- Changes -->
+  
+
 <script>
   import {withToken, apiGetStandardPdf} from '../api/config'
   import {addHistory} from '../api/standard'
