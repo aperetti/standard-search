@@ -1,4 +1,4 @@
-import {apiAddHistory, apiGetHistory, apiLookupStandardById, apiLookupStandardByFile, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, apiGetStandardPdf, Vue} from './config'
+import {apiAddHistory, elasticSearch, apiGetHistory, apiLookupStandardById, apiLookupStandardByFile, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, apiGetStandardPdf, Vue} from './config'
 
 // Gets the specific Mongo standard document referenced by the filename
 // standard -> String (filename of the standard)
@@ -43,4 +43,12 @@ export const addHistory = (standardId) => {
 
 export const getHistory = () => {
   return Vue.http({url: apiGetHistory})
+}
+
+export const searchStandard = (search, fields = ['code', 'desc'], fuzzy = 2) => {
+  var data = {}
+  data.fields = (fields && fields.length > 0) ? fields : undefined
+  data.search = search
+  data.fuzzy = (fuzzy && typeof fuzzy === 'number') ? fuzzy : 0
+  return Vue.http({url: elasticSearch, method: 'POST', data: data})
 }

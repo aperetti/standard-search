@@ -23,8 +23,8 @@
       <h2 v-if='!$route.params.projectId'>Projects</h2>
       <ul class="list-group" v-if='!$route.params.projectId' >
         <li v-for='project in projects' class="list-group-item">
-          <span class="pull-right glyphicon glyphicon-trash" @click='delProject(project._id)'></span>
-          <a  v-link="{name:'projects', params:{projectId: project._id}}">{{project.name}}<br /><small>{{project.description}}</small></a>
+          <span class="pull-right glyphicon glyphicon-trash cursor" @click='delProject(project._id)'></span>
+          <a v-link="{name:'projects', params:{projectId: project._id}}">{{project.name}}<br /><small>{{project.description}}</small></a>
         </li>
       </ul>
       <!-- FOR WHEN PROJECT IS SELECTED --> 
@@ -33,8 +33,7 @@
       <div class="panel panel-default" v-if='$route.params.projectId && loadingProject === false'>
         <div class="panel-heading">
           <button class="close" v-link="{name:'projectsHome'}"><small><span class="glyphicon glyphicon-circle-arrow-up"></span></small></button>
-          <h3 class="panel-title">{{currentProject.name}}</h3><small>{{currentProject.description}}</small>
-                  
+          <h3 class="panel-title">{{currentProject.name}}</h3><small>{{currentProject.description}}</small>                  
         </div>
         <div class="panel-body">
           <div class='row' v-for='category in uniqueMenus | orderBy 1'>

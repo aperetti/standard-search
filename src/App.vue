@@ -2,12 +2,12 @@
   <div id="app">
     <create-project v-if='modals.CreateProject.enabled'></create-project>
     <navbar v-if='logged'></navbar>
-    <div class='container-fluid' style='position:absolute; height: 50px; width: 100%; background-color: #eee;' v-else></div>
+    <login v-else></login>
 
     <!-- MODALS -->
     
 
-    <div class='router'>
+    <div class='router' v-show='logged'>
       <router-view></router-view>
     </div>  
   </div>
@@ -15,6 +15,7 @@
 
 <script>
   import store from './vuex/store'
+  import Login from 'components/Login'
   import {logout, setToken} from './vuex/actions'
   import Navbar from './components/Navbar'
   // MODAL Components
@@ -25,6 +26,7 @@
     store,
     components: {
       Navbar,
+      Login,
       CreateProject
     },
     ready: function () {
@@ -85,11 +87,12 @@
   z-index: 999;
 }
 .router {
-  position: relative;
-  width: 100%;
-  top: 0;
-  bottom: 0;
+  position: absolute;
   z-index: 0;
+  width: 100%;
+  margin-top:50px;
+  top: 0px;
+  bottom: 0px;
 }
 body {
   align-items: top;
@@ -112,8 +115,8 @@ body {
   height:100%;
   width:100%;
   position:fixed;
-  left:0;
-  top:0;
+  left:0px;
+  top:0px;
   z-index:1 !important;
   background-color:black;
   filter: alpha(opacity=75); /* internet explorer */

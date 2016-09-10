@@ -74,11 +74,6 @@
 </script>
 
 <style scoped>
-  .pdf-frame {
-    width: 100%;
-    height: 500px;
-    z-index: -99;
-  }
   .logo {
     width: 80%;
     max-width: 250px;
@@ -86,16 +81,13 @@
     margin-bottom: 25px;
   }
   .jumbotron {
-    display: table;
-    background: #bdc3c7; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to left, #bdc3c7 , #2c3e50); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to left, #bdc3c7 , #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    position: fixed;
-    max-height: 100vh;
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 10px;   
+    padding: 10px;
+    margin-bottom: 0px;
+
   }
   .fafa-transition {
     transition: all .3s ease;
@@ -107,11 +99,11 @@
     background-color: rgba(254,254,254,.65);
   }
   .login-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
     background: #bdc3c7; /* fallback for old browsers */
     background: -webkit-linear-gradient(to left, #bdc3c7 , #2c3e50); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to left, #bdc3c7 , #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    position: fixed;
-    height: 100%;
-    width: 100%;
   }
 </style>

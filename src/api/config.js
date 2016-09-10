@@ -19,9 +19,9 @@ export {Vue}
 
 export const domainBase = 'https://photoredux.com/'
 export const apiBase = domainBase + 'api/'
-export const elasticSearch = domainBase + 'standards/_search'
 export const apiAuth = apiBase + 'authenticate'
 export const apiStandardsBase = apiBase + 'standards/'
+export const elasticSearch = apiStandardsBase + 'search'
 export const apiAdminBase = apiBase + 'admin/'
 export const apiGetMenus = apiStandardsBase + 'menu'
 export const apiUserBase = apiBase + 'user/'
@@ -73,6 +73,8 @@ export const loggedIn = () => {
 
 export const apiAddStandard = apiAdminBase + 'add_standard'
 export const apiEditStandard = apiAdminBase + 'edit_standard'
+export const apiGetReferences = apiAdminBase + 'get_references'
+export const apiAddReferences = apiAdminBase + 'add_references'
 
 // appends the current token to the url string
 export const withToken = (url) => url + '?token=' + token()
