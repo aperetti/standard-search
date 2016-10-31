@@ -73,6 +73,7 @@ export const loggedIn = () => {
 
 export const apiAddStandard = apiAdminBase + 'add_standard'
 export const apiEditStandard = apiAdminBase + 'edit_standard'
+
 export const apiGetReferences = apiAdminBase + 'get_references'
 export const apiAddReferences = apiAdminBase + 'add_references'
 

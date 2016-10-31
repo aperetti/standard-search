@@ -5,7 +5,6 @@
     <login v-else></login>
 
     <!-- MODALS -->
-    
 
     <div class='router' v-show='logged'>
       <router-view></router-view>

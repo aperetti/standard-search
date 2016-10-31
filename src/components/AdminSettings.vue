@@ -3,29 +3,27 @@
   <div class="page-header"><h2 class="text-left">Admin Settings</h2></div>
     <ul class="nav nav-tabs nav-justified">
       <template v-for='group in groups'>
-        <li  class='{{$index === tab ? "active" : ""}}'><a href='#' @click='tab = $index'>Test</a></li>
+        <li  class='{{$index === tab ? "active" : ""}}'><a href='#' @click='tab = $index'>{{group}}</a></li>
       </template>
     </ul>
   </div>
+  <!-- Standards Tab -->
   <div class='container' style='margin-top: 25px;' v-if='tab === 0'>
-    <div class='input group'>
-      <input class='form-control' v-model='newRegex'></input>
-    </div>
+    <references></references>
   </div>
 </template>
 
 <script>
-  import {Tabset, Tab} from 'vue-strap'
+  import References from 'components/widget/References'
   export default {
     components: {
-      Tabset,
-      Tab
+      References
     },
     data () {
       return {
         groups: ['Standards', 'Frontpage'],
         tab: 0,
-        newRegex: ''
+        regexes: []
       }
     }
   }

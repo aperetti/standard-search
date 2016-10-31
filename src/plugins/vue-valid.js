@@ -10,11 +10,10 @@
     },
     computed: {
       $vd: function () {
-        let validation = this.$options.validator.call(this)
         if (!this.$options.validator) {
           return true
         }
-
+        let validation = this.$options.validator.call(this)
         // Will check each validation group and make sure all of the $valid rules
         // are upheld. If the validation group starts with '$' they will be ignored
         // $valid wil be a reflect of the validation group (i.e. if any are false $valid == false).
