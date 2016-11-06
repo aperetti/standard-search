@@ -2,7 +2,7 @@
         <drop-down v-show="history.length > 0">
           <template slot='title'>History</template>
           <template slot='dropdown'>
-            <li id='drop {{standard.code}}' v-for='standard in history'><a v-link="{ name: 'standard', params: { standardId: standard._id }}" >{{standard.code}}</a></li>
+            <li id='drop {{standard.code}}' v-for='standard in history'><a v-link="{ name: 'standard', params: { standardId: standard.code }}" >{{standard.code}}</a></li>
           </template>
         </drop-down>
 </template>
@@ -16,20 +16,18 @@ export default {
     DropDown
   },
   ready: function () {
-    var self = this
-    let history = getHistory()
-    history.then((response) => {
-      self.history = response.data.history
-    }, (response) => {
-      self.history = []
+    getHistory().then((response) => {
+      console.log(response)
+      this.history = response.data
+    }).catch((e) => {
+      this.history = []
     })
     bus.on('page-reset', function (arg) {
       if (arg === 'beforeRoute') {
-        let history = getHistory()
-        history.then((response) => {
-          self.history = response.data.history
-        }, (response) => {
-          self.history = []
+        getHistory().then((response) => {
+          this.history = response.data.history
+        }).catch((e) => {
+          this.history = []
         })
       }
     })
