@@ -17,7 +17,6 @@ export default {
   },
   ready: function () {
     getHistory().then((response) => {
-      console.log(response)
       this.history = response.data
     }).catch((e) => {
       this.history = []
