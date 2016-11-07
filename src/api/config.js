@@ -35,12 +35,6 @@ export const apiLookupStandardById = (standard) => {
   return apiStandardsBase + 'lookup/' + standard
 }
 
-// Gets the specific Mongo standard document referenced by the filename
-// standard -> String (filename of the standard)
-export const apiLookupStandardByFile = (standard) => {
-  return apiStandardsBase + 'lookup_file/' + standard
-}
-
 export const apiGetStandardHtml = (standard) => {
   return apiStandardsBase + 'html/' + standard
 }
