@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "array-equal": "^1.0.0",
+    "axios": "^0.15.2",
     "babel-runtime": "^5.8.0",
     "bootstrap": "^3.3.6",
     "javascript-natural-sort": "^0.7.1",

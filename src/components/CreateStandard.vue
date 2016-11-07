@@ -106,7 +106,7 @@
       this.$watch('code', () => {
         var self = this
         validStandard(encodeURIComponent(this.code)).then((response) => {
-          if (!response.data.length) {
+          if (!response.data) {
             self.validCode = true
             return
           } else {

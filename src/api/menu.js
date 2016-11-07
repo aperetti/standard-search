@@ -1,5 +1,4 @@
 import {apiGetMenus, Vue} from './config'
-
-export const getMenu = () => {
-  return Vue.http({url: apiGetMenus, method: 'GET'})
+export const getMenu = (id) => {
+  return Vue.http({url: apiGetMenus + '/' + id, method: 'GET'})
 }

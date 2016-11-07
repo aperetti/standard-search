@@ -188,8 +188,7 @@
       }
     },
     ready: function () {
-      let menu = getMenu()
-      menu.then((response) => {
+      getMenu(1).then((response) => {
         this.allMenus = response.data
       }, (response) => {
         this.allMenus = []
