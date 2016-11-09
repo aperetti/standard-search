@@ -4,14 +4,14 @@
         href='#'
         data-toggle="dropdown"
         role="button" 
-        @click="toggle('open',0,persistant,$event)" 
+        @click="toggleState()" 
         @keyup.down="focusDropDown($event)"
         aria-haspopup="true"  
         aria-expanded="{{open}}">
       <slot name='title'>Title</slot>
       <span v-if='loading === false && (open === false || !persistant)' class="caret"></span>&nbsp;
       <span v-if='loading === false && (open === true && persistant)' class="glyphicon glyphicon-eye-close"></span>
-      <img v-if='loading' src='../../assets/greyLoading18.svg'>
+      <img v-if='loading' src='../../assets/greyLoading14.svg'>
     </a>
       <ul class="dropdown-menu" >
         <slot name='dropdown'><li><a>Dropdown</a></li></slot>
@@ -22,6 +22,7 @@
 <script>
 import {togglers} from '../../plugins/mixins'
 import bus from 'src/bus'
+
 export default {
   ready () {
     bus.on('page-reset', (arg) => {
@@ -41,6 +42,10 @@ export default {
   methods: {
     focusDropDown (e) {
       this.open = true
+    },
+    toggleState ($event) {
+      this.toggle('open', 0, this.persistant, $event)
+      this.$emit('open', this.open)
     }
   },
   name: 'drop-down',
