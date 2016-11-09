@@ -6,7 +6,7 @@
         <li  v-show='projects.length === 0'>
           <a tabindex='-1' @click=''> Create One?</a>
         </li>
-        <li v-for='project in projects' v-link="{name:'projects', params:{projectId: project._id}}">
+        <li v-for='project in projects' v-link="{name:'projects', params:{projectId: project.id}}">
           <a>{{project.name}}</a>
     </template>
   </drop-down>

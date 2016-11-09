@@ -71,10 +71,10 @@ export default {
     }
   },
   methods: {
-    addToPath: function (category) {
+    addToPath (category) {
       this.currentPath.push(category)
     },
-    getChildMenus: function () {
+    getChildMenus () {
       let standards = getStandardsByMenu(this.currentPath)
       standards.then((response) => {
         this.childLoading = false
