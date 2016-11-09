@@ -23,8 +23,8 @@
       <h2 v-if='!$route.params.projectId'>Projects</h2>
       <ul class="list-group" v-if='!$route.params.projectId' >
         <li v-for='project in projects' class="list-group-item">
-          <span class="pull-right glyphicon glyphicon-trash cursor" @click='delProject(project._id)'></span>
-          <a v-link="{name:'projects', params:{projectId: project._id}}">{{project.name}}<br /><small>{{project.description}}</small></a>
+          <span class="pull-right glyphicon glyphicon-trash cursor" @click='delProject(project.id)'></span>
+          <a v-link="{name:'projects', params:{projectId: project.id}}">{{project.name}}<br /><small>{{project.description}}</small></a>
         </li>
       </ul>
       <!-- FOR WHEN PROJECT IS SELECTED --> 
@@ -39,10 +39,10 @@
           <div class='row' v-for='category in uniqueMenus | orderBy 1'>
             <h4 class='row'>{{category}}</h4>
             <hr style='margin-top: 0px;'>
-            <div class='col-sm-6 col-md-3 col-xs-12' v-for='standard in currentProject.standards | filterBy category in "menu[0]" | orderBy "code"  natural'>
+            <div class='col-sm-6 col-md-3 col-xs-12' v-for='standard in currentProject.standards | filterBy category in "menu.ancestors[1].name" | orderBy "code"  natural'>
               <!-- <button class='col-xs-3 col btn btn-default' v-link='{name: "standard", params: {standardId: standard._id}}'> -->
-              <button class='col btn btn-default' style='width: 100%;' @click='selectedStandard = standard._id'>
-                <a type="button" class='close'  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></a><strong>{{standard.code}}</strong><br /><div class='desc small'>{{standard.desc}}</div>
+              <button class='col btn btn-default' style='width: 100%;' @click='selectedStandard = standard.code'>
+                <a type="button" class='close'  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></a><strong>{{standard.code}}</strong><br /><div class='desc small'>{{standard.description}}</div>
               </button>
             </div>
           </div>
@@ -149,15 +149,17 @@
         var menus = []
         var standards = this.currentProject.standards
         for (var i in standards) {
-          if (menus.indexOf(standards[i].menu[0]) === -1) {
-            menus.push(standards[i].menu[0])
+          if (menus.indexOf(standards[i].menu.ancestors[1].name) === -1) {
+            menus.push(standards[i].menu.ancestors[1].name)
           }
         }
-        console.log(menus)
         return menus
       },
       filterStandard (category) {
-        return this.currentProject.standards.filter((standard) => standard.menu[0] === category)
+        return this.currentProject.standards.filter((standard) => {
+          console.log(standard)
+          return standard.menu.ancestors[1].name === category
+        })
       },
       natural () {
         return naturalSort
