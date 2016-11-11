@@ -19,11 +19,14 @@ export {Vue}
 
 export const domainBase = 'https://photoredux.com/'
 export const apiBase = domainBase + 'api/'
+
 export const apiAuth = apiBase + 'authenticate'
 export const apiStandardsBase = apiBase + 'standards/'
-export const elasticSearch = apiStandardsBase + 'search'
 export const apiAdminBase = apiBase + 'admin/'
+
+export const elasticSearch = apiStandardsBase + 'search'
 export const apiGetMenus = apiStandardsBase + 'menu'
+export const apiCreateMenu = apiAdminBase + 'create_menu'
 export const apiUserBase = apiBase + 'user/'
 export const apiAddHistory = apiUserBase + 'add_history/'
 export const apiGetHistory = apiUserBase + 'get_history/'

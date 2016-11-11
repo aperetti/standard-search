@@ -27,26 +27,48 @@
                 <button type="button" class="btn btn-default" aria-label="Help" @click.prevent="toggleGroup()"><span class="glyphicon glyphicon-remove"></span></button>
               </div>
             </div>          
-            <button v-if="!addGroup" v-for="menu in menus" class='btn btn-primary pull-left' @click.prevent="pushGroup(menu)">{{menu}}</button>
-            <button v-if="!addGroup" @click.prevent="customGroup()" class="btn btn-default pull-left"><span class="glyphicon glyphicon-plus"></span> Custom</button>
+            <button v-if="!addGroup" v-for="menu in availableMenus" class='btn btn-primary pull-left' @click.prevent="fetchMenu(menu.id)">{{menu.name}}</button>
+            <button v-if="!addGroup" @click.prevent="menuModal = true" class="btn btn-default pull-left"><span class="glyphicon glyphicon-plus"></span> Custom</button>
             </div>
           </div>
         </div>
       </div>
-    
+
+      <base-modal v-if="menuModal" v-on:close="cancelModal" v-on:submit="createMenu">
+        <template slot='title'>Create Menu</template>
+          <template slot='body'>
+            <div class="form-group">
+              <label for="inputStandard" class="col-sm-3 control-label">Menu Name</label>
+                <div class="col-sm-8">
+                  <input class='form-control' type="text" v-model="newMenu.name"></input>
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="inputStandard" class="col-sm-3 control-label">Description</label>
+                <div class="col-sm-8">
+                  <input class='form-control' type="text" v-model="newMenu.description"></input>
+                </div>
+              </label>
+            </div>
+          </template>
+        </base-modal>
+              
       <div class="form-group">
         <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Menu Path</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1">
           <div class="input-group-btn">
-            <template v-for="(index, group) in menu" track-by="$index">
-              <button  @click.prevent="removeGroup(index)" class="btn btn-primary pull-left">
-              <span  aria-hidden="true" class="glyphicon glyphicon glyphicon-remove-sign"></span>
-              &nbsp;&nbsp; {{group}} &nbsp;
-              </button>   
-              <button v-if="!(menu.length - 1 == index)" @click.prevent="removeGroup(index+1)" class="btn btn-primary pull-left">
-              <span  aria-hidden="true" class="glyphicon glyphicon-chevron-right"></span>
-              </button>                         
+            <template v-if="menu && menu.ancestors">
+              <button v-if=currentMenu @click.prevent="upMenu()" class="btn btn-secondary pull-left"><span class="glyphicon glyphicon-arrow-up"></span></button>
+              <template v-for="(index, menu) in menu.ancestors" track-by="$index">
+                <button  @click.prevent="fetchMenu(menu.id)" class="btn btn-secondary pull-left">
+                &nbsp;&nbsp; {{menu.name}} &nbsp;
+                </button>   
+              </template>
             </template>
+              <button v-if=currentMenu  @click.prevent="fetchMenu(menu.id)" class="btn btn-success pull-left">
+              &nbsp;&nbsp; {{menu.name}} &nbsp;
+              </button>   
           </div>
         </div>
       </div>
@@ -78,8 +100,6 @@
               <li class="list-group-item" v-if="!$vd.code.required.valid">Standard Code Required</li>
               <li class="list-group-item" v-if="!$vd.code.conflict.valid && code.length !== 0">Standard Name Already Used</li>
               <li class="list-group-item" v-if="!$vd.desc.required.valid">Standard Description Required</li>
-              <li class="list-group-item" v-if="!$vd.menu.required.valid">(1) Group Required</li>
-              <li class="list-group-item" v-if="!$vd.menu.eachLength.valid(1)">Each Group Must Have a Name</li>
               <li class="list-group-item" v-if="!$vd.file.required.valid">PDF Upload Required</li>
             </div>
           </div>
@@ -91,118 +111,76 @@
   import {apiAddStandard, withToken} from '../api/config'
   import {tooltip} from 'vue-strap'
   import {validStandard} from '../api/standard'
-  import {getMenu} from 'src/api/menu'
-  import equals from 'array-equal'
-  import naturalSort from 'javascript-natural-sort'
+  import {getMenu, createMenu} from 'src/api/menu'
+  import BaseModal from './modals/BaseModal'
   export default {
     ready: function () {
-      let menu = getMenu()
-      menu.then((response) => {
-        this.allMenus = response.data
-      }, (response) => {
-        this.allMenus = []
-      })
-      // Watch for code to find a conflict with the Name of the standard.
+      this.fetchMenu(0)
+      // Watch for code to find a conflict with the name of the standard.
       this.$watch('code', () => {
         var self = this
-        validStandard(encodeURIComponent(this.code)).then((response) => {
-          if (!response.data) {
-            self.validCode = true
-            return
-          } else {
+        validStandard(encodeURIComponent(this.code))
+          .then((response) => {
+            self.validCode = Boolean(response.data)
+          }).catch(e => {
             self.validCode = false
-            return
-          }
-        }, (response) => {
-          self.validCode = false
-          return
-        })
+          })
       })
     },
     components: {
-      tooltip
+      tooltip,
+      BaseModal
     },
     data: function () {
       return {
-        edit: false,
+        menuModal: false,
+        newMenu: {
+          name: null,
+          description: null
+        },
+        menu: null,
         code: '',
         validCode: false,
         desc: '',
         file: '',
-        addGroup: false,
-        newGroup: '',
-        menu: [],
         fileConflictInfo: {},
-        loading: false,
-        allMenus: []
-      }
-    },
-    validator: function () {
-      return {
-        code: {
-          $name: 'Code',
-          required: {valid: this.code.length > 0, msg: 'Standard Code is required.'},
-          conflict: {valid: this.validCode || this.val, msg: 'Standard Code is already in use.'}
-        },
-        desc: {
-          $name: 'Description',
-          required: {valid: this.desc.length > 0, msg: 'Standard Description is required.'}
-        },
-        menu: {
-          $name: 'Groups',
-          required: {valid: this.menu.length > 0, msg: 'Standard must contain (1) Menu Item.'},
-          eachLength: {
-            valid: (min) => {
-              for (var el in this.menu) {
-                if (this.menu[el].length < min) {
-                  return false
-                } else {
-                  return true
-                }
-              }
-            },
-            msg: 'One of the Standard Menu does not contain a name'
-          }
-        },
-        file: {
-          $name: 'File Upload',
-          required: {valid: this.file.length > 0, msg: 'PDF Upload is Required'},
-          type: {
-            valid: (extension) => {
-              if (this.file.indexof(extension)) {
-                return true
-              } else {
-                return true
-              }
-            },
-            msg: '*.pdf extension is required!'
-          }
-        }
+        loading: false
       }
     },
     methods: {
-      toggleGroup: function () {
-        this.addGroup = !this.addGroup
+      closeModal: function () {
+        this.menuModal = false
+        this.newMenu.name = null
+        this.newMenu.description = null
       },
-      pushGroup: function (a) {
-        this.newGroup = ''
-        this.addGroup = false
-        this.menu.push(a)
+      upMenu: function () {
+        if (this.menu.parent) {
+          this.fetchMenu(this.menu.parent.id)
+        } else {
+          this.fetchMenu()
+        }
       },
-      customGroup: function () {
-        this.toggleGroup()
-        this.$nextTick(function () {
-          document.getElementById('group-add').focus()
+      createMenu: function () {
+        var newMenu = this.newMenu
+        newMenu.parentId = this.currentMenu
+        createMenu(this.newMenu).then(res => {
+          this.menu = res.data
         })
       },
-      removeGroup: function (index) {
-        this.menu.splice(index)
+      fetchMenu: function (menuId) {
+        getMenu(menuId).then(res => {
+          console.log(res)
+          this.menu = res.data
+        }).catch(e => {
+          console.log(e)
+          this.menu = null
+        })
       },
       onSubmit: function (e) {
         var formData = new window.FormData()
         this.loading = true
         var self = this
-        formData.append('path', this.menu.join('|'))
+        formData.append('menu', this.menu)
         formData.append('code', this.code)
         formData.append('desc', this.desc)
         formData.append('pdf', document.getElementById('pdfFile').files[0])
@@ -226,21 +204,51 @@
       fileName: function () {
         let array = this.file.split(/(\/|\\)/).slice(-1)[0].split('.')
         array.pop()
-
         return array[0].toLowerCase()
       },
-      menus: function () {
-        let allMenus = this.allMenus
-        let path = this.menu
-        let menus = []
-        allMenus.forEach((menu) => {
-          if (menus.indexOf(menu[path.length]) === -1) {
-            if ((equals(path, menu.slice(0, path.length)) || path.length === 0) && menu.length !== path.length) {
-              menus.push(menu[path.length])
-            }
+      currentMenu: function () {
+        return Array.isArray(this.menu) ? null : this.menu
+      },
+      availableMenus: function () {
+        var menus = []
+        var curMenu = this.menu
+        if (!curMenu) {
+          return menus
+        } else if (Array.isArray(curMenu)) {
+          curMenu.map(el => menus.push(el))
+        } else {
+          if (Array.isArray(curMenu.children) && curMenu.children.length !== 0) {
+            curMenu.children.map(el => menus.push(el))
           }
-        })
-        return menus.sort(naturalSort)
+        }
+        return menus
+      }
+    },
+    validator: function () {
+      return {
+        code: {
+          $name: 'Code',
+          required: {valid: this.code.length > 0, msg: 'Standard Code is required.'},
+          conflict: {valid: this.validCode || this.val, msg: 'Standard Code is already in use.'}
+        },
+        desc: {
+          $name: 'Description',
+          required: {valid: this.desc.length > 0, msg: 'Standard Description is required.'}
+        },
+        file: {
+          $name: 'File Upload',
+          required: {valid: this.file.length > 0, msg: 'PDF Upload is Required'},
+          type: {
+            valid: (extension) => {
+              if (this.file.indexof(extension)) {
+                return true
+              } else {
+                return true
+              }
+            },
+            msg: '*.pdf extension is required!'
+          }
+        }
       }
     }
   }

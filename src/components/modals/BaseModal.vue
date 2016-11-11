@@ -38,6 +38,7 @@
     },
     methods: {
       close () {
+        this.$emit('close')
         this.closeModals()
       },
       submit () {
