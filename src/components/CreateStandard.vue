@@ -132,17 +132,15 @@
       <template slot='body'>
         <div class="form-group">
           <label for="inputStandard" class="col-sm-3 control-label">Menu Name</label>
-            <div class="col-sm-8">
-              <input class='form-control' type="text" v-model="newMenu.name"></input>
-            </div>
-          </label>
+          <div class="col-sm-8">
+            <input class='form-control' type="text" v-model="newMenu.name"></input>
+          </div>
         </div>
         <div class="form-group">
           <label for="inputStandard" class="col-sm-3 control-label">Description</label>
-            <div class="col-sm-8">
-              <input class='form-control' type="text" v-model="newMenu.description"></input>
-            </div>
-          </label>
+          <div class="col-sm-8">
+            <input class='form-control' type="text" v-model="newMenu.description"></input>
+          </div>
         </div>
       </template>
       <template slot="button">

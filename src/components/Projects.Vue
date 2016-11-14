@@ -3,8 +3,7 @@
     <nav class="navbar navbar-inverse" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
-          <router-link to="projectsHome">Projects</router-link>         
-          <a class="navbar-brand">Projects</a>
+          <router-link class="navbar-brand" :to="{name: 'projectsHome'}">Projects</router-link>         
           <button type="button" class="navbar-toggle" @click="toggleOption">
             <span class="sr-only">Toggle navigation</span>
             <span class="caret caret-mod"></span>
@@ -12,12 +11,14 @@
         </div>
         <div :class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
           <ul class="nav navbar-nav">
-            <li><a class='cursor'>Create Project</a></li>
+            <li><a class='cursor' @click="newProject.modal = true">Create Project</a></li>
             <nav-projects @click='refreshProjects' :projects='projects'></nav-projects>
           </ul>
         </div>
       </div>
     </nav>
+    
+
 
     <div class='container'>
       <div class='row' >
@@ -33,12 +34,12 @@
         <div v-if='loadingProject === true'><img src='../assets/greyLoading.svg'></img></div>
         <div class="panel panel-default" v-if='$route.params.projectId && loadingProject === false'>
           <div class="panel-heading">
-            <button class="close" v-on:submit="$route.router.push({name:'projectsHome'})"><small><span class="glyphicon glyphicon-circle-arrow-up"></span></small></button>
+            <button class="close" v-on:click="$router.push({name:'projectsHome'})"><small><span class="glyphicon glyphicon-circle-arrow-up"></span></small></button>
             <h3 class="panel-title">{{currentProject.name}}</h3><small>{{currentProject.description}}</small>                  
           </div>
           <div class="panel-body">
-            <div class='row' v-for='category in uniqueMenus'>
-              <h4 class='row'>{{category}}</h4>
+            <div class='row' >
+              <h4 class='row'></h4>
               <hr style='margin-top: 0px;'>
               <div class='col-sm-6 col-md-3 col-xs-12' v-for='standard in currentProject.standards'>
                 <button class='col btn btn-default' style='width: 100%;' @click='selectedStandard = standard.code'>
@@ -51,40 +52,44 @@
       </div>  
     </div>
     <pdf-viewer v-if='selectedStandard.length !== 0' :standard='selectedStandard' @close="selectedStandard= ''"></pdf-viewer>
+    
+    <base-modal :dim="newProject.modal" v-on:close="cancelModal" v-on:submit="createProject">
+      <template slot='title'>Create Project</template>
+    <template slot='body'>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Project</span>
+        <input type="text" class="form-control" placeholder="Name of your project..." aria-describedby="basic-addon1" v-model="newProject.name">
+      </div>
+      <br>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Description</span>
+        <input type="text" class="form-control" placeholder="Short description..." aria-describedby="basic-addon1" v-model="newProject.description">
+      </div>
+    </template>
+    <template slot='button'>Add Project</template>
+    </base-modal>
   </div>
+  
 </template>
 
 <script>
-  import {getProjects, getProject, deleteProject} from 'src/api/project'
+  import {getProjects, getProject, deleteProject, createProject} from 'src/api/project'
   import NavProjects from './widget/NavProjects'
   import bus from '../bus'
-  import {modals} from 'src/plugins/mixins'
-  import naturalSort from 'javascript-natural-sort'
   import PdfViewer from 'components/widget/PdfViewer'
   import BaseModal from 'components/modals/BaseModal'
 
   export default {
-    mixins: [modals],
     components: {
       BaseModal,
       NavProjects,
       PdfViewer
     },
-    route: {
-      data ({next}) {
-        if (this.$route.params.projectId) {
-          this.loadingProject = true
-          getProject(this.$route.params.projectId).then((res) => {
-            this.currentProject = res.data
-            this.loadingProject = false
-            next()
-          })
-        } else {
-          next()
-        }
-      }
+    watch: {
+      '$route': 'loadProject'
     },
     mounted () {
+      this.loadProject()
       // For mobile menu prevent closing
       bus.on(bus.events.pageReset, (arg) => {
         if (arg !== 'drop-down') {
@@ -97,12 +102,17 @@
       getProjects().then((res) => {
         this.projects = res.data
       }).catch((e) => {
-        bus.emit('alert', 'danger', 'Failed to get project results', true)
+        this.$state.dispatch('createAlert', {messsage: 'Failed to get project results', type: 'danger'})
         this.projects = []
       })
     },
     data () {
       return {
+        newProject: {
+          modal: true,
+          name: null,
+          description: null
+        },
         optionOpen: false,
         projects: [],
         currentProject: {},
@@ -111,12 +121,32 @@
       }
     },
     methods: {
+      loadProject () {
+        if (this.$route.params.projectId) {
+          console.log('test')
+          this.loadingProject = true
+          getProject(this.$route.params.projectId).then((res) => {
+            this.currentProject = res.data
+            this.loadingProject = false
+          })
+        }
+      },
+      cancelModal () {
+        for (var i in this.newProject) {
+          this.newProject[i] = null
+        }
+      },
       createProject () {
-        this.$store.dispatch('setCreateProject')
+        createProject(this.newProject.name, this.newProject.description).then((res) => {
+          this.cancelModal()
+          this.$store.dispatch('createAlert', {message: res.data, type: 'success'})
+        }).catch((er) => {
+          this.$store.dispatch('createAlert', {message: er.data, type: 'danger'})
+        })
       },
       delProject (projectId) {
         deleteProject(projectId).then((res) => {
-          bus.emit('alert', 'success', 'Project Succesfully Delete. Refreshing Projects!')
+          this.$store.dispatch('createAlert', res.data, 'success')
           this.refreshProjects()
         })
       },
@@ -139,25 +169,6 @@
           console.log(this.$refs.pdf)
           return this.$refs.pdf.close
         }
-      },
-      uniqueMenus () {
-        var menus = []
-        var standards = this.currentProject.standards
-        for (var i in standards) {
-          if (menus.indexOf(standards[i].menu.ancestors[1].name) === -1) {
-            menus.push(standards[i].menu.ancestors[1].name)
-          }
-        }
-        return menus
-      },
-      filterStandard (category) {
-        return this.currentProject.standards.filter((standard) => {
-          console.log(standard)
-          return standard.menu.ancestors[1].name === category
-        })
-      },
-      natural () {
-        return naturalSort
       }
     }
   }

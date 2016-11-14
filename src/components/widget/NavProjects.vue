@@ -7,22 +7,20 @@
         <a tabindex='-1' @click=''> Create One?</a>
       </li>
     </li>
-    <router-link el="li" v-for='project in projects' :to="{name:'projects', params:{projectId: project.id}}">
-      <a>{{project.name}}</a>
-    </router-link>
+    <li v-for='project in projects'>
+      <router-link :to="{name:'projects', params:{projectId: project.id}}">{{project.name}}</router-link>
+    </li>
     </template>
   </drop-down>
 </template>
 
 <script>
-import {modals} from '../../plugins/mixins'
 import DropDown from 'components/widget/DropDown'
 
 export default {
   components: {
     DropDown
   },
-  mixins: [modals],
   props: {
     projects: {
       type: Array,
