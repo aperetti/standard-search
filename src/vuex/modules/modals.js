@@ -1,5 +1,14 @@
 import * as t from '../mutation-types'
 
+const actions = {
+  setCreateProject ({dispatch}, set) {
+    dispatch(t.SET_CREATEPROJECT, set)
+  },
+  closeModals ({dispatch}) {
+    dispatch(t.CLOSE_MODALS)
+  }
+}
+
 const state = {
   CreateProject: {
     enabled: false
@@ -21,5 +30,6 @@ const mutations = {
 
 export default {
   state,
-  mutations
+  mutations,
+  actions
 }

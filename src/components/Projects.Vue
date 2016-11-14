@@ -1,61 +1,61 @@
 <template>
-    <!-- Standard subnav -->
-  <nav class="navbar navbar-inverse" role="navigation">
-    <div class="container-fluid">
-      <div class="navbar-header">         
-        <a class="navbar-brand" v-link="{name:'projectsHome'}">Projects</a>
-        <button type="button" class="navbar-toggle" @click="toggleOption">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="caret caret-mod"></span>
-        </button>
-      </div>
-      <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
-        <ul class="nav navbar-nav">
-          <li><a @click='openCreateProject' class='cursor'>Create Project</a></li>
-          <nav-projects @click='refreshProjects' :projects='projects'></nav-projects>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <div class='container'>
-    <div class='row' >
-      <h2 v-if='!$route.params.projectId'>Projects</h2>
-      <ul class="list-group" v-if='!$route.params.projectId' >
-        <li v-for='project in projects' class="list-group-item">
-          <span class="pull-right glyphicon glyphicon-trash cursor" @click='delProject(project.id)'></span>
-          <a v-link="{name:'projects', params:{projectId: project.id}}">{{project.name}}<br /><small>{{project.description}}</small></a>
-        </li>
-      </ul>
-      <!-- FOR WHEN PROJECT IS SELECTED --> 
-    <div class='container'> 
-      <div v-if='loadingProject === true'><img src='../assets/greyLoading.svg'></img></div>
-      <div class="panel panel-default" v-if='$route.params.projectId && loadingProject === false'>
-        <div class="panel-heading">
-          <button class="close" v-link="{name:'projectsHome'}"><small><span class="glyphicon glyphicon-circle-arrow-up"></span></small></button>
-          <h3 class="panel-title">{{currentProject.name}}</h3><small>{{currentProject.description}}</small>                  
+  <div>  <!-- Standard subnav -->
+    <nav class="navbar navbar-inverse" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <router-link to="projectsHome">Projects</router-link>         
+          <a class="navbar-brand">Projects</a>
+          <button type="button" class="navbar-toggle" @click="toggleOption">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="caret caret-mod"></span>
+          </button>
         </div>
-        <div class="panel-body">
-          <div class='row' v-for='category in uniqueMenus | orderBy 1'>
-            <h4 class='row'>{{category}}</h4>
-            <hr style='margin-top: 0px;'>
-            <div class='col-sm-6 col-md-3 col-xs-12' v-for='standard in currentProject.standards | filterBy category in "menu.ancestors[1].name" | orderBy "code"  natural'>
-              <!-- <button class='col-xs-3 col btn btn-default' v-link='{name: "standard", params: {standardId: standard._id}}'> -->
-              <button class='col btn btn-default' style='width: 100%;' @click='selectedStandard = standard.code'>
-                <a type="button" class='close'  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></a><strong>{{standard.code}}</strong><br /><div class='desc small'>{{standard.description}}</div>
-              </button>
+        <div :class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
+          <ul class="nav navbar-nav">
+            <li><a class='cursor'>Create Project</a></li>
+            <nav-projects @click='refreshProjects' :projects='projects'></nav-projects>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class='container'>
+      <div class='row' >
+        <h2 v-if='!$route.params.projectId'>Projects</h2>
+        <ul class="list-group" v-if='!$route.params.projectId' >
+          <li v-for='project in projects' class="list-group-item">
+            <span class="pull-right glyphicon glyphicon-trash cursor" @click='delProject(project.id)'></span>
+            <router-link :to="{name:'projects', params:{projectId: project.id}}">{{project.name}}<br /><small>{{project.description}}</small></router-link>
+          </li>
+        </ul>
+        <!-- FOR WHEN PROJECT IS SELECTED --> 
+      <div class='container'> 
+        <div v-if='loadingProject === true'><img src='../assets/greyLoading.svg'></img></div>
+        <div class="panel panel-default" v-if='$route.params.projectId && loadingProject === false'>
+          <div class="panel-heading">
+            <button class="close" v-on:submit="$route.router.push({name:'projectsHome'})"><small><span class="glyphicon glyphicon-circle-arrow-up"></span></small></button>
+            <h3 class="panel-title">{{currentProject.name}}</h3><small>{{currentProject.description}}</small>                  
+          </div>
+          <div class="panel-body">
+            <div class='row' v-for='category in uniqueMenus'>
+              <h4 class='row'>{{category}}</h4>
+              <hr style='margin-top: 0px;'>
+              <div class='col-sm-6 col-md-3 col-xs-12' v-for='standard in currentProject.standards'>
+                <button class='col btn btn-default' style='width: 100%;' @click='selectedStandard = standard.code'>
+                  <a type="button" class='close' data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></a><strong>{{standard.code}}</strong><br /><div class='desc small'>{{standard.description}}</div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>  
-  </div>
+      </div>  
+    </div>
     <pdf-viewer v-if='selectedStandard.length !== 0' :standard='selectedStandard' @close="selectedStandard= ''"></pdf-viewer>
+  </div>
 </template>
 
 <script>
   import {getProjects, getProject, deleteProject} from 'src/api/project'
-  import {setCreateProject} from 'src/vuex/actions'
   import NavProjects from './widget/NavProjects'
   import bus from '../bus'
   import {modals} from 'src/plugins/mixins'
@@ -69,11 +69,6 @@
       BaseModal,
       NavProjects,
       PdfViewer
-    },
-    vuex: {
-      actions: {
-        setCreateProject
-      }
     },
     route: {
       data ({next}) {
@@ -89,7 +84,7 @@
         }
       }
     },
-    ready () {
+    mounted () {
       // For mobile menu prevent closing
       bus.on(bus.events.pageReset, (arg) => {
         if (arg !== 'drop-down') {
@@ -117,7 +112,7 @@
     },
     methods: {
       createProject () {
-        this.setCreateProject(true)
+        this.$store.dispatch('setCreateProject')
       },
       delProject (projectId) {
         deleteProject(projectId).then((res) => {

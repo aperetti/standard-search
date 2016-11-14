@@ -2,7 +2,7 @@
   <drop-down>
     <template slot='title'>User</template>
     <template slot='dropdown'>
-      <li><a v-link="{ name: 'projectsHome' }" class='cursor'><span class="glyphicon glyphicon-list-alt"></span> Projects</a></li>
+      <li><router-link :to="{ name: 'projectsHome' }" class='cursor'><span class="glyphicon glyphicon-list-alt"></span> Projects</router-link></li>
     </template>
   </drop-down>
 </template>

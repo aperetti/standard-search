@@ -1,40 +1,41 @@
 <template>
-  <nav class=" navbar navbar-default" role="navigation">
-    <div class="navbar-header">         
-      <a class="navbar-brand cursor" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
-      <button type="button" class="navbar-toggle" @click="toggleOption">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
-      <ul class="nav navbar-nav">
-        <li><a @click.prevent='proccessLogout' class='cursor'>Logout</a></li>
-        <nav-history></nav-history>
-        <nav-user></nav-user>
-      </ul>
-      <ul v-if="admin" class="nav navbar-nav">
-        <nav-admin></nav-admin>
-      </ul>
+  <div>
+    <nav class=" navbar navbar-default" role="navigation">
+      <div class="navbar-header">         
+        <a class="navbar-brand cursor" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
+        <button type="button" class="navbar-toggle" @click="toggleOption">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div v-bind:class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
+        <ul class="nav navbar-nav">
+          <li><a @click.prevent='proccessLogout' class='cursor'>Logout</a></li>
+          <nav-history></nav-history>
+          <nav-user></nav-user>
+        </ul>
+        <ul v-if="admin" class="nav navbar-nav">
+          <nav-admin></nav-admin>
+        </ul>
 
-      <form class="navbar-form">
-        <div class="form-group" style="display:inline;">
-          <div class="input-group" style="display:table;">
-            <span class="input-group-addon" style="width:1%;"><span class="glyphicon glyphicon-search"></span></span>
-            <search></search>
+        <form class="navbar-form">
+          <div class="form-group" style="display:inline;">
+            <div class="input-group" style="display:table;">
+              <span class="input-group-addon" style="width:1%;"><span class="glyphicon glyphicon-search"></span></span>
+              <search></search>
+            </div>
           </div>
-        </div>
-      </form> 
+        </form> 
+      </div>
+      </nav>
+      <standard-menu :enable='menuOpen' class="col-xs-12 col-md-6 float"></standard-menu> 
+      <div class="dim" @click="close" v-if="menuOpen || optionOpen"></div>
     </div>
-  </nav>
-  <standard-menu :enable='menuOpen' class="col-xs-12 col-md-6 float"></standard-menu> 
-  <div class="dim" @click="close" v-if="menuOpen || optionOpen"></div>
 </template>
 
 <script>
-  import {logout} from '../vuex/actions'
   import {isAdmin} from '../api/auth'
   import Search from './Search'
   import StandardMenu from './StandardMenu'
@@ -46,7 +47,7 @@
 
   export default {
     mixins: [togglers],
-    ready: function () {
+    mounted: function () {
       bus.on('page-reset', (arg) => {
         if (arg !== 'drop-down') {
           this.optionOpen = false
@@ -78,11 +79,6 @@
         admin: false
       }
     },
-    vuex: {
-      actions: {
-        logout
-      }
-    },
     computed: {
       editStandard () {
         var standardId = this.$route.params.standardId
@@ -100,11 +96,11 @@
         this.menuOpen = false
       },
       proccessLogout: function () {
-        this.logout()
-        this.$route.router.go('/login')
+        this.$store.dispatch('logout')
+        this.$router.push('/login')
       },
       createStandard: function () {
-        this.$route.router.go('/admin/standard/create')
+        this.$router.push('/admin/standard/create')
       },
       toggleMenu: function () {
         let tempStatus = !this.menuOpen

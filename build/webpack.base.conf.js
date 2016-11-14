@@ -16,13 +16,16 @@ module.exports = {
     extensions: ['', '.js', '.vue'],
     fallback: [path.join(__dirname, '../node_modules'), path.join(__dirname, '../bower_components')],
     alias: {
+      'vue': 'vue/dist/vue.js',
+      'vue$': 'vue/dist/vue.js',
       'src': path.resolve(__dirname, '../src'),
       'assets': path.resolve(__dirname, '../src/assets'),
       'components': path.resolve(__dirname, '../src/components'),
       'actions': path.resolve(__dirname, '../src/vuex/actions.js'),
       'getters': path.resolve(__dirname, '../src/vuex/getters.js'),
       'menus': path.resolve(__dirname, '../src/vuex/menus.js'),
-      'mixins': path.resolve(__dirname, '../src/plugins/mixins.js')
+      'mixins': path.resolve(__dirname, '../src/plugins/mixins.js'),
+      'api' : path.resolve(__dirname, '../src/api')
     }
   },
   resolveLoader: {

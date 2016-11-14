@@ -1,7 +1,6 @@
 import store from '../vuex/store'
 import Vue from 'vue'
 import VueResource from 'vue-resource'
-import {setToken} from '../vuex/actions'
 
 Vue.use(VueResource)
 
@@ -27,9 +26,12 @@ export const apiAdminBase = apiBase + 'admin/'
 export const elasticSearch = apiStandardsBase + 'search'
 export const apiGetMenus = apiStandardsBase + 'menu'
 export const apiCreateMenu = apiAdminBase + 'create_menu'
+export const apiDeleteMenu = apiAdminBase + 'delete_menu'
+
 export const apiUserBase = apiBase + 'user/'
 export const apiAddHistory = apiUserBase + 'add_history/'
 export const apiGetHistory = apiUserBase + 'get_history/'
+
 export const apiProjectsBase = apiBase + 'user/projects/'
 
 // Gets the specific Mongo standard document referenced by the filename
@@ -61,7 +63,10 @@ export const loggedIn = () => {
   if (store.state.standard.token.token && store.state.standard.token.expiration > new Date().getTime()) {
     return true
   } else if (window.localStorage.getItem('token') && window.localStorage.getItem('expiration') > new Date().getTime()) {
-    setToken(store, {token: window.localStorage.getItem('token'), expiration: window.localStorage.getItem('expiration')})
+    store.dispatch(
+      'setToken',
+      {token: window.localStorage.getItem('token'), expiration: window.localStorage.getItem('expiration')}
+    )
     return true
   } else {
     return false

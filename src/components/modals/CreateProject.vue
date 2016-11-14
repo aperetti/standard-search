@@ -1,5 +1,5 @@
 <template>
-  <base-modal :callback='addProject' v-ref:basemodal @submit='addProject'>
+  <base-modal :callback='addProject' ref:basemodal @submit='addProject'>
     <template slot='title'>Create Project</template>
     <template slot='body'>
       <div class="input-group">

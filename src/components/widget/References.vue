@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div v-if='regexes.length !== 0'>
       <div v-for='regex in regexes'>
         <div v-if='regex.edit' class='input group'>
@@ -14,6 +15,7 @@
       <input v-model='newRegex.modifiers'></input>
       <button @click='saveReferences'>Save</button>
     </div>
+  </div>
 </template>
 
 <script>
@@ -26,7 +28,7 @@
         newRegex: {group: '', regex: '', modifiers: ''}
       }
     },
-    ready () {
+    mounted () {
       this.refreshReferences()
     },
     methods: {

@@ -29,24 +29,30 @@
         </div>
       </div>
     <div class = 'col-xs-7 col-md-8'>
-      <img v-if='standardsLoading' class='loader' src='../assets/greyLoading.svg' style="z-index:100;" transition='item'></img>
+      <transition name="item">
+        <img v-if='standardsLoading' class='loader' src='../assets/greyLoading.svg' style="z-index:100;"></img>
+      </transition>
       <div class="panel panel-default" v-if="!menus.standards || menus.standards.length === 0">
         <div class="panel-heading">{{menus.name}}</div>
         <div class="list-group">
-            <a v-if='!menus.standards || menus.standards.length === 0' class="list-group-item" transition='item'>
-              <h4 class="list-group-item-heading" transition='item'><span class="glyphicon glyphicon-sunglasses glyphicon" transition='item'></span></h4>
-              <p class="list-group-item-text" transition='item'>No Standards</p>
+          <transition name="item">
+            <a v-if='!menus.standards || menus.standards.length === 0' class="list-group-item">
+              <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-sunglasses glyphicon"></span></h4>
+              <p class="list-group-item-text">No Standards</p>
             </a>
+          </transition>
         </div>
       </div>
       <div class="panel panel-default" v-if="menus.standards && menus.standards.length != 0">
         <div class="panel-heading">{{menus.name}}</div>
         <div class="list-group">             
           <template v-for='std in menus.standards'>
-            <a class="list-group-item" v-link="{name: 'standard', params: {standardId: std.code}}" transition='item'>
-              <h4 class="list-group-item-heading">{{std.code}}</h4>
-              <p class="list-group-item-text">{{std.description}}</p>
-            </a>
+            <transition name="item">
+              <router-link class="list-group-item" :to="{name: 'standard', params: {standardId: std.code}}">
+                <h4 class="list-group-item-heading">{{std.code}}</h4>
+                <p class="list-group-item-text">{{std.description}}</p>
+              </router-link>
+            </transition>
           </template>
         </div>
       </div>
@@ -99,7 +105,7 @@ export default {
       })
     }
   },
-  ready: function () {
+  mounted: function () {
     this.fetchMenu()
   }
 }
@@ -118,18 +124,20 @@ export default {
       margin: auto;
       top: 0; left: 0; bottom: 0; right: 0;
     }
-    .item-transition {
+    .item-enter-active {
       -webkit-transition: opacity .25s ease-in-out;
       -moz-transition: opacity .25s ease-in-out;
       -o-transition: opacity .25s ease-in-out;
       transition: opacity .25s ease-in-out;
-    }
-    .item-enter {
       filter: alpha(opacity=0);
       height: 0;
       opacity: 0;
     }
-    .item-leave {
+    .item-enter-active {
+      -webkit-transition: opacity .25s ease-in-out;
+      -moz-transition: opacity .25s ease-in-out;
+      -o-transition: opacity .25s ease-in-out;
+      transition: opacity .25s ease-in-out;
       filter: alpha(opacity=0);
       opacity: 0;
       height: 0;

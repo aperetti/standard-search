@@ -8,9 +8,8 @@
       <div id="editor" class='col-xs-12' v-if='edit'>
         <textarea v-model="input" class="form-control" rows="25"></textarea>
       </div>
-      <div class="{{edit ? 'col-xs-12'' : 'col-xs-12''}}">
-       
-        <div v-html="input | marked"></div>
+      <div class="[edit ? 'col-xs-12' : 'col-xs-12']">
+        <div v-html="input"></div>
       </div>
     </div>
   </div>

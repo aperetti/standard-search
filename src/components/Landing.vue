@@ -1,6 +1,6 @@
 <template>
   <div class='container view'>
-  <markdown :admin='admin'></markdown>
+    <markdown :admin='admin'></markdown>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
   import markdown from './widget/markdown'
   import {isAdmin} from '../api/auth'
   export default {
-    ready () {
+    mounted () {
       isAdmin().then((res) => {
         this.admin = true
       })

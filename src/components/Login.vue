@@ -1,34 +1,36 @@
 <template>
-  <div class='login-bg'>  </div>
-  <div class='jumbotron'>
-    <div style='overflow-y: auto; height: 100%; width: 100%;'>
-    <div class=' col-xs-12 col-md-4 col-md-offset-4' style='margin-top:50px;margin-bottom:50px;'>
-      <div class='well'>
-        <img class="logo" src="../assets/logo_s.png">
-        <form class='login'>
-          <div class='form-group'>
-            <label class='sr-only' for="loginUsername">User</label>
-            <input id='loginUsername' class='form-control' v-model='username' type='text' placeholder='Username' />
+  <div>
+    <div class='login-bg'></div>
+      <div class='jumbotron'>
+        <div style='overflow-y: auto; height: 100%; width: 100%;'>
+        <div class=' col-xs-12 col-md-4 col-md-offset-4' style='margin-top:50px;margin-bottom:50px;'>
+          <div class='well'>
+            <img class="logo" src="../assets/logo_s.png">
+            <form class='login'>
+              <div class='form-group'>
+                <label class='sr-only' for="loginUsername">User</label>
+                <input id='loginUsername' class='form-control' v-model='username' type='text' placeholder='Username' />
+              </div>
+              <div class='form-group'>
+                <label class='sr-only' for='loginPassword'>Password</label>
+                <input id='loginPassword' class='form-control' @keyup.13='processLogin' v-model='password' type='password' placeholder='Password'/>
+                <br />
+                <button class='btn btn-primary btn-block' @click.prevent='processLogin' type='button'>{{loading ? 'Loading' : 'Sign in'}}</button>
+              </div>
+              <transition name="fafa">
+                <div v-show='failed' class='alert alert-danger'>
+                  {{message}}
+                </div>
+              </transition>
+            </form>
           </div>
-          <div class='form-group'>
-            <label class='sr-only' for='loginPassword'>Password</label>
-            <input id='loginPassword' class='form-control' @keyup.13='processLogin' v-model='password' type='password' placeholder='Password'/>
-            <br />
-            <button class='btn btn-primary btn-block' @click.prevent='processLogin' type='button'>{{loading ? 'Loading' : 'Sign in'}}</button>
-          </div>
-          <div v-show='failed' transition="fafa" class='alert alert-danger'>
-            {{message}}
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
-  </div>
-
 </template>
 
 <script>
-  import {logout, login} from '../vuex/actions'
   import {getToken} from '../api/auth'
   
   export default {
@@ -41,33 +43,26 @@
         message: 'Incorrect Username/Password. Please try again.'
       }
     },
-    vuex: {
-      actions: {
-        login,
-        logout
-      }
-    },
     methods: {
       processLogin: function () {
-        var self = this
         this.loading = true
         getToken(this.username, this.password).then((response) => {
-          self.login(response)
-          self.password = ''
-          self.loading = false
-          self.$route.router.go('/')
+          this.$store.dispatch('login', response)
+          this.password = ''
+          this.loading = false
+          this.$router.push({name: 'landing'})
         }, (response) => {
-          self.password = ''
-          self.failed = true
-          self.loading = false
-          self.message = response.data.message ? response.data.message : self.message
+          this.password = ''
+          this.failed = true
+          this.loading = false
+          this.message = response.data.message ? response.data.message : this.message
           window.setTimeout(() => {
-            self.failed = false
+            this.failed = false
           }, 3000)
         })
       },
       logout: function () {
-        this.logout()
+        this.$store.dispatch('logout')
       }
     }
   }
@@ -89,10 +84,12 @@
     margin-bottom: 0px;
 
   }
-  .fafa-transition {
+  .fafa-enter-active {
     transition: all .3s ease;
+    opacity: 1;
   }
-  .fafa-enter, .fafa-leave {
+  .fafa-leave-active {
+    transition: all .3s ease;
     opacity: 0;
   }
   .well {

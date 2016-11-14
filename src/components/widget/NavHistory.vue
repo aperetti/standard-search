@@ -1,10 +1,10 @@
 <template>
-        <drop-down v-show="history.length > 0">
-          <template slot='title'>History</template>
-          <template slot='dropdown'>
-            <li id='drop {{standard.code}}' v-for='standard in history'><a v-link="{ name: 'standard', params: { standardId: standard.code }}">{{standard.code}}</a></li>
-          </template>
-        </drop-down>
+  <drop-down v-show="history.length > 0">
+    <template slot='title'>History</template>
+    <template slot='dropdown'>
+      <li :id="'drop ' + standard.code" v-for='standard in history'><router-link :to="{name: 'standard', params: {standardId: standard.code}}">{{standard.code}}</router-link></li>
+    </template>
+  </drop-down>
 </template>
 
 <script>
@@ -15,7 +15,7 @@ export default {
   components: {
     DropDown
   },
-  ready: function () {
+  mounted: function () {
     getHistory().then((response) => {
       this.history = response.data
     }).catch((e) => {

@@ -1,34 +1,33 @@
 <template>
   <div id="app">
-    <create-project v-if='modals.CreateProject.enabled'></create-project>
     <navbar v-if='logged'></navbar>
     <login v-else></login>
-
+    <div class="alert">
+      <alert-container  />
+    </div>
     <!-- MODALS -->
-
+      
     <div class='router' v-show='logged'>
       <router-view></router-view>
-    </div>  
+    </div>
+
   </div>
 </template>
 
 <script>
-  import store from './vuex/store'
   import Login from 'components/Login'
-  import {logout, setToken} from './vuex/actions'
   import Navbar from './components/Navbar'
+  import AlertContainer from 'components/widget/Alert/AlertContainer'
   // MODAL Components
-  import CreateProject from 'components/modals/CreateProject'
   import {loggedIn} from './api/config'
   import bus from './bus'
   export default {
-    store,
     components: {
       Navbar,
       Login,
-      CreateProject
+      AlertContainer
     },
-    ready: function () {
+    mounted: function () {
       document.addEventListener('keyup', (e) => {
         if (e.keyCode === 27) {
           bus.emit('page-reset')
@@ -46,24 +45,14 @@
       })
       window.setInterval(function () {
         if (!loggedIn()) {
-          self.$route.router.go('/login')
-          self.logout()
+          self.$router.push('/login')
+          self.$store.dispatch('logout')
         }
       }, 10000)
     },
     computed: {
       logged: function () {
-        return (this.expiration > new Date().getTime())
-      }
-    },
-    vuex: {
-      getters: {
-        expiration: state => state.standard.token.expiration,
-        modals: state => state.modals
-      },
-      actions: {
-        logout,
-        setToken
+        return (this.$store.state.standard.token.expiration > new Date().getTime())
       }
     },
     data () {
@@ -110,6 +99,7 @@ body {
   margin-left: 10px;
   margin-right: 10px;
 }
+
 .dim {
   height:100%;
   width:100%;

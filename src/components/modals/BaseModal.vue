@@ -1,8 +1,8 @@
 <template>
   <!-- MODAL -->
-  <div v-if='dim' class='modal-dim'></div>
   <div class="col-xs-12 col-md-4">
-    <div class="modal fade in" tabindex="-1" role="dialog" style='display:block; padding-top: 100px;'>
+    <transition name='roll-down'>
+    <div class="modal" tabindex="-1" role="dialog" style='display:block; padding-top: 100px;' v-if="dim">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -19,49 +19,33 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    </transition>
   </div>
+
 </template>
 
 <script>
-  import {closeModals} from 'src/vuex/actions'
   export default {
-    props: {
-      dim: {
-        type: 'Boolean',
-        default: true
-      }
-    },
-    vuex: {
-      actions: {
-        closeModals
-      }
-    },
+    props: ['dim'],
     methods: {
       close () {
         this.$emit('close')
-        this.closeModals()
       },
       submit () {
         this.$emit('submit')
-        this.closeModals()
       }
     }
   }
 </script>
 
 <style scoped>
-.modal-dim {
-  height: 100%;
-  width: 100%;
-  top: 0%;
-  right: 0%;
-  position:fixed;
-  z-index:1000;
-  background-color:black;
-  filter: alpha(opacity=50); /* internet explorer */
-  -khtml-opacity: 0.50;      /* khtml, old safari */
-    -moz-opacity: 0.50;      /* mozilla, netscape */
-          opacity: 0.50;      /* fx, safari, opera */
+.roll-down-enter-active, .roll-down-leave-active {
+  transition: all 0.2s ease
 }
-
+ .roll-down-leave-active {
+  opacity: 0;
+}
+.roll-down-enter {
+  opacity: 0;
+}
 </style>

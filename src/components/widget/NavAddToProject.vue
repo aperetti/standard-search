@@ -4,11 +4,11 @@
       <template slot='dropdown'>
         <li v-show='projects.length === 0' class="dropdown-header">No Projects</li>
         <li  v-show='projects.length === 0'>
-          <a tabindex='-1' @click='openCreateProject()' id='projects-{{$index}}'> Create One?</a>
+          <a tabindex='-1' @click='openCreateProject()' :id="'projects-'+index"> Create One?</a>
         </li>
         <li v-show='projects.length !== 0' class="dropdown-header">Click a Project to add or remove this Standard</li>
-        <li v-for='project in projects'  @click='toggleProject(project.id, $index)'>
-          <a tabindex='-1' class='cursor' id='projects-{{$index}}' style='display:inline-block; width:100%; padding-right:0px;'>{{project.name}}
+        <li v-for='(project, index) in projects'  @click='toggleProject(project.id, index)'>
+          <a tabindex='-1' class='cursor' :id="'projects-' + index" style='display:inline-block; width:100%; padding-right:0px;'>{{project.name}}
             <span class='pull-right'>
               <span v-if='!project.standards.length && !project.loading' class="glyphicon glyphicon-plus" ></span>      
               <span v-if='project.standards.length && !project.loading' class="glyphicon glyphicon-ok" ></span>
@@ -27,9 +27,6 @@
   export default {
     mixins: [modals],
     props: ['standard'],
-    route: {
-      canReuse: false
-    },
     methods: {
       toggleProject: function (project, i) {
         this.projects[i].loading = true

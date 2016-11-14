@@ -5,7 +5,7 @@ export const togglers = {
   methods: {
     toggle (arg, time, pId, evt) {
       var event = this.$event || evt
-      var next = !this.$get(arg)
+      var next = !this[arg]
 
       // Check if clicked element causing the blur, contains a specific ID string (pId)
       // if it does then don't toggle the menu
@@ -23,14 +23,14 @@ export const togglers = {
             return
           }
         }
-        this.$set(arg, false)
+        this[arg] = false
         window.document.removeEventListener('click', blur)
       }
 
       bus.emit('page-reset', this.$options.name, !next)
 
       setTimeout(() => {
-        this.$set(arg, next)
+        this[arg] = next
         if (next) {
           window.document.addEventListener('click', blur)
         }
@@ -47,7 +47,7 @@ export const togglers = {
       }
 
       setTimeout(() => {
-        this.$set(arg, false)
+        this[arg] = false
       }, time + 50)
     }
   }

@@ -7,7 +7,7 @@
         @click="toggleState()" 
         @keyup.down="focusDropDown($event)"
         aria-haspopup="true"  
-        aria-expanded="{{open}}">
+        v-bind:aria-expanded="open">
       <slot name='title'>Title</slot>
       <span v-if='loading === false && (open === false || !persistant)' class="caret"></span>&nbsp;
       <span v-if='loading === false && (open === true && persistant)' class="glyphicon glyphicon-eye-close"></span>
@@ -24,7 +24,7 @@ import {togglers} from '../../plugins/mixins'
 import bus from 'src/bus'
 
 export default {
-  ready () {
+  mounted () {
     bus.on('page-reset', (arg) => {
       this.toggleDown('open')
     })

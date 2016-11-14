@@ -1,26 +1,28 @@
 <template>
-  <!-- Standard subnav -->
-  <nav class="navbar navbar-inverse" role="navigation" v-if='!standard'>
-  <div class="container-fluid">
-    <div class="navbar-header">         
-      <a class="navbar-brand">Standard</a>
-      <button type="button" class="navbar-toggle" @click="toggleOption">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="caret caret-mod"></span>
-      </button>
-    </div>
-    <div class="{{ optionOpen ? 'navbar-collapse collapse-in' : 'navbar-collapse collapse'}}">
-      <ul class="nav navbar-nav">
-        <nav-add-to-project :standard="routerStandard"></nav-add-to-project>
-      </ul>
-    </div>
-</nav>
-<!-- Standard PDF Viewer -->
-  <div class='row' style="position: fixed; height: 95%; min-height: 95%; width: 100%; ">
-    <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
-      <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
-      <img v-if="notFound" class="logo" class='photo' src="../assets/logo_s.png">
-      <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
+  <div>
+    <!-- Standard subnav -->
+    <nav class="navbar navbar-inverse" role="navigation" v-if='!standard'>
+    <div class="container-fluid">
+      <div class="navbar-header">         
+        <a class="navbar-brand">Standard</a>
+        <button type="button" class="navbar-toggle" @click="toggleOption">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="caret caret-mod"></span>
+        </button>
+      </div>
+      <div class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
+        <ul class="nav navbar-nav">
+          <nav-add-to-project :standard="routerStandard"></nav-add-to-project>
+        </ul>
+      </div>
+    </nav>
+  <!-- Standard PDF Viewer -->
+    <div class='row' style="position: fixed; height: 95%; min-height: 95%; width: 100%; ">
+      <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
+        <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
+        <img v-if="notFound" class="logo photo" src="../assets/logo_s.png">
+        <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
+      </div>
     </div>
   </div>
 </template>

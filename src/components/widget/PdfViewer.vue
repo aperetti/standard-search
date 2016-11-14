@@ -1,17 +1,12 @@
 <template>
 <!-- Standard PDF Viewer -->
-
   <div class='row' style="position: fixed; height: 100%; min-height: 95%; width: 100%; z-index: 9999">
-    
     <div class='dim' @click='$emit("close")'></div>
     <div class='close' @click='$emit("close")'><span class='glyphicon glyphicon-remove-circle'></span></div>
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
-      
       <iframe id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
-      
-      <img v-if="notFound" class="logo" class='photo' src="../../assets/logo_s.png">
+      <img v-if="notFound" class="logo photo" src="../../assets/logo_s.png">
       <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
-        
     </div>
   </div>
 </template>
@@ -27,7 +22,7 @@
         close: false
       }
     },
-    ready () {
+    mounted () {
       this.$watch('standard', () => {
         addHistory(this.standard).then().catch(e => console.log('Failed to add Histroy'))
           // TODO: HANDLE ERROR WHEN STANDARD IS NOT ADDED. IS THIS NEEDED?)
