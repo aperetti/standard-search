@@ -16,7 +16,7 @@
         let validation = this.$options.validator.call(this)
         // Will check each validation group and make sure all of the $valid rules
         // are upheld. If the validation group starts with '$' they will be ignored
-        // $valid wil be a reflect of the validation group (i.e. if any are false $valid == false).
+        // $valid wil be a reflection of the validation group (i.e. if any are false $valid == false).
         // If the warning flag is set on one of the validation items, then that rule will not cause $valid to fail.
         for (var group in validation) {
           if (group.indexOf('$') !== '0') {

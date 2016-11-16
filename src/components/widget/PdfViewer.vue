@@ -5,8 +5,6 @@
     <div class='close' @click='$emit("close")'><span class='glyphicon glyphicon-remove-circle'></span></div>
     <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
       <iframe id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
-      <img v-if="notFound" class="logo photo" src="../../assets/logo_s.png">
-      <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
     </div>
   </div>
 </template>

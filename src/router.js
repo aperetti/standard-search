@@ -29,7 +29,7 @@ var routes = [
     path: '/admin/standard/edit/:standardId',
     name: 'editStandard',
     component: function (resolve) {
-      require(['components/EditStandard'], resolve)
+      require(['components/CreateStandard'], resolve)
     }
   },
   {

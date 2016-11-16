@@ -4,7 +4,7 @@
       <template slot='dropdown'>
         <li v-show='projects.length === 0' class="dropdown-header">No Projects</li>
         <li  v-show='projects.length === 0'>
-          <a tabindex='-1' @click='openCreateProject()' :id="'projects-'+index"> Create One?</a>
+          <a tabindex='-1' @click='openCreateProject()' :id="'projects-0'"> Create One?</a>
         </li>
         <li v-show='projects.length !== 0' class="dropdown-header">Click a Project to add or remove this Standard</li>
         <li v-for='(project, index) in projects'  @click='toggleProject(project.id, index)'>

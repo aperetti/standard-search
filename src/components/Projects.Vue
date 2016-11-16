@@ -17,8 +17,6 @@
         </div>
       </div>
     </nav>
-    
-
 
     <div class='container'>
       <div class='row' >
@@ -109,7 +107,7 @@
     data () {
       return {
         newProject: {
-          modal: true,
+          modal: false,
           name: null,
           description: null
         },
@@ -139,6 +137,7 @@
       createProject () {
         createProject(this.newProject.name, this.newProject.description).then((res) => {
           this.cancelModal()
+          this.refreshProjects()
           this.$store.dispatch('createAlert', {message: res.data, type: 'success'})
         }).catch((er) => {
           this.$store.dispatch('createAlert', {message: er.data, type: 'danger'})

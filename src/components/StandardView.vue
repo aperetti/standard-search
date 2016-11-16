@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Standard subnav -->
-    <nav class="navbar navbar-inverse" role="navigation" v-if='!standard'>
+    <nav class="navbar navbar-inverse" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">         
         <a class="navbar-brand">Standard</a>
@@ -14,16 +14,30 @@
         <ul class="nav navbar-nav">
           <nav-add-to-project :standard="routerStandard"></nav-add-to-project>
         </ul>
+        <ul class="nav navbar-nav">
+          <li><a href='#' @click="showRevision = true"><span class="glyphicon glyphicon-list" /> Revisions</a></li>
+        </ul>
       </div>
     </nav>
   <!-- Standard PDF Viewer -->
     <div class='row' style="position: fixed; height: 95%; min-height: 95%; width: 100%; ">
       <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
-        <iframe v-show="!notFound" id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
-        <img v-if="notFound" class="logo photo" src="../assets/logo_s.png">
-        <div v-if="notFound" class="page-header"><h2>404 - Not Found</h2></div>
+        <iframe id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
       </div>
     </div>
+  <!-- Versions Modal -->
+    <base-modal :dim="showRevision" :hideSubmit="true" v-on:close="showRevision = false" v-on:submit="showRevision = false">
+      <template slot='title'>Standard Revision</template>
+    <template slot='body'>
+      <div class="list-group">
+        <a class="list-group-item" v-for="version in revisions">
+          <h4 class="list-group-item-heading pull-left"style="margin-right: 10px; margin-bottom: 0px;">{{ version.createdAt | date }}</h4>
+          <p class="list-group-item-text text-left" style="margin-top: 2px;" >{{version.note}}</p>
+        </a>
+      </div>
+    </template>
+    <template slot='button' v-if="false">Add Project</template>
+    </base-modal>
   </div>
 </template>
 
@@ -31,23 +45,25 @@
   
 
 <script>
+  import BaseModal from 'components/modals/BaseModal'
   import {withToken, apiGetStandardPdf} from '../api/config'
-  import {addHistory} from '../api/standard'
+  import {addHistory, getStandardRevisions} from '../api/standard'
   import StandardMenu from './StandardMenu'
   import NavAddToProject from './widget/NavAddToProject'
   import bus from '../bus'
 
   export default {
-    route: {
-      data: function (transition) {
-        addHistory(transition.to.params.standardId).then((res) => {
-        }).catch(e => console.log('Failed to add Histroy'))
-        // TODO: HANDLE ERROR WHEN STANDARD IS NOT ADDED. IS THIS NEEDED?)
-      }
+    created () {
+      addHistory(this.$route.params.standardId).then((res) => {
+      }).catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
+
+      getStandardRevisions(this.$route.params.standardId).then((res) => {
+        this.revisions = res.data
+      }).catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
     },
     computed: {
       standardUrl: function () {
-        var standardId = this.standard ? this.standard : this.$route.params.standardId
+        var standardId = this.$route.params.standardId
         var standardUrl = withToken(apiGetStandardPdf(standardId))
         var iFrameUrl = `https://docs.google.com/gview?url=${standardUrl}&embedded=true`
         return iFrameUrl
@@ -65,12 +81,16 @@
     },
     data () {
       return {
-        optionOpen: false
+        optionOpen: false,
+        standard: {},
+        revisions: [],
+        showRevision: false
       }
     },
     components: {
       StandardMenu,
-      NavAddToProject
+      NavAddToProject,
+      BaseModal
     }
   }
 </script>

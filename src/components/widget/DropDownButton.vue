@@ -1,22 +1,17 @@
 <template>
-  <li role='presentation' v-bind:class="['dropdown', this.open ? 'open' : '']">
-    <a class="dropdown-toggle" 
-        href='#'
-        data-toggle="dropdown"
-        role="button" 
-        @click="toggleState()" 
-        @keyup.down="focusDropDown($event)"
-        aria-haspopup="true"  
-        v-bind:aria-expanded="open">
+  
+  <div v-bind:class="['dropdown text-left', this.open ? 'open' : '']">
+    <button type="button" @click.prevent="toggleState" class="btn btn-default">
       <slot name='title'>Title</slot>
+      <span class="sr-only">Toggle Dropdown</span>
       <span v-if='loading === false && (open === false || !persistant)' class="caret"></span>&nbsp;
       <span v-if='loading === false && (open === true && persistant)' class="glyphicon glyphicon-eye-close"></span>
       <img v-if='loading' src='../../assets/greyLoading14.svg'>
-    </a>
-      <ul class="dropdown-menu" >
-        <slot name='dropdown'><li><a>Dropdown</a></li></slot>
-      </ul>
-  </li>
+    </button>
+    <ul class="dropdown-menu">
+      <slot name='dropdown'><a>Dropdown</a></slot>
+    </ul>
+  </div>
 </template>
 
 <script>

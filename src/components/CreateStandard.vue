@@ -54,22 +54,19 @@
         </div>
       </div>
     </div>
+
     <!-- STATUS FORM GROUP -->
     <div class="form-group">
     <label for="status" class="col-sm-2 col-sm-offset-1 control-label">Set Status</label>
       <div class="col-sm-8 col-xs-10 col-xs-offset-1">
-        <dropdown class="pull-left">
-          <button type="button" class="btn btn-default" data-toggle="dropdown">
-            {{status}}
-            <span class="caret"></span>
-          </button>
-          <ul slot="dropdown-menu" class="dropdown-menu">
-            <li><h6 class='dropdown-header'>Select Status</h6></li>
-            <li><a href='#' @click="setStatus('ACTIVE')">ACTIVE</a></li>
-            <li><a href='#' @click="setStatus('INACTIVE')">INACTIVE</a></li>
-            <li><a href='#' @click="setStatus('DELETED')">DELETED</a></li>             
-          </ul>
-        </dropdown>
+        <drop-down-button>
+          <template slot="title">{{status.value}}</template>
+          <template slot='dropdown'>
+            <li><a href='#' @click="status.value = 'ACTIVE'">ACTIVE</a></li>
+            <li><a href='#' @click="status.value = 'OBSOLETE'">OBSOLETE</a></li>
+            <li><a href='#' @click="status.value = 'DELETED'">DELETED</a></li>
+          </template>             
+        </drop-down-button>
       </div>
     </div>
 
@@ -100,7 +97,7 @@
       <input class="btn btn-primary" v-if='!loading' :disabled="!$vd.$valid" type="submit" value="Submit">
     </div>
     
-    <div class="form-group">
+    <div class="form-group" v-if="!loadingStandard">
       <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
         <div class="panel panel-danger" v-if="!$vd.$valid">
           <div class="panel-heading">Errors</div>
@@ -109,6 +106,17 @@
             <li class="list-group-item" v-if="!$vd.code.conflict.valid && code.length !== 0">Standard Name Already Used</li>
             <li class="list-group-item" v-if="!$vd.desc.required.valid">Standard Description Required</li>
             <li class="list-group-item" v-if="!$vd.file.required.valid">PDF Upload Required</li>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <div class="form-group" v-if="!loadingStandard">
+      <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+        <div class="panel panel-warning" v-if="!$vd.changelog.required.valid">
+          <div class="panel-heading">Warning</div>
+          <div class="list-group">
+            <li class="list-group-item" v-if="!$vd.changelog.required.valid">{{$vd.changelog.required.msg}}</li>
           </div>
         </div>
       </div>
@@ -148,19 +156,40 @@
       </template>
     </base-modal>
 
+    <loading-modal :show="loadingStandard">Loading Standard Information</loading-modal>
+
   </div>
   
 </template>
 
 <script>
-  import {apiAddStandard, withToken} from '../api/config'
-  import {tooltip, dropdown} from 'vue-strap'
-  import {validStandard} from '../api/standard'
+  import {apiAddStandard, apiEditStandard, withToken} from '../api/config'
+  import {tooltip} from 'vue-strap'
+  import {validStandard, getStandardById} from '../api/standard'
   import {getMenu, createMenu, deleteMenu} from 'src/api/menu'
   import BaseModal from './modals/BaseModal'
+  import LoadingModal from './modals/LoadingModal'
+  import DropDownButton from 'components/widget/dropdownbutton'
   export default {
     mounted: function () {
-      this.fetchMenu(0)
+      if ('standardId' in this.$route.params) {
+        this.loadingStandard = true
+        getStandardById(this.$route.params.standardId)
+        .then(res => {
+          this.loadingStandard = false
+          this.editStandard = res.data
+          this.code = res.data.code
+          this.desc = res.data.description
+          this.fetchMenu(res.data.menu_id)
+        }).catch(e => {
+          this.$store.dispatch('createAlert', {message: e.res, type: 'danger'})
+          this.loadingStandard = false
+        })
+      } else {
+              // Get base level Menu
+        this.fetchMenu(0)
+      }
+
       // Watch for code to find a conflict with the name of the standard.
       this.$watch('code', () => {
         var self = this
@@ -175,11 +204,16 @@
     components: {
       tooltip,
       BaseModal,
-      dropdown
+      DropDownButton,
+      LoadingModal
     },
     data: function () {
       return {
-        status: '',
+        loadingStandard: false,
+        status: {
+          open: false,
+          value: 'ACTIVE'
+        },
         changelog: '',
         deleteModal: null,
         scrollDir: false,
@@ -196,7 +230,8 @@
         desc: '',
         file: '',
         fileConflictInfo: {},
-        loading: false
+        loading: false,
+        editStandard: {}
       }
     },
     methods: {
@@ -269,19 +304,29 @@
         formData.append('menu', this.menu.id)
         formData.append('code', this.code)
         formData.append('desc', this.desc)
+        formData.append('changelog', this.changelog)
         if (document.getElementById('pdfFile').files[0]) {
           formData.append('pdf', document.getElementById('pdfFile').files[0])
         }
         formData.append('status', this.status)
         if (this.changelog.length > 0) formData.append('changelog', this.changelog)
         var xhr = new window.XMLHttpRequest()
-        xhr.open('POST', withToken(apiAddStandard), true)
+        if ('standardId' in this.$route.params) {
+          formData.append('oldStandardId', this.editStandard.code)
+          xhr.open('POST', withToken(apiEditStandard), true)
+        } else {
+          xhr.open('POST', withToken(apiAddStandard), true)
+        }
         xhr.onload = function () {
           self.loading = false
+          var msg
           if (xhr.status === 200) {
             self.$router.push({name: 'standard', params: {standardId: self.code}})
+            msg = ('standardId' in self.$route.params) ? 'Standard Edited!' : 'Standard Created!'
+            self.$store.dispatch('createAlert', {message: msg, type: 'success'})
           } else {
-            // TODO: HANDLE FAILED STANDARD CREATION
+            msg = ('standardId' in self.$route.params) ? 'Failed editing Standard' : 'Failed creating Standard'
+            self.$store.dispatch('createAlert', {message: msg, type: 'danger'})
           }
         }
         xhr.send(formData)
@@ -319,7 +364,7 @@
         code: {
           $name: 'Code',
           required: {valid: this.code.length > 0, msg: 'Standard Code is required.'},
-          conflict: {valid: this.validCode || this.val, msg: 'Standard Code is already in use.'}
+          conflict: {valid: this.validCode || this.val || this.code === this.editStandard.code, msg: 'Standard Code is already in use.'}
         },
         desc: {
           $name: 'Description',
@@ -327,7 +372,7 @@
         },
         file: {
           $name: 'File Upload',
-          required: {valid: this.file.length > 0, msg: 'PDF Upload is Required'},
+          required: {valid: this.file.length > 0 || this.$route.params.standardId, msg: 'PDF Upload is Required'},
           type: {
             valid: (extension) => {
               if (this.file.indexof(extension)) {
@@ -338,6 +383,10 @@
             },
             msg: '*.pdf extension is required!'
           }
+        },
+        changelog: {
+          $name: 'Changelog',
+          required: {valid: this.changelog.length > 0, msg: 'Changelog is recommended for most changes. If no changelog is provide, a new revision will not be created. The latest revision will be update with the changes.', warning: true}
         }
       }
     }

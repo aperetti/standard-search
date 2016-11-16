@@ -5,8 +5,11 @@ import store from './vuex/store'
 import App from './App'
 import router from './router'
 import VueValid from './plugins/vue-valid'
-
+import moment from 'moment'
 /* eslint-disable no-new */
+Vue.filter('date', function (value) {
+  return moment(value).format('MMMM Do, YYYY')
+})
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueValid)
