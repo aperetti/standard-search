@@ -1,7 +1,8 @@
 # standards-search
 
 > Framework for Standard Management
-> Built from vue-webpack 
+
+See [Photoredux](https://photoredux.com) (contact for credentials)
 
 ## Build Setup
 
@@ -14,14 +15,5 @@ npm run dev
 
 # build for production with minification
 npm run build
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
  
