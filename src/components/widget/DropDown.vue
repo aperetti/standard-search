@@ -7,7 +7,7 @@
         @click="toggleState()" 
         @keyup.down="focusDropDown($event)"
         aria-haspopup="true"  
-        v-bind:aria-expanded="open">
+        :aria-expanded="open">
       <slot name='title'>Title</slot>
       <span v-if='loading === false && (open === false || !persistant)' class="caret"></span>&nbsp;
       <span v-if='loading === false && (open === true && persistant)' class="glyphicon glyphicon-eye-close"></span>

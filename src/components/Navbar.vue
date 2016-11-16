@@ -23,8 +23,9 @@
         <form class="navbar-form">
           <div class="form-group" style="display:inline;">
             <div class="input-group" style="display:table;">
+              <!--Search is disabled until fixed in backend 
               <span class="input-group-addon" style="width:1%;"><span class="glyphicon glyphicon-search"></span></span>
-              <search></search>
+               <search></search> --> 
             </div>
           </div>
         </form> 
