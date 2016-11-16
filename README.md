@@ -2,7 +2,7 @@
 
 > Framework for Standard Management
 
-See [Photoredux](https://photoredux.com)
+See [Photoredux](https://photoredux.com) (contact for credentials)
 
 ## Build Setup
 
