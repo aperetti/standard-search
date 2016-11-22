@@ -9,7 +9,7 @@
         <textarea v-model="input" class="form-control" rows="25"></textarea>
       </div>
       <div class="[edit ? 'col-xs-12' : 'col-xs-12']">
-        <div v-html="input"></div>
+        <div v-html="htmlInput"></div>
       </div>
     </div>
   </div>
@@ -57,8 +57,10 @@ Strikethrough uses two tildes. ~~Scratch this.~~
         edit: false
       }
     },
-    filters: {
-      marked: marked
+    computed: {
+      htmlInput () {
+        return marked(this.input)
+      }
     }
   }
 </script>

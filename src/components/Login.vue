@@ -1,32 +1,27 @@
 <template>
-  <div>
-    <div class='login-bg'></div>
-      <div class='jumbotron'>
-        <div style='overflow-y: auto; height: 100%; width: 100%;'>
-        <div class=' col-xs-12 col-md-4 col-md-offset-4' style='margin-top:50px;margin-bottom:50px;'>
-          <div class='well'>
-            <img class="logo" src="../assets/logo_s.png">
-            <form class='login'>
-              <div class='form-group'>
-                <label class='sr-only' for="loginUsername">User</label>
-                <input id='loginUsername' class='form-control' v-model='username' type='text' placeholder='Username' />
+  <div class="login-bg">
+      <div class=' col-xs-12 col-md-4 col-md-offset-4' style='margin-top:50px;margin-bottom:50px;'>
+        <div class='well'>
+          <img class="logo" src="../assets/logo_s.png">
+          <form class='login'>
+            <div class='form-group'>
+              <label class='sr-only' for="loginUsername">User</label>
+              <input id='loginUsername' class='form-control' v-model='username' type='text' placeholder='Username' />
+            </div>
+            <div class='form-group'>
+              <label class='sr-only' for='loginPassword'>Password</label>
+              <input id='loginPassword' class='form-control' @keyup.13='processLogin' v-model='password' type='password' placeholder='Password'/>
+              <br />
+              <button class='btn btn-primary btn-block' @click.prevent='processLogin' type='button'>{{loading ? 'Loading' : 'Sign in'}}</button>
+            </div>
+            <transition name="fafa">
+              <div v-show='failed' class='alert alert-danger'>
+                {{message}}
               </div>
-              <div class='form-group'>
-                <label class='sr-only' for='loginPassword'>Password</label>
-                <input id='loginPassword' class='form-control' @keyup.13='processLogin' v-model='password' type='password' placeholder='Password'/>
-                <br />
-                <button class='btn btn-primary btn-block' @click.prevent='processLogin' type='button'>{{loading ? 'Loading' : 'Sign in'}}</button>
-              </div>
-              <transition name="fafa">
-                <div v-show='failed' class='alert alert-danger'>
-                  {{message}}
-                </div>
-              </transition>
-            </form>
-          </div>
+            </transition>
+          </form>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -75,15 +70,7 @@
     max-height: 350px;
     margin-bottom: 25px;
   }
-  .jumbotron {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    margin-bottom: 0px;
 
-  }
   .fafa-enter-active {
     transition: all .3s ease;
     opacity: 1;
@@ -97,6 +84,7 @@
   }
   .login-bg {
     position: absolute;
+    -webkit-transform: translate3d(0,0,0);
     width: 100%;
     height: 100%;
     background: #bdc3c7; /* fallback for old browsers */

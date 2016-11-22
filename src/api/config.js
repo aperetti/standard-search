@@ -17,6 +17,7 @@ Vue.http.interceptors.push({
 export {Vue}
 
 export const domainBase = 'https://photoredux.com/'
+
 export const apiBase = domainBase + 'api/'
 
 export const apiAuth = apiBase + 'authenticate'
