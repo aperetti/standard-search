@@ -32,7 +32,8 @@
       <div class="list-group">
         <a class="list-group-item" v-for="version in revisions">
           <h4 class="list-group-item-heading pull-left"style="margin-right: 10px; margin-bottom: 0px;">{{ version.createdAt | date }}</h4>
-          <p class="list-group-item-text text-left" style="margin-top: 2px;" >{{version.note}}</p>
+          <p class="list-group-item-text text-left" style="margin-top: 2px;" v-if="version.note" > {{ version.note }}</p>
+          <p class="list-group-item-text text-left" style="margin-top: 2px;" v-else> File Changed </p>
         </a>
       </div>
     </template>
@@ -51,6 +52,7 @@
   import StandardMenu from './StandardMenu'
   import NavAddToProject from './widget/NavAddToProject'
   import bus from '../bus'
+  import Viewer from 'components/PdfViewer/Viewer'
 
   export default {
     created () {
@@ -71,6 +73,9 @@
       },
       routerStandard: function () {
         return this.$route.params.standardId
+      },
+      space: function (note) {
+        return note.length > 0 ? note : ' '
       }
     },
     methods: {
@@ -91,7 +96,8 @@
     components: {
       StandardMenu,
       NavAddToProject,
-      BaseModal
+      BaseModal,
+      Viewer
     }
   }
 </script>
