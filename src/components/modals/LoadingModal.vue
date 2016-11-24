@@ -5,7 +5,7 @@
     <div v-show="show" class="modal" tabindex="-1" role="dialog" style='display:block; padding-top: 100px;'>
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
-          <img src="../../assets/ring-alt108.svg"></img>
+          <img src="~src/assets/ring-alt108.svg"></img>
           <h4><slot></slot></h4>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

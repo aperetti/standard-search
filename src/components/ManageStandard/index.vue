@@ -93,7 +93,7 @@
     </div>
     
     <div class="form-group">
-      <button class='btn btn-primary' v-if='loading'><img src='../assets/loading.svg'> Uploading </img></button>
+      <button class='btn btn-primary' v-if='loading'><img src='~src/assets/loading.svg'> Uploading </img></button>
       <input class="btn btn-primary" v-if='!loading' :disabled="!$vd.$valid" type="submit" value="Submit">
     </div>
     
@@ -163,12 +163,12 @@
 </template>
 
 <script>
-  import {apiAddStandard, apiEditStandard, withToken} from '../api/config'
+  import {apiAddStandard, apiEditStandard, withToken} from 'src/api/config'
   import {tooltip} from 'vue-strap'
-  import {validStandard, getStandardById} from '../api/standard'
+  import {validStandard, getStandardById} from 'src/api/standard'
   import {getMenu, createMenu, deleteMenu} from 'src/api/menu'
-  import BaseModal from './modals/BaseModal'
-  import LoadingModal from './modals/LoadingModal'
+  import BaseModal from 'components/modals/BaseModal'
+  import LoadingModal from 'components/modals/LoadingModal'
   import DropDownButton from 'components/widget/dropdownbutton'
   export default {
     mounted: function () {
@@ -304,11 +304,10 @@
         formData.append('menu', this.menu.id)
         formData.append('code', this.code)
         formData.append('desc', this.desc)
-        formData.append('changelog', this.changelog)
-        if (document.getElementById('pdfFile').files[0]) {
+        if (this.file.length > 0) {
           formData.append('pdf', document.getElementById('pdfFile').files[0])
         }
-        formData.append('status', this.status)
+        formData.append('status', this.status.value)
         if (this.changelog.length > 0) formData.append('changelog', this.changelog)
         var xhr = new window.XMLHttpRequest()
         if ('standardId' in this.$route.params) {

@@ -30,7 +30,7 @@
       </div>
     <div class = 'col-xs-7 col-md-8'>
       <transition name="item">
-        <img v-if='standardsLoading' class='loader' src='../assets/greyLoading.svg' style="z-index:100;"></img>
+        <img v-if='standardsLoading' class='loader' src='~src/assets/greyLoading.svg' style="z-index:100;"></img>
       </transition>
       <div class="panel panel-default" v-if="!menus.standards || menus.standards.length === 0">
         <div class="panel-heading">{{menus.name}}</div>
@@ -62,8 +62,8 @@
 
 <script>
 import naturalSort from 'javascript-natural-sort'
-import {getStandardsByMenu} from '../api/standard'
-import {getMenu} from '../api/menu'
+import {getStandardsByMenu} from 'src/api/standard'
+import {getMenu} from 'src/api/menu'
 
 export default {
   props: ['enable'],

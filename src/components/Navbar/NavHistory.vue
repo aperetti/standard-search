@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import {getHistory} from '../../api/standard'
-import bus from '../../bus'
+import {getHistory} from 'src/api/standard'
+import bus from 'src/bus'
 import DropDown from 'components/widget/DropDown'
 export default {
   components: {

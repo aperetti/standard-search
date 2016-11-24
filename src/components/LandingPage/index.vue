@@ -5,8 +5,8 @@
 </template>
 
 <script>
-  import markdown from './widget/markdown'
-  import {isAdmin} from '../api/auth'
+  import markdown from 'components/widget/markdown'
+  import {isAdmin} from 'src/api/auth'
   export default {
     mounted () {
       isAdmin().then((res) => {

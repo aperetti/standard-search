@@ -6,7 +6,7 @@
       <span class="sr-only">Toggle Dropdown</span>
       <span v-if='loading === false && (open === false || !persistant)' class="caret"></span>&nbsp;
       <span v-if='loading === false && (open === true && persistant)' class="glyphicon glyphicon-eye-close"></span>
-      <img v-if='loading' src='../../assets/greyLoading14.svg'>
+      <img v-if='loading' src='~src/assets/greyLoading14.svg'>
     </button>
     <ul class="dropdown-menu">
       <slot name='dropdown'><a>Dropdown</a></slot>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {togglers} from '../../plugins/mixins'
+import {togglers} from 'src/plugins/mixins'
 import bus from 'src/bus'
 
 export default {

@@ -37,14 +37,14 @@
 </template>
 
 <script>
-  import {isAdmin} from '../api/auth'
+  import {isAdmin} from 'src/api/auth'
   import Search from './Search'
   import StandardMenu from './StandardMenu'
-  import NavHistory from './widget/NavHistory'
-  import NavAdmin from './widget/NavAdmin'
-  import NavUser from './widget/NavUser'
-  import bus from '../bus'
-  import {togglers} from '../plugins/mixins'
+  import NavHistory from './NavHistory'
+  import NavAdmin from './NavAdmin'
+  import NavUser from './NavUser'
+  import bus from 'src/bus'
+  import {togglers} from 'src/plugins/mixins'
 
   export default {
     mixins: [togglers],
@@ -115,6 +115,7 @@
 <style scoped>
   .navbar {
     margin-bottom:0px;
+    border: 0px;
   }
   .float {
     position: absolute;

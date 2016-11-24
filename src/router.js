@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router'
-import Projects from './components/Projects'
-import StandardView from './components/StandardView'
-import Landing from './components/Landing'
+import Projects from 'components/Projects'
+import StandardView from 'components/StandardView'
+import Landing from 'components/LandingPage'
 import Login from './components/Login'
 import {loggedIn} from './api/config'
 import {isAdmin} from './api/auth'
@@ -22,21 +22,21 @@ var routes = [
     path: '/admin/standard/create',
     name: 'createStandard',
     component: function (resolve) {
-      require(['components/CreateStandard'], resolve)
+      require(['components/ManageStandard'], resolve)
     }
   },
   {
     path: '/admin/standard/edit/:standardId',
     name: 'editStandard',
     component: function (resolve) {
-      require(['components/CreateStandard'], resolve)
+      require(['components/ManageStandard'], resolve)
     }
   },
   {
     path: '/admin/settings',
     name: 'adminSettings',
     component: function (resolve) {
-      require(['components/AdminSettings'], resolve)
+      require(['./components/AdminSettings'], resolve)
     }
   },
   {

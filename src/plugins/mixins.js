@@ -1,4 +1,4 @@
-import bus from '../bus'
+import bus from 'src/bus'
 import * as types from 'src/vuex/mutation-types'
 
 export const togglers = {

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  import {getProjects, toggleStandard} from '../../api/project'
+  import {getProjects, toggleStandard} from 'src/api/project'
   import {modals} from 'src/plugins/mixins'
   import DropDown from 'components/widget/DropDown'
 

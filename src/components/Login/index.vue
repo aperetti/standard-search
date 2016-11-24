@@ -2,7 +2,7 @@
   <div class="login-bg">
       <div class=' col-xs-12 col-md-4 col-md-offset-4' style='margin-top:50px;margin-bottom:50px;'>
         <div class='well'>
-          <img class="logo" src="../assets/logo_s.png">
+          <img class="logo" src="~src/assets/logo_s.png">
           <form class='login'>
             <div class='form-group'>
               <label class='sr-only' for="loginUsername">User</label>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import {getToken} from '../api/auth'
+  import {getToken} from 'src/api/auth'
   
   export default {
     data () {

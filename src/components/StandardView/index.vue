@@ -13,6 +13,7 @@
       <div class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
         <ul class="nav navbar-nav">
           <nav-add-to-project :standard="routerStandard"></nav-add-to-project>
+          <li><a :href="standardLink">Open</a></li>
         </ul>
         <ul class="nav navbar-nav">
           <li><a href='#' @click="showRevision = true"><span class="glyphicon glyphicon-list" /> Revisions</a></li>
@@ -30,11 +31,12 @@
       <template slot='title'>Standard Revision</template>
     <template slot='body'>
       <div class="list-group">
-        <a class="list-group-item" v-for="version in revisions">
+        <a v-if="!loadingRevisions" class="list-group-item" v-for="version in revisions">
           <h4 class="list-group-item-heading pull-left"style="margin-right: 10px; margin-bottom: 0px;">{{ version.createdAt | date }}</h4>
           <p class="list-group-item-text text-left" style="margin-top: 2px;" v-if="version.note" > {{ version.note }}</p>
           <p class="list-group-item-text text-left" style="margin-top: 2px;" v-else> File Changed </p>
         </a>
+        <img v-if="loadingRevisions" src="~src/assets/ring-alt108.svg">
       </div>
     </template>
     <template slot='button' v-if="false">Add Project</template>
@@ -47,23 +49,25 @@
 
 <script>
   import BaseModal from 'components/modals/BaseModal'
-  import {withToken, apiGetStandardPdf} from '../api/config'
-  import {addHistory, getStandardRevisions} from '../api/standard'
-  import StandardMenu from './StandardMenu'
-  import NavAddToProject from './widget/NavAddToProject'
-  import bus from '../bus'
-  import Viewer from 'components/PdfViewer/Viewer'
+  import {withToken, apiGetStandardPdf} from 'src/api/config'
+  import {addHistory, getStandardRevisions} from 'src/api/standard'
+  import NavAddToProject from './NavAddToProject'
+  import bus from 'src/bus'
 
   export default {
     created () {
-      addHistory(this.$route.params.standardId).then((res) => {
-      }).catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
+      this.addHistory()
+      this.getStandardRevisions()
 
-      getStandardRevisions(this.$route.params.standardId).then((res) => {
-        this.revisions = res.data
-      }).catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
+      this.$watch('$route.params.standardId', () => {
+        this.addHistory()
+        this.getStandardRevisions()
+      })
     },
     computed: {
+      standardLink: function () {
+        return withToken(apiGetStandardPdf(this.$route.params.standardId))
+      },
       standardUrl: function () {
         var standardId = this.$route.params.standardId
         var standardUrl = withToken(apiGetStandardPdf(standardId))
@@ -83,6 +87,19 @@
         var temp = !this.optionOpen
         bus.emit('page-reset', 'standardView')
         this.optionOpen = temp
+      },
+      addHistory () {
+        addHistory(this.$route.params.standardId)
+        .then((res) => {})
+        .catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
+      },
+      getStandardRevisions () {
+        this.loadingRevisions = true
+        getStandardRevisions(this.$route.params.standardId)
+        .then((res) => {
+          this.loadingRevisions = false
+          this.revisions = res.data
+        }).catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
       }
     },
     data () {
@@ -90,14 +107,13 @@
         optionOpen: false,
         standard: {},
         revisions: [],
-        showRevision: false
+        showRevision: false,
+        loadingRevisions: false
       }
     },
     components: {
-      StandardMenu,
       NavAddToProject,
-      BaseModal,
-      Viewer
+      BaseModal
     }
   }
 </script>

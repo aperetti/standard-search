@@ -1,4 +1,4 @@
-import store from '../vuex/store'
+import store from 'src/vuex/store'
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 

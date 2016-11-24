@@ -32,7 +32,7 @@ export const getHtmlStandard = (code) => {
 }
 
 export const getPdfStandard = (code) => {
-  return Vue.http({url: apiGetStandardPdf})
+  return Vue.http({url: apiGetStandardPdf(code), method: 'GET'})
 }
 
 // Takes the current standardId and adds it to the user's history

@@ -16,7 +16,7 @@
 
 <script>
   import Login from 'components/Login'
-  import Navbar from './components/Navbar'
+  import Navbar from 'components/Navbar'
   import AlertContainer from 'components/widget/Alert/AlertContainer'
   // MODAL Components
   import {loggedIn} from './api/config'
@@ -81,8 +81,10 @@
   margin-top:50px;
   top: 0px;
   bottom: 0px;
+  background-color: #f8f8f8;
 }
 body {
+  background-color: #f8f8f8;
   align-items: top;
   height: 100%;
 }

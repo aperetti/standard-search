@@ -12,10 +12,8 @@
 </template>
 
 <script>
-  import StandardView from './StandardView'
-  import StandardMenu from './StandardMenu'
-  import {searchStandard} from '../api/standard'
-  import bus from '../bus'
+  import {searchStandard} from 'src/api/standard'
+  import bus from 'src/bus'
   export default {
     mounted () {
       bus.on('page-reset', () => {
@@ -32,10 +30,6 @@
         searchCode: true,
         searchDesc: true
       }
-    },
-    components: {
-      StandardView,
-      StandardMenu
     },
     methods: {
       setCurrentStandard: function (item) {

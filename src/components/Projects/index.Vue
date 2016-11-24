@@ -29,7 +29,7 @@
         </ul>
         <!-- FOR WHEN PROJECT IS SELECTED --> 
       <div class='container'> 
-        <div v-if='loadingProject === true'><img src='../assets/greyLoading.svg'></img></div>
+        <div v-if='loadingProject === true'><img src='src/assets/greyLoading.svg'></img></div>
         <div class="panel panel-default" v-if='$route.params.projectId && loadingProject === false'>
           <div class="panel-heading">
             <button class="close" v-on:click="$router.push({name:'projectsHome'})"><small><span class="glyphicon glyphicon-circle-arrow-up"></span></small></button>
@@ -72,8 +72,8 @@
 
 <script>
   import {getProjects, getProject, deleteProject, createProject} from 'src/api/project'
-  import NavProjects from './widget/NavProjects'
-  import bus from '../bus'
+  import NavProjects from './NavProjects'
+  import bus from 'src/bus'
   import PdfViewer from 'components/widget/PdfViewer'
   import BaseModal from 'components/modals/BaseModal'
 

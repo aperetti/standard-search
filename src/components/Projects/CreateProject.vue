@@ -18,7 +18,7 @@
 
 <script>
   import {createProject} from 'src/api/project'
-  import BaseModal from './BaseModal'
+  import BaseModal from 'components/modals/BaseModal'
   import bus from 'src/bus'
 
   export default {
