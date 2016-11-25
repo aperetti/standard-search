@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import References from 'components/widget/References'
+  import References from './StandardTypes.vue'
   export default {
     components: {
       References

@@ -13,7 +13,7 @@
       <div class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
         <ul class="nav navbar-nav">
           <nav-add-to-project :standard="routerStandard"></nav-add-to-project>
-          <li><a :href="standardLink">Open</a></li>
+          <li><a @click="standardLink"><span class="glyphicon glyphicon-open" /> Open</a></li>
         </ul>
         <ul class="nav navbar-nav">
           <li><a href='#' @click="showRevision = true"><span class="glyphicon glyphicon-list" /> Revisions</a></li>
@@ -50,7 +50,7 @@
 <script>
   import BaseModal from 'components/modals/BaseModal'
   import {withToken, apiGetStandardPdf} from 'src/api/config'
-  import {addHistory, getStandardRevisions} from 'src/api/standard'
+  import {addHistory, getStandardRevisions, viewPdfStandard} from 'src/api/standard'
   import NavAddToProject from './NavAddToProject'
   import bus from 'src/bus'
 
@@ -65,13 +65,9 @@
       })
     },
     computed: {
-      standardLink: function () {
-        return withToken(apiGetStandardPdf(this.$route.params.standardId))
-      },
       standardUrl: function () {
         var standardId = this.$route.params.standardId
         var standardUrl = withToken(apiGetStandardPdf(standardId))
-        console.log(standardUrl)
         var iFrameUrl = `https://docs.google.com/gview?url=${standardUrl}&embedded=true`
         return iFrameUrl
       },
@@ -100,6 +96,14 @@
           this.loadingRevisions = false
           this.revisions = res.data
         }).catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
+      },
+      standardLink: function () {
+        viewPdfStandard(this.$route.params.standardId)
+        .then(res => {
+          window.location.href = apiGetStandardPdf(this.$route.params.standardId) + '?nonce=' + res.data
+        }).catch(e => {
+          this.$store.dispatch('createAlert', {message: 'Failed to retrieve PDF!', type: 'danger'})
+        })
       }
     },
     data () {

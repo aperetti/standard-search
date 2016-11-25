@@ -1,4 +1,4 @@
-import {apiAddHistory, elasticSearch, apiGetHistory, apiLookupStandardById, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, apiGetStandardPdf, apiStandardRevisions, Vue} from './config'
+import {apiViewStandardPdf, apiAddHistory, elasticSearch, apiGetHistory, apiLookupStandardById, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, apiGetStandardPdf, apiStandardRevisions, Vue} from './config'
 
 // Gets the specific Mongo standard document referenced by the filename
 // standard -> String (filename of the standard)
@@ -11,8 +11,6 @@ export const getStandardRevisions = (id) => {
   return Vue.http({url: apiStandardRevisions(id), method: 'GET'})
 }
 
-// Gets the Mongo standard documents queried by the menu path
-// menu -> Array (The list of menu items needed to find the standards)
 export const getStandardsByMenu = (menu) => {
   return Vue.http({url: apiGetStandardsFromMenu, method: 'POST', data: {'menu': menu}})
 }
@@ -31,8 +29,14 @@ export const getHtmlStandard = (code) => {
   return Vue.http({url: apiGetStandardHtml(code), method: 'GET'})
 }
 
+// Gets the File
 export const getPdfStandard = (code) => {
   return Vue.http({url: apiGetStandardPdf(code), method: 'GET'})
+}
+
+// View Redirects to a temporary link to access the PDF
+export const viewPdfStandard = (code) => {
+  return Vue.http({url: apiViewStandardPdf(code), method: 'GET'})
 }
 
 // Takes the current standardId and adds it to the user's history

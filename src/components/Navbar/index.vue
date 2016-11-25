@@ -116,6 +116,7 @@
   .navbar {
     margin-bottom:0px;
     border: 0px;
+    border-radius: 0px;
   }
   .float {
     position: absolute;

@@ -71,7 +71,6 @@ function before (to, from, next) {
     })
   } else {
     if (to.fullPath.indexOf('/login') !== -1 && loggedIn()) return next(false)
-    console.log('going to next')
     return next()
   }
 }

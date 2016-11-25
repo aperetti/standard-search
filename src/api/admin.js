@@ -1,10 +1,12 @@
-import {apiAddReferences, apiGetReferences, Vue} from 'src/api/config'
+import {apiAdminBase, Vue} from 'src/api/config'
 
-// Expects an array with objects of followign schema {group: 'Regex Group Example', regex: '(reg|regex)', modifiers: 'g'}
-export const addReference = (refs) => {
-  return Vue.http({url: apiAddReferences, method: 'POST', data: {references: refs}})
+var apiSaveCategories = apiAdminBase + 'save_categories'
+// Expects an array with objects of followign schema {}
+export const saveCategories = (refs) => {
+  return Vue.http({url: apiSaveCategories, method: 'POST', data: {references: refs}})
 }
 
-export const getReference = () => {
-  return Vue.http({url: apiGetReferences, methods: 'GET'})
+var apiGetCategories = apiAdminBase + 'categories'
+export const getCategories = () => {
+  return Vue.http({url: apiGetCategories, methods: 'GET'})
 }
