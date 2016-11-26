@@ -2,6 +2,8 @@
   <div>
     <form class="form-horizontal well" method="POST" enctype="multipart/form-data" v-on:submit.prevent="onSubmit">
     <div class="page-header"><h2 class="text-left">Create Standard</h2></div>
+
+    <!-- Input Standard Code -->
     <div v-bind:class="['form-group', {'has-success': $vd.code.$valid, 'has-error': !$vd.code.$valid}]">
       <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Standard Code</label>
       <div class="col-sm-3 col-xs-10 col-xs-offset-1">
@@ -9,6 +11,7 @@
       </div>
     </div>
       
+    <!-- Input Standard Description -->
     <div v-bind:class="['form-group', $vd.desc.$valid ? 'has-success' : 'has-error']">
       <label for="inputStandard" placeholder="One or Two Line Description" class="col-sm-2 col-sm-offset-1 control-label">Description</label>
       <div class="col-sm-6 col-xs-10 col-xs-offset-1">
@@ -16,7 +19,7 @@
       </div>
     </div>
 
-
+    <!-- Select Standard Menu -->
     <div class="form-group">
       <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label btn-label">Select Menu</label>
         <div class="col-sm-8 col-xs-10 col-xs-offset-1" >
@@ -36,6 +39,7 @@
         </div>
     </div>
     
+    <!-- Active Standard Menu -->
     <div class="form-group">
       <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label btn-label">Standard Menu</label>
       <div class="col-sm-8 col-xs-10 col-xs-offset-1">
@@ -78,6 +82,7 @@
       </div>
     </div>
     
+    <!-- Upload File -->
     <div class="form-group">
       <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">File</label>
       <div class="col-sm-8 col-xs-10 col-xs-offset-1">
@@ -91,7 +96,45 @@
         </div>
       </div>
     </div>
-    
+
+    <!-- PDF References -->
+    <div class="form-group form-inline">
+      <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">PDF References</label>
+      <div class="row">
+      <div class="col-sm-5 col-xs-10 col-xs-offset-1">       
+        <div class="checkbox pull-left" v-for="(ref, index) in possibleReferences">
+          {{ref.match}}<span v-if="index !== possibleReferences.length -1">,	&nbsp;</span>
+        </div>  
+      </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">References</label>
+      <div class="col-sm-5 col-xs-10 col-xs-offset-1"> 
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Standard</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>      
+          <template v-for='(reference, index) in references'>
+            <tr>
+              <td class="pull-left">{{reference}}</td>
+              <td><span @click="deleteReference(index)" class="glyphicon glyphicon-trash" /></td>
+            </tr>
+          </template>
+          <tr>
+            <td><input class="form-control" placeholder="Name" v-model='newReference.name'></input></td>
+            <td><button :class="['btn','btn-default']" :disabled="!newReference.valid" @click.prevent='addReference'>Add <span class="glyphicon glyphicon-plus"/><br/></td>
+          </tr>  
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="form-group">
       <button class='btn btn-primary' v-if='loading'><img src='~src/assets/loading.svg'> Uploading </img></button>
       <input class="btn btn-primary" v-if='!loading' :disabled="!$vd.$valid" type="submit" value="Submit">
@@ -111,7 +154,7 @@
       </div>
     </div>
 
-        <div class="form-group" v-if="!loadingStandard">
+    <div class="form-group" v-if="!loadingStandard">
       <div class="col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
         <div class="panel panel-warning" v-if="!$vd.changelog.required.valid">
           <div class="panel-heading">Warning</div>
@@ -164,6 +207,7 @@
 
 <script>
   import {apiAddStandard, apiEditStandard, withToken} from 'src/api/config'
+  import {apiProcessPdf} from 'src/api/admin'
   import {tooltip} from 'vue-strap'
   import {validStandard, getStandardById} from 'src/api/standard'
   import {getMenu, createMenu, deleteMenu} from 'src/api/menu'
@@ -186,10 +230,24 @@
           this.loadingStandard = false
         })
       } else {
-              // Get base level Menu
-        this.fetchMenu(0)
+        this.fetchMenu(0) // Get base level Menu
       }
 
+      // Watch for file and process when uploaded.
+      this.$watch('file', () => {
+        if (this.file.length > 0) {
+          var formData = new window.FormData()
+          formData.append('pdf', document.getElementById('pdfFile').files[0])
+          this.$http.post(apiProcessPdf, formData)
+          .then(res => {
+            var refs = res.data.map(ref => {
+              ref.add = false
+              return ref
+            })
+            this.possibleReferences = refs
+          })
+        }
+      })
       // Watch for code to find a conflict with the name of the standard.
       this.$watch('code', () => {
         var self = this
@@ -198,6 +256,14 @@
             self.validCode = Boolean(!response.data)
           }).catch(e => {
             self.validCode = false
+          })
+      })
+      this.$watch('newReference.name', () => {
+        validStandard(encodeURIComponent(this.newReference.name))
+          .then((response) => {
+            this.newReference.valid = Boolean(response.data)
+          }).catch(e => {
+            this.newReference.valid = false
           })
       })
     },
@@ -209,6 +275,12 @@
     },
     data: function () {
       return {
+        references: [],
+        newReference: {
+          name: '',
+          valid: false
+        },
+        possibleReferences: [],
         loadingStandard: false,
         status: {
           open: false,
@@ -235,6 +307,13 @@
       }
     },
     methods: {
+      addReference () {
+        this.references.push(this.newReference.name)
+        this.newReference.name = ''
+      },
+      deleteReference: function (index) {
+        this.references.splice(index, 1)
+      },
       getFile: function (event) {
         this.file = document.getElementById('pdfFile').files[0].name
       },
@@ -300,10 +379,10 @@
       onSubmit: function (e) {
         var formData = new window.FormData()
         this.loading = true
-        var self = this
         formData.append('menu', this.menu.id)
         formData.append('code', this.code)
         formData.append('desc', this.desc)
+        formData.append('references', JSON.stringify(this.references))
         if (this.file.length > 0) {
           formData.append('pdf', document.getElementById('pdfFile').files[0])
         }
@@ -316,20 +395,19 @@
         } else {
           xhr.open('POST', withToken(apiAddStandard), true)
         }
-        xhr.onload = function () {
-          self.loading = false
+        xhr.onload = () => {
+          this.loading = false
           var msg
           if (xhr.status === 200) {
-            self.$router.push({name: 'standard', params: {standardId: self.code}})
-            msg = ('standardId' in self.$route.params) ? 'Standard Edited!' : 'Standard Created!'
-            self.$store.dispatch('createAlert', {message: msg, type: 'success'})
+            this.$router.push({name: 'standard', params: {standardId: this.code}})
+            msg = ('standardId' in this.$route.params) ? 'Standard Edited!' : 'Standard Created!'
+            this.$store.dispatch('createAlert', {message: msg, type: 'success'})
           } else {
-            msg = ('standardId' in self.$route.params) ? 'Failed editing Standard' : 'Failed creating Standard'
-            self.$store.dispatch('createAlert', {message: msg, type: 'danger'})
+            msg = ('standardId' in this.$route.params) ? 'Failed editing Standard' : 'Failed creating Standard'
+            this.$store.dispatch('createAlert', {message: msg, type: 'danger'})
           }
         }
         xhr.send(formData)
-        // TODO: CREATE CONFIRMATION THAT BUTTON HAS BEEN SUBMITTED?
       }
     },
     computed: {
