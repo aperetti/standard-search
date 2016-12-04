@@ -2,7 +2,7 @@
   <div id="app">
     <navbar v-if='logged'></navbar>
     <login v-else></login>
-    <div class="alert">
+    <div v-if='logged' class="alert">
       <alert-container  />
     </div>
     <!-- MODALS -->

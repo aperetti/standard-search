@@ -1,8 +1,13 @@
 <template>
-  <div class="login-bg">
-      <div class=' col-xs-12 col-md-4 col-md-offset-4' style='margin-top:50px;margin-bottom:50px;'>
+  <div class="login-bg container-fluid">
+    <div class='row'>
+    <div class='col-xs-12' style='padding-left: 0px; padding-right: 0px;'>
+      <div style="background-color: #000; opacity: .4; padding:5px;"><b style="font-size: 16px; color: #fff;">-Standards</b></div>
+    </div>
+    </div>
+    <div class='row'>
+      <div class='col-xs-12 col-sm-4 col-sm-offset-4' style='padding:20px;'>
         <div class='well'>
-          <img class="logo" src="~src/assets/logo_s.png">
           <form class='login'>
             <div class='form-group'>
               <label class='sr-only' for="loginUsername">User</label>
@@ -14,7 +19,7 @@
               <br />
               <button class='btn btn-primary btn-block' @click.prevent='processLogin' type='button'>{{loading ? 'Loading' : 'Sign in'}}</button>
             </div>
-            <transition name="fafa">
+            <transition name="roll-down">
               <div v-show='failed' class='alert alert-danger'>
                 {{message}}
               </div>
@@ -22,6 +27,7 @@
           </form>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -64,31 +70,33 @@
 </script>
 
 <style scoped>
-  .logo {
-    width: 80%;
-    max-width: 250px;
-    max-height: 350px;
-    margin-bottom: 25px;
-  }
+.logo {
+  width: 80%;
+  max-width: 250px;
+  max-height: 350px;
+  margin-bottom: 25px;
+}
+.roll-down-enter-active, .roll-down-leave-active {
+  transition: all 0.2s ease
+}
+ .roll-down-leave-active {
+  opacity: 0;
+  transform: translateY(-30px) scaleY(0);
+}
+.roll-down-enter {
+  transform: translateY(-30px) scaleY(0);
 
-  .fafa-enter-active {
-    transition: all .3s ease;
-    opacity: 1;
-  }
-  .fafa-leave-active {
-    transition: all .3s ease;
-    opacity: 0;
-  }
-  .well {
-    background-color: rgba(254,254,254,.65);
-  }
-  .login-bg {
-    position: absolute;
-    -webkit-transform: translate3d(0,0,0);
-    width: 100%;
-    height: 100%;
-    background: #bdc3c7; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to left, #bdc3c7 , #2c3e50); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to left, #bdc3c7 , #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  }
+}
+.well {
+  background-color: rgba(254,254,254,.65);
+  max-height: 175px;
+}
+.login-bg {
+  position: relative;
+  min-height: 100%;
+  -webkit-transform: translate3d(0,0,0);
+  background: #bdc3c7; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #bdc3c7 , #2c3e50); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #bdc3c7 , #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 </style>
