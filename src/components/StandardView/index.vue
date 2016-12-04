@@ -10,7 +10,7 @@
           <span class="caret caret-mod"></span>
         </button>
       </div>
-      <div class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
+      <div :class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
         <ul class="nav navbar-nav">
           <nav-add-to-project :standard="routerStandard"></nav-add-to-project>
           <li><a @click="standardLink"><span class="glyphicon glyphicon-open" /> Open</a></li>
@@ -50,7 +50,7 @@
 <script>
   import BaseModal from 'components/modals/BaseModal'
   import {withToken, apiGetStandardPdf} from 'src/api/config'
-  import {addHistory, getStandardRevisions, viewPdfStandard} from 'src/api/standard'
+  import {addHistory, getStandardRevisions, viewPdfStandard, getStandardInfo} from 'src/api/standard'
   import NavAddToProject from './NavAddToProject'
   import bus from 'src/bus'
 
@@ -58,10 +58,11 @@
     created () {
       this.addHistory()
       this.getStandardRevisions()
-
+      this.getStandardInfo()
       this.$watch('$route.params.standardId', () => {
         this.addHistory()
         this.getStandardRevisions()
+        this.getStandardInfo()
       })
     },
     computed: {
@@ -88,6 +89,14 @@
         addHistory(this.$route.params.standardId)
         .then((res) => {})
         .catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
+      },
+      getStandardInfo () {
+        this.loadingRevisions = true
+        getStandardInfo(this.$route.params.standardId)
+        .then((res) => {
+          this.loadingRevisions = false
+          this.standard = res.data
+        }).catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
       },
       getStandardRevisions () {
         this.loadingRevisions = true
@@ -159,7 +168,9 @@
 .navbar-form {
    padding-left: 0;
 }
-
+.navbar-toggle:focus {
+  background-color: transparent;
+}
 .navbar-collapse{
    padding-left:0; 
 }
