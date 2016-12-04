@@ -1,8 +1,7 @@
 import {apiViewStandardPdf, apiAddHistory, elasticSearch, apiGetHistory, apiLookupStandardById, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, apiGetStandardPdf, apiStandardRevisions, Vue} from './config'
 
-// Gets the specific Mongo standard document referenced by the filename
-// standard -> String (filename of the standard)
-export const getStandardById = (id) => {
+// Retrieves information about the standard.
+export const getStandardInfo = (id) => {
   return Vue.http({url: apiLookupStandardById(id), method: 'GET'})
 }
 

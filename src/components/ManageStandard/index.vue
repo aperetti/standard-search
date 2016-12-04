@@ -209,7 +209,7 @@
   import {apiAddStandard, apiEditStandard, withToken} from 'src/api/config'
   import {apiProcessPdf} from 'src/api/admin'
   import {tooltip} from 'vue-strap'
-  import {validStandard, getStandardById} from 'src/api/standard'
+  import {validStandard, getStandardInfo} from 'src/api/standard'
   import {getMenu, createMenu, deleteMenu} from 'src/api/menu'
   import BaseModal from 'components/modals/BaseModal'
   import LoadingModal from 'components/modals/LoadingModal'
@@ -218,7 +218,7 @@
     mounted: function () {
       if ('standardId' in this.$route.params) {
         this.loadingStandard = true
-        getStandardById(this.$route.params.standardId)
+        getStandardInfo(this.$route.params.standardId)
         .then(res => {
           this.loadingStandard = false
           this.editStandard = res.data
