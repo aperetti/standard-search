@@ -1,14 +1,16 @@
 <template>
-  <div>
-    <input autocomplete="off" placeholder='Search for...' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="showResults = true" @blur="blurResults" />
-    <div>
-      <div class='list-group float' id='results' v-show='showResults'>
-          <a v-if='searchResults && searchResults.length === 0 && searchInput.length > 0 && !loading' id='results-0' @blur="blurResults" class='list-group-item text-left'>No Standards Found</a>
-          <a v-if='loading' class='list-group-item text-left'>Loading...</a>
-          <router-link v-if='!loading' v-for='(item, index) in searchResults' :id="'results-'+index" @blur="blurResults" :to="{ name: 'standard', params: { standardId: item._id }}"  class='list-group-item text-left'>{{item._source.code}} - {{item._source.desc}}</router-link>
+  <span>
+    <div class="input-group" style="padding: 8px;">
+      <span class="input-group-addon" id="sizing-addon1">@</span>
+       <input autocomplete="off" placeholder='Search for...' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="showResults = true" @blur="blurResults" />
+
+        <div class='list-group float' id='results' v-show='showResults'>
+        <a v-if='searchResults && searchResults.length === 0 && searchInput.length > 0 && !loading' id='results-0' @blur="blurResults" class='list-group-item text-left'>No Standards Found</a>
+        <a v-if='loading' class='list-group-item text-left'>Loading...</a>
+        <router-link v-if='!loading' v-for='(item, index) in searchResults' :id="'results-'+index" @blur="blurResults" :to="{ name: 'standard', params: { standardId: item._id }}"  class='list-group-item text-left'>{{item._source.code}} - {{item._source.desc}}</router-link>
       </div>
     </div>
-  </div>
+  </span>
 </template>
 
 <script>
@@ -66,7 +68,7 @@
 <style scoped>
   .float {
     position: absolute;
-    top: 40px;
+    top: 42px;
     z-index: 500;
   }
     /* always present */

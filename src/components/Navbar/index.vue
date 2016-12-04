@@ -3,12 +3,14 @@
     <nav class=" navbar navbar-default" role="navigation">
       <div class="navbar-header">         
         <a class="navbar-brand cursor" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
+        
         <button type="button" class="navbar-toggle" @click="toggleOption">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
+
       </div>
       <div v-bind:class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
         <ul class="nav navbar-nav">
@@ -19,16 +21,7 @@
         <ul v-if="admin" class="nav navbar-nav">
           <nav-admin></nav-admin>
         </ul>
-
-        <form class="navbar-form">
-          <div class="form-group" style="display:inline;">
-            <div class="input-group" style="display:table;">
-              <!--Search is disabled until fixed in backend 
-              <span class="input-group-addon" style="width:1%;"><span class="glyphicon glyphicon-search"></span></span>
-               <search></search> --> 
-            </div>
-          </div>
-        </form> 
+        <search></search>
       </div>
       </nav>
       <standard-menu :enable='menuOpen' class="col-xs-12 col-md-6 float"></standard-menu> 
@@ -119,8 +112,8 @@
     border-radius: 0px;
   }
   .float {
-    position: absolute;
-    top: 50px;
+    position: relative;
+    top: 0px;
     z-index: 1000;
     border-radius: 0;
   } 
