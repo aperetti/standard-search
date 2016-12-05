@@ -2,7 +2,7 @@
   <transition name="slide">
   <div class=" navbar navbar-default" v-show="enable">
     <div class='row'>
-      <div class='col-xs-12 col-md-4'>
+      <div class='col-xs-12'>
         <h4 class='pull-left'>Standards Menu</h4>
         </div>
         <div class='col-xs-12 col-md-12 text-left'>
@@ -20,8 +20,6 @@
     </div>
     <div class='row' >
       <div class = 'col-xs-5 col-md-4 tabl'  style="padding-right:0px; padding-left:0px; text-align: left;">
-
-          
           <div class="list-group">
             <!-- Display for Root -->
              <template v-if="!menus.parent">
@@ -32,9 +30,8 @@
             </template>
             <!-- Display Else -->
             <template v-if="menus.parent">
-              <div :class="['list-group-item','parent', 'arrow']" style="cursor: pointer">{{menus.name}}</div>
               <template v-for='sibling in menus.parent.children'>
-                <div v-if="menus.id !== sibling.id" :class="['list-group-item','parent']" @click='fetchMenu(sibling.id)' style="cursor: pointer">{{sibling.name}}</div>
+                <div :class="['list-group-item','parent', menus.id === sibling.id ? 'arrow' : '']" @click='fetchMenu(sibling.id)' style="cursor: pointer">{{sibling.name}}</div>
                 <template v-if='sibling.id === menus.id && menus.children'>
                   <template  v-for="child in menus.children">
                     <a class="list-group-item" style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
