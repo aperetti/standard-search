@@ -13,7 +13,7 @@
       <div :class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
         <ul class="nav navbar-nav">
           <nav-add-to-project :standard="routerStandard"></nav-add-to-project>
-          <li><a @click="standardLink"><span class="glyphicon glyphicon-open" /> Open</a></li>
+          <li><a href='#' @click="standardLink"><span class="glyphicon glyphicon-open" /> Open</a></li>
         </ul>
         <ul class="nav navbar-nav">
           <li><a href='#' @click="showRevision = true"><span class="glyphicon glyphicon-list" /> Revisions</a></li>
