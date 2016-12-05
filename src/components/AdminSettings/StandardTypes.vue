@@ -13,10 +13,10 @@
         <tbody>      
       <template v-for='(category, index) in categories'>
         <tr v-if="category.edit">
-          <td><input class="form-control" v-model='category.name'></input></td>
-          <td><input class="form-control" v-model='category.description'></input></td>
-          <td><input class="form-control" v-model='category.regex'></input></td>
-          <td><button class="btn btn-default" @click="confirmCategory(category)">Confirm</button></td>
+          <td :class="[validRegex(category) ? '' : 'form-group has-error']"><input class="form-control" v-model='category.name'></input></td>
+          <td :class="[validRegex(category) ? '' : 'form-group has-error']"><input class="form-control" v-model='category.description'></input></td>
+          <td :class="[validRegex(category) ? '' : 'form-group has-error']"><input class="form-control" v-model='category.regex'></input></td>
+          <td><button class="btn btn-default" :disabled="!validRegex(category)" @click="confirmCategory(category)">Confirm</button></td>
         </tr>
         <tr v-else>
           <td>{{category.name}}</td>
@@ -26,10 +26,10 @@
         </tr>
       </template>
       <tr>
-        <td><input class="form-control" placeholder="Name" v-model='newCategory.name'></input></td>
-        <td><input class="form-control" placeholder="Description" v-model='newCategory.description'></input></td>
-        <td><input class="form-control" placeholder="Regex" v-model='newCategory.regex'></input></td>
-        <td><button class="btn btn-default" @click='addCategory'>Add <span class="glyphicon glyphicon-plus"/><br/></td>
+        <td :class="[validRegex(newCategory) ? '' : 'form-group has-error']"><input class="form-control" placeholder="Name" v-model='newCategory.name'></input></td>
+        <td :class="[validRegex(newCategory) ? '' : 'form-group has-error']"><input class="form-control" placeholder="Description" v-model='newCategory.description'></input></td>
+        <td :class="[validRegex(newCategory) ? '' : 'form-group has-error']"><input :class="['form-control']" placeholder="Regex" v-model='newCategory.regex'></input></td>
+        <td><button :class="['btn btn-default']" :disabled="!validRegex(newCategory)" @click.prevent='addCategory'>Add <span class="glyphicon glyphicon-plus"/><br/></td>
       </tr>  
       </tbody>
     </table>
@@ -86,6 +86,17 @@
       this.refreshCategories()
     },
     methods: {
+      validRegex (cat) {
+        if (!cat.name || !cat.description || !cat.regex) return false
+        try {
+          var test = new window.RegExp(cat.regex)
+          test
+        } catch (e) {
+          console.log(e)
+          return false
+        }
+        return true
+      },
       confirmCategory (category) {
         category.edit = false
       },
