@@ -23,7 +23,7 @@
         <h2 v-if='!$route.params.projectId'>Projects</h2>
         <ul class="list-group" v-if='!$route.params.projectId' >
           <li v-for='project in projects' class="list-group-item">
-            <span class="pull-right glyphicon glyphicon-trash cursor" @click='delProject(project.id)'></span>
+            <span class="pull-right glyphicon glyphicon-trash cursor" @click='deleteProject = project.id'></span>
             <router-link :to="{name:'projects', params:{projectId: project.id}}">{{project.name}}<br /><small>{{project.description}}</small></router-link>
           </li>
         </ul>
@@ -40,7 +40,7 @@
               <h4 class='row'></h4>
               <hr style='margin-top: 0px;'>
               <div class='col-sm-6 col-md-3 col-xs-12' v-for='standard in currentProject.standards'>
-                <button class='col btn btn-default' style='width: 100%;' @click='selectedStandard = standard.code'>
+                <button class='col btn btn-default' style='width: 100%;' @click='selectedStandard = standard.id'>
                   <a type="button" class='close' data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></a><strong>{{standard.code}}</strong><br /><div class='desc small'>{{standard.description}}</div>
                 </button>
               </div>
@@ -51,6 +51,7 @@
     </div>
     <pdf-viewer v-if='selectedStandard.length !== 0' :standard='selectedStandard' @close="selectedStandard= ''"></pdf-viewer>
     
+    <!-- New Project Modal -->
     <base-modal :dim="newProject.modal" v-on:close="cancelModal" v-on:submit="createProject">
       <template slot='title'>Create Project</template>
     <template slot='body'>
@@ -66,6 +67,13 @@
     </template>
     <template slot='button'>Add Project</template>
     </base-modal>
+
+    <base-modal :dim="deleteProject" v-on:close="deleteProject = ''" v-on:submit="delProject">
+      <template slot='title'>Delete Project</template>
+    <template slot='body'>Please confirm to delete the project.<br /> The project cannot be recovered.</template>
+    <template slot='button'>Delete Project</template>
+    </base-modal>
+
   </div>
   
 </template>
@@ -112,6 +120,7 @@
           description: null
         },
         optionOpen: false,
+        deleteProject: '',
         projects: [],
         currentProject: {},
         selectedStandard: '',
@@ -143,11 +152,15 @@
           this.$store.dispatch('createAlert', {message: er.data, type: 'danger'})
         })
       },
-      delProject (projectId) {
+      delProject () {
+        var projectId = this.deleteProject
         deleteProject(projectId).then((res) => {
-          this.$store.dispatch('createAlert', res.data, 'success')
+          this.$store.dispatch('createAlert', {message: res.data, type: 'success'})
           this.refreshProjects()
+        }).catch((er) => {
+          this.$store.dispatch('createAlert', {message: er.data, type: 'danger'})
         })
+        this.deleteProject = ''
       },
       refreshProjects () {
         getProjects().then((response) => {
