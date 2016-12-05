@@ -1,11 +1,12 @@
 <template>
+  <transition name="slide">
   <div class=" navbar navbar-default" v-show="enable">
     <div class='row'>
       <div class='col-xs-12 col-md-4'>
         <h4 class='pull-left'>Standards Menu</h4>
         </div>
         <div class='col-xs-12 col-md-12 text-left'>
-        <ol class="breadcrumb" style='margin-bottom: 5px; padding-left: 0px'>
+        <ol class="breadcrumb" style='margin-bottom: 5px; padding-left: 0px;'>
           <template v-for='ancestor in menus.ancestors'>
             <li class="active" @click='fetchMenu(ancestor.id)'>
               <a class='active'>{{ancestor.name}}</a>
@@ -18,51 +19,55 @@
       </div>
     </div>
     <div class='row' >
-      <div class = 'col-xs-5 col-md-4'>
-        <div class="panel panel-default">
-          <div class="panel-heading" style="cursor: pointer"  @click='fetchMenu(menus.parent.id)'><span class='glyphicon glyphicon-level-up'></span></div></li>
-          <div>
-            <template v-for='children in menus.children'>
-              <a class="list-group-item" style="cursor: pointer" @click='fetchMenu(children.id)'>{{children.name}}</a>
+      <div class = 'col-xs-5 col-md-4 tabl'  style="padding-right:0px; padding-left:0px; text-align: left;">
+
+          
+          <div class="list-group">
+            <!-- Display for Root -->
+             <template v-if="!menus.parent">
+              <div :class="['list-group-item','parent', 'arrow']" style="cursor: pointer">{{menus.name}}</div>
+              <template v-for='child in menus.children'>
+                <a class="list-group-item child" style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
+              </template>
+            </template>
+            <!-- Display Else -->
+            <template v-if="menus.parent">
+              <div :class="['list-group-item','parent', 'arrow']" style="cursor: pointer">{{menus.name}}</div>
+              <template v-for='sibling in menus.parent.children'>
+                <div v-if="menus.id !== sibling.id" :class="['list-group-item','parent']" @click='fetchMenu(sibling.id)' style="cursor: pointer">{{sibling.name}}</div>
+                <template v-if='sibling.id === menus.id && menus.children'>
+                  <template  v-for="child in menus.children">
+                    <a class="list-group-item" style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
+                  </template>
+                </template>
+              </template>
             </template>
           </div>
-        </div>
+
       </div>
-    <div class = 'col-xs-7 col-md-8'>
-      <transition name="item">
-        <img v-if='standardsLoading' class='loader' src='~src/assets/greyLoading.svg' style="z-index:100;"></img>
-      </transition>
-      <div class="panel panel-default" v-if="!menus.standards || menus.standards.length === 0">
-        <div class="panel-heading">{{menus.name}}</div>
-        <div class="list-group">
-          <transition name="item">
-            <a v-if='!menus.standards || menus.standards.length === 0' class="list-group-item">
-              <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-sunglasses glyphicon"></span></h4>
+    <div class = 'col-xs-7 col-md-8 tabl'  style="padding-left:0px;padding-right: 0px;">
+        <div v-if='!menus.standards || menus.standards.length === 0 || standardsLoading' class="list-group">
+            <a  class="list-group-item">
+              <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-sunglasses glyphicon"></span></h4>
               <p class="list-group-item-text">No Standards</p>
             </a>
-          </transition>
         </div>
-      </div>
-      <div class="panel panel-default" v-if="menus.standards && menus.standards.length != 0">
-        <div class="panel-heading">{{menus.name}}</div>
-        <div class="list-group">             
-          <template v-for='std in menus.standards'>
-            <transition name="item">
-              <router-link class="list-group-item" :to="{name: 'standard', params: {standardId: std.code}}">
-                <h4 class="list-group-item-heading">{{std.code}}</h4>
+        <div v-else class="list-group">             
+          <template v-for='std in sortedStandards'>
+              <router-link class="list-group-item" :to="{name: 'standard', params: {standardId: std.id}}">
+                <h5 class="list-group-item-heading">{{std.code}}</h5>
                 <p class="list-group-item-text">{{std.description}}</p>
               </router-link>
-            </transition>
           </template>
         </div>
-      </div>
+      
     </div>
   </div>
+  </transition>
 </template>
 
 <script>
 import naturalSort from 'javascript-natural-sort'
-import {getStandardsByMenu} from 'src/api/standard'
 import {getMenu} from 'src/api/menu'
 
 export default {
@@ -76,19 +81,12 @@ export default {
       menuStandards: []
     }
   },
+  computed: {
+    sortedStandards () {
+      return this.menus.standards.sort((e1, e2) => naturalSort(e1.code, e2.code))
+    }
+  },
   methods: {
-    addToPath (category) {
-      this.currentPath.push(category)
-    },
-    getChildMenus () {
-      let standards = getStandardsByMenu(this.currentPath)
-      standards.then((response) => {
-        this.childLoading = false
-        this.childMenus = response.data
-      }, (response) => {
-        this.childMenus = []
-      })
-    },
     menuStandards () {
       let standards = []
       if (standards.length > 0) {
@@ -98,9 +96,12 @@ export default {
       }
     },
     fetchMenu (id = 1) {
+      this.standardsLoading = true
       getMenu(id).then((response) => {
         this.menus = response.data
+        this.standardsLoading = false
       }, (response) => {
+        this.standardsLoading = false
         this.menus = []
       })
     }
@@ -112,6 +113,62 @@ export default {
 </script>
 
 <style scoped>
+    .slide-enter-active, .slide-leave-active {
+      transition: all .5s;
+    }
+    .slide-enter, .slide-leave-active {
+      transform: translateX(-100%);
+    }
+    .breadcrumb {
+      font-size: 11px;
+    }
+    .list-group-item {
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    .list-group-item-heading {
+      margin-bottom: 0px;
+    }
+    .list-group-item-text {
+      font-size: 11px;
+    }
+    .tabl {
+      display: table-cell;
+          vertical-align:top;
+    }
+    .child {
+      background-color: #fff;
+
+    }
+    .parent, .parent:focus {
+      padding-left: 5px;
+      background-color: #333;
+      border-color: #332;
+      color: #bbb;
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      z-index:10;
+    }
+    .arrow, .arrow:focus {
+      background-color: #333;
+      border-color: #332;
+      color: #bbb;
+      z-index:10;
+    }
+    .arrow:before {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      margin-top:1em;
+      top: 1.8em;
+      left: 99%;
+      box-sizing: border-box;
+      margin: auto;
+      border: .5em solid black;
+      border-color: transparent transparent #333 #333;
+      transform-origin: 0 0;
+      transform: rotate(-135deg);
+    }
     .loader {
       position: absolute;
       margin: auto;
@@ -123,24 +180,5 @@ export default {
       position: absolute;
       margin: auto;
       top: 0; left: 0; bottom: 0; right: 0;
-    }
-    .item-enter-active {
-      -webkit-transition: opacity .25s ease-in-out;
-      -moz-transition: opacity .25s ease-in-out;
-      -o-transition: opacity .25s ease-in-out;
-      transition: opacity .25s ease-in-out;
-      filter: alpha(opacity=0);
-      height: 0;
-      opacity: 0;
-    }
-    .item-enter-active {
-      -webkit-transition: opacity .25s ease-in-out;
-      -moz-transition: opacity .25s ease-in-out;
-      -o-transition: opacity .25s ease-in-out;
-      transition: opacity .25s ease-in-out;
-      filter: alpha(opacity=0);
-      opacity: 0;
-      height: 0;
-      position: absolute; /* important for removal move to work */
     }
 </style>
