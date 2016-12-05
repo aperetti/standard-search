@@ -24,18 +24,18 @@ export const validStandard = (code) => {
   return Vue.http({url: apiValidStandard + code, method: 'GET'})
 }
 
-export const getHtmlStandard = (code) => {
-  return Vue.http({url: apiGetStandardHtml(code), method: 'GET'})
+export const getHtmlStandard = (id) => {
+  return Vue.http({url: apiGetStandardHtml(id), method: 'GET'})
 }
 
 // Gets the File
-export const getPdfStandard = (code) => {
-  return Vue.http({url: apiGetStandardPdf(code), method: 'GET'})
+export const getPdfStandard = (id) => {
+  return Vue.http({url: apiGetStandardPdf(id), method: 'GET'})
 }
 
 // View Redirects to a temporary link to access the PDF
-export const viewPdfStandard = (code) => {
-  return Vue.http({url: apiViewStandardPdf(code), method: 'GET'})
+export const viewPdfStandard = (id) => {
+  return Vue.http({url: apiViewStandardPdf(id), method: 'GET'})
 }
 
 // Takes the current standardId and adds it to the user's history
