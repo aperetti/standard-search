@@ -4,7 +4,7 @@
     <nav class="navbar navbar-inverse" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">         
-        <a class="navbar-brand">Standard</a>
+        <a class="navbar-brand">{{standard.code}}</a>
         <button type="button" class="navbar-toggle" @click="toggleOption">
           <span class="sr-only">Toggle navigation</span>
           <span class="caret caret-mod"></span>
