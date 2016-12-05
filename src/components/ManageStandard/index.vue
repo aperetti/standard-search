@@ -251,12 +251,14 @@
       // Watch for code to find a conflict with the name of the standard.
       this.$watch('code', () => {
         var self = this
-        validStandard(encodeURIComponent(this.code))
+        if (this.code.length > 0) {
+          validStandard(encodeURIComponent(this.code))
           .then((response) => {
             self.validCode = Boolean(!response.data)
           }).catch(e => {
             self.validCode = false
           })
+        }
       })
       this.$watch('newReference.name', () => {
         validStandard(encodeURIComponent(this.newReference.name))
@@ -390,7 +392,7 @@
         if (this.changelog.length > 0) formData.append('changelog', this.changelog)
         var xhr = new window.XMLHttpRequest()
         if ('standardId' in this.$route.params) {
-          formData.append('oldStandardId', this.editStandard.code)
+          formData.append('id', this.editStandard.id)
           xhr.open('POST', withToken(apiEditStandard), true)
         } else {
           xhr.open('POST', withToken(apiAddStandard), true)
@@ -399,7 +401,7 @@
           this.loading = false
           var msg
           if (xhr.status === 200) {
-            this.$router.push({name: 'standard', params: {standardId: this.code}})
+            this.$router.push({name: 'standard', params: {standardId: this.editStandard.id}})
             msg = ('standardId' in this.$route.params) ? 'Standard Edited!' : 'Standard Created!'
             this.$store.dispatch('createAlert', {message: msg, type: 'success'})
           } else {
