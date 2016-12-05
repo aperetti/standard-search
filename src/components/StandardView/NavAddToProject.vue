@@ -11,7 +11,7 @@
           <a tabindex='-1' class='cursor' :id="'projects-' + index" style='display:inline-block; width:100%; padding-right:0px;'>{{project.name}}
             <span class='pull-right'>
               <span v-if='!project.standards.length && !project.loading' class="glyphicon glyphicon-plus" ></span>      
-              <span v-if='project.standards.length && !project.loading' class="glyphicon glyphicon-ok" ></span>
+              <span v-if='project.standards.length && !project.loading' class="glyphicon glyphicon-minus" ></span>
             </span>
           </a>
         </li>
