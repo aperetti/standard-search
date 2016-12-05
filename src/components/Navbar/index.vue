@@ -24,7 +24,7 @@
         <search></search>
       </div>
       </nav>
-      <standard-menu :enable='menuOpen' class="col-xs-12 col-md-6 float"></standard-menu> 
+      <standard-menu :enable='menuOpen' class="col-xs-12 col-md-6 col-lg-4 float"></standard-menu> 
       <div class="dim" @click="close" v-if="menuOpen || optionOpen"></div>
     </div>
 </template>
@@ -42,20 +42,20 @@
   export default {
     mixins: [togglers],
     mounted: function () {
+      this.admin = isAdmin()
+            .then((res) => res.status === 200)
+            .catch((e) => false)
+
       bus.on('page-reset', (arg) => {
+        if (arg === 'beforeRoute') {
+          this.admin = isAdmin()
+            .then((res) => res.status === 200)
+            .catch((e) => false)
+        }
         if (arg !== 'drop-down') {
           this.optionOpen = false
         }
         this.menuOpen = false
-      })
-      let getAdmin = isAdmin()
-      var self = this
-      getAdmin.then(function (res) {
-        if (res.status === 200) {
-          self.admin = true
-        }
-      }).catch(function (e) {
-        self.admin = false
       })
     },
     components: {
