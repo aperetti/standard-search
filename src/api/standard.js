@@ -47,7 +47,7 @@ export const getHistory = () => {
   return Vue.http({url: apiGetHistory})
 }
 
-export const searchStandard = (search, fields = ['code', 'desc'], fuzzy = 2) => {
+export const searchStandard = (search, fields = ['code', 'description'], fuzzy = 2) => {
   var data = {}
   data.fields = (fields && fields.length > 0) ? fields : undefined
   data.search = search
