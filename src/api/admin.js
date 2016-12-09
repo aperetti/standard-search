@@ -1,14 +1,18 @@
-import {apiAdminBase, Vue} from 'src/api/config'
+import {apiAdmin} from 'src/api/config'
 
 // Expects an array with objects of followign schema {}
-var apiSaveCategories = apiAdminBase + 'save_categories'
 export const saveCategories = (refs) => {
-  return Vue.http({url: apiSaveCategories, method: 'POST', data: {types: refs}})
+  return apiAdmin.post('/save_categories', {types: refs})
 }
 
-var apiGetCategories = apiAdminBase + 'categories'
 export const getCategories = () => {
-  return Vue.http({url: apiGetCategories, methods: 'GET'})
+  return apiAdmin.get('/categories')
 }
 
-export const apiProcessPdf = apiAdminBase + 'process_pdf'
+export const processPdf = (formData) => {
+  return apiAdmin.post('/process_pdf', formData)
+}
+
+export const saveSetting = (id, val) => {
+  return apiAdmin.post('/save_setting', {setting: val}, {params: {id: id}})
+}

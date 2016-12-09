@@ -1,56 +1,31 @@
-import {apiViewStandardPdf, apiAddHistory, elasticSearch, apiGetHistory, apiLookupStandardById, apiGetStandardsFromMenu, apiValidStandard, apiSetNewStandard, apiGetStandardHtml, apiGetStandardPdf, apiStandardRevisions, Vue} from './config'
+import {apiStandard, apiUser} from './config'
 
 // Retrieves information about the standard.
-export const getStandardInfo = (id) => {
-  return Vue.http({url: apiLookupStandardById(id), method: 'GET'})
-}
+export const getStandardInfo = (id) => apiStandard.get(`/lookup/${id}`)
 
 // Get Revisions
-export const getStandardRevisions = (id) => {
-  return Vue.http({url: apiStandardRevisions(id), method: 'GET'})
-}
-
-export const getStandardsByMenu = (menu) => {
-  return Vue.http({url: apiGetStandardsFromMenu, method: 'POST', data: {'menu': menu}})
-}
-
-// Sends Standard Object for Server to Create Record
-export const setNewStandard = (standard) => {
-  return Vue.http({url: apiSetNewStandard, method: 'POST', data: {standard: standard}})
-}
+export const getStandardRevisions = (id) => apiStandard.get(`/revisions/${id}`)
 
 // Requires Admin
-export const validStandard = (code) => {
-  return Vue.http({url: apiValidStandard + code, method: 'GET'})
-}
-
-export const getHtmlStandard = (id) => {
-  return Vue.http({url: apiGetStandardHtml(id), method: 'GET'})
-}
+export const validStandard = (code) => apiStandard.get(`/valid_standard/${code}`)
 
 // Gets the File
-export const getPdfStandard = (id) => {
-  return Vue.http({url: apiGetStandardPdf(id), method: 'GET'})
-}
+export const getPdfStandard = (id) => apiStandard.get(`/pdf/${id}`)
 
 // View Redirects to a temporary link to access the PDF
-export const viewPdfStandard = (id) => {
-  return Vue.http({url: apiViewStandardPdf(id), method: 'GET'})
-}
+export const viewPdfStandard = (id) => apiStandard.get(`/nonce/${id}`)
 
 // Takes the current standardId and adds it to the user's history
-export const addHistory = (standardId) => {
-  return Vue.http({url: apiAddHistory + standardId, method: 'POST'})
-}
+export const addHistory = (id) => apiUser.post(`/add_history/${id}`)
 
-export const getHistory = () => {
-  return Vue.http({url: apiGetHistory})
-}
+export const getHistory = () => apiUser.get('/get_history')
 
 export const searchStandard = (search, fields = ['code', 'description'], fuzzy = 2) => {
   var data = {}
-  data.fields = (fields && fields.length > 0) ? fields : undefined
+  data.fields = fields
   data.search = search
-  data.fuzzy = (fuzzy && typeof fuzzy === 'number') ? fuzzy : 0
-  return Vue.http({url: elasticSearch, method: 'POST', data: data})
+  data.fuzzy = fuzzy
+  return apiStandard.post('/search', data)
 }
+
+export const getSetting = (id) => apiStandard.get(`/get_setting/${id}`)

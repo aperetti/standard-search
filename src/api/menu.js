@@ -1,12 +1,6 @@
-import {apiGetMenus, apiCreateMenu, apiDeleteMenu, Vue} from './config'
-export const getMenu = (id) => {
-  return Vue.http({url: apiGetMenus + '/' + id, method: 'GET'})
-}
+import {apiAdmin, apiStandard} from './config'
 
-export const createMenu = (menu) => {
-  return Vue.http.post(apiCreateMenu, menu)
-}
+export const getMenu = (id) => apiStandard.get(`/menu/${id}`)
+export const createMenu = (menu) => apiAdmin.post('/create_menu', menu)
+export const deleteMenu = (id) => apiAdmin.delete(`/delete_menu/${id}`)
 
-export const deleteMenu = (menuId) => {
-  return Vue.http.delete(apiDeleteMenu + '/' + menuId)
-}

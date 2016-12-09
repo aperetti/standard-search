@@ -207,7 +207,7 @@
 
 <script>
   import {apiAddStandard, apiEditStandard, withToken} from 'src/api/config'
-  import {apiProcessPdf} from 'src/api/admin'
+  import {processPdf} from 'src/api/admin'
   import {tooltip} from 'vue-strap'
   import {validStandard, getStandardInfo} from 'src/api/standard'
   import {getMenu, createMenu, deleteMenu} from 'src/api/menu'
@@ -238,7 +238,7 @@
         if (this.file.length > 0) {
           var formData = new window.FormData()
           formData.append('pdf', document.getElementById('pdfFile').files[0])
-          this.$http.post(apiProcessPdf, formData)
+          processPdf(formData)
           .then(res => {
             var refs = res.data.map(ref => {
               ref.add = false
