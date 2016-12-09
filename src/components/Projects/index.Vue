@@ -51,23 +51,8 @@
     </div>
     <pdf-viewer v-if='selectedStandard.length !== 0' :standard='selectedStandard' @close="selectedStandard= ''"></pdf-viewer>
     
-    <!-- New Project Modal -->
-    <base-modal :dim="newProject.modal" v-on:close="cancelModal" v-on:submit="createProject">
-      <template slot='title'>Create Project</template>
-    <template slot='body'>
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Project</span>
-        <input type="text" class="form-control" placeholder="Name of your project..." aria-describedby="basic-addon1" v-model="newProject.name">
-      </div>
-      <br>
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Description</span>
-        <input type="text" class="form-control" placeholder="Short description..." aria-describedby="basic-addon1" v-model="newProject.description">
-      </div>
-    </template>
-    <template slot='button'>Add Project</template>
-    </base-modal>
-
+    <create-project :dim="newProject.modal" v-on:close="cancelModal" v-on:submit="createProject"></create-project>
+      
     <base-modal :dim="deleteProject" v-on:close="deleteProject = ''" v-on:submit="delProject">
       <template slot='title'>Delete Project</template>
     <template slot='body'>Please confirm to delete the project.<br /> The project cannot be recovered.</template>
@@ -79,15 +64,17 @@
 </template>
 
 <script>
-  import {getProjects, getProject, deleteProject, createProject} from 'src/api/project'
+  import {getProjects, getProject, deleteProject} from 'src/api/project'
   import NavProjects from './NavProjects'
   import bus from 'src/bus'
   import PdfViewer from 'components/widget/PdfViewer'
   import BaseModal from 'components/modals/BaseModal'
+  import CreateProject from 'components/modals/CreateProject'
 
   export default {
     components: {
       BaseModal,
+      CreateProject,
       NavProjects,
       PdfViewer
     },
@@ -144,13 +131,7 @@
         }
       },
       createProject () {
-        createProject(this.newProject.name, this.newProject.description).then((res) => {
-          this.cancelModal()
-          this.refreshProjects()
-          this.$store.dispatch('createAlert', {message: res.data, type: 'success'})
-        }).catch((er) => {
-          this.$store.dispatch('createAlert', {message: er.data, type: 'danger'})
-        })
+        this.refreshProjects()
       },
       delProject () {
         var projectId = this.deleteProject

@@ -1,31 +1,29 @@
 <template>
-    <drop-down :loading='loading' v-on:open='refreshProjects' persistant='projects'>
-      <template slot='title'>Add To Project</template>
-      <template slot='dropdown'>
-        <li v-show='projects.length === 0' class="dropdown-header">No Projects</li>
-        <li  v-show='projects.length === 0'>
-          <a tabindex='-1' @click='openCreateProject()' :id="'projects-0'"> Create One?</a>
-        </li>
-        <li v-show='projects.length !== 0' class="dropdown-header">Click a Project to add or remove this Standard</li>
-        <li v-for='(project, index) in projects'  @click='toggleProject(project.id, index)'>
-          <a tabindex='-1' class='cursor' :id="'projects-' + index" style='display:inline-block; width:100%; padding-right:0px;'>{{project.name}}
-            <span class='pull-right'>
-              <span v-if='!project.standards.length && !project.loading' class="glyphicon glyphicon-plus" ></span>      
-              <span v-if='project.standards.length && !project.loading' class="glyphicon glyphicon-minus" ></span>
-            </span>
-          </a>
-        </li>
-      </template>
-    </drop-down>
+  <drop-down :loading='loading' v-on:open='refreshProjects' persistant='projects'>
+    <template slot='title'>Add To Project</template>
+    <template slot='dropdown'>
+      <li v-show='projects.length === 0' class="dropdown-header">No Projects</li>
+      <li  v-show='projects.length === 0'>
+        <a tabindex='-1' href="#" @click="$emit('create-project')" :id="'projects-0'"> Create One?</a>
+      </li>
+      <li v-show='projects.length !== 0' class="dropdown-header">Click a Project to add or remove this Standard</li>
+      <li v-for='(project, index) in projects'  @click='toggleProject(project.id, index)'>
+        <a tabindex='-1' class='cursor' :id="'projects-' + index" style='display:inline-block; width:100%; padding-right:0px;'>{{project.name}}
+          <span class='pull-right'>
+            <span v-if='!project.standards.length && !project.loading' class="glyphicon glyphicon-plus" ></span>      
+            <span v-if='project.standards.length && !project.loading' class="glyphicon glyphicon-minus" ></span>
+          </span>
+        </a>
+      </li>
+    </template>
+  </drop-down>
 </template>
 
 <script>
   import {getProjects, toggleStandard} from 'src/api/project'
-  import {modals} from 'src/plugins/mixins'
   import DropDown from 'components/widget/DropDown'
-
+  
   export default {
-    mixins: [modals],
     props: ['standard'],
     methods: {
       toggleProject: function (project, i) {
@@ -56,7 +54,8 @@
     data () {
       return {
         projects: [],
-        loading: false
+        loading: false,
+        createProject: false
       }
     },
     components: {

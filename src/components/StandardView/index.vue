@@ -12,7 +12,7 @@
       </div>
       <div :class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
         <ul class="nav navbar-nav">
-          <nav-add-to-project :standard="routerStandard"></nav-add-to-project>
+          <nav-add-to-project :standard="routerStandard" v-on:create-project='createProject = true'></nav-add-to-project>
           <li><a href='#' @click="standardLink"><span class="glyphicon glyphicon-open" /> Open</a></li>
         </ul>
         <ul class="nav navbar-nav">
@@ -41,6 +41,9 @@
     </template>
     <template slot='button' v-if="false">Add Project</template>
     </base-modal>
+        <!-- Create Project -->
+    <create-project :dim='createProject' v-on:close='createProject = false'></create-project>
+
   </div>
 </template>
 
@@ -53,6 +56,7 @@
   import {addHistory, getStandardRevisions, viewPdfStandard, getStandardInfo} from 'src/api/standard'
   import NavAddToProject from './NavAddToProject'
   import bus from 'src/bus'
+  import CreateProject from 'components/modals/CreateProject'
 
   export default {
     created () {
@@ -121,12 +125,14 @@
         standard: {},
         revisions: [],
         showRevision: false,
-        loadingRevisions: false
+        loadingRevisions: false,
+        createProject: false
       }
     },
     components: {
       NavAddToProject,
-      BaseModal
+      BaseModal,
+      CreateProject
     }
   }
 </script>
