@@ -1,14 +1,17 @@
 <template>
   <div class='container'>
     <div class='row'>
+      <div class='col-xs-8'>
+        <div v-if='input !== original' class="alert alert-info" role="alert"><b>Heads up!</b> Changes have not been saved</div>
+    <div class='row'>
        <template v-if='admin'>
           <div class='close' v-if='!edit' @click='edit = true'><small><span class='glyphicon glyphicon-edit'></span></small></div>
-          <div class='close' v-else @click='edit = false'><small><span class='glyphicon glyphicon-floppy-saved'></span></small></div>
+          <div class='close' v-else @click='saveSetting'><small><span class='glyphicon glyphicon-floppy-saved'></span></small></div>
         </template>
-      <div id="editor" class='col-xs-12' v-if='edit'>
+      <div id="editor" class='col-xs-12 col-md-6' v-if='edit'>
         <textarea v-model="input" class="form-control" rows="25"></textarea>
       </div>
-      <div class="[edit ? 'col-xs-12' : 'col-xs-12']">
+      <div :class="['col-xs-12', edit ? 'col-md-6' : 'col-md-12']">
         <div v-html="htmlInput"></div>
       </div>
     </div>
@@ -17,6 +20,8 @@
 
 <script>
   import marked from 'marked'
+  import {getSetting} from 'api/standard'
+  import {saveSetting} from 'api/admin'
   export default {
     props: {
       admin: {
@@ -24,37 +29,33 @@
         type: Boolean
       }
     },
+    mounted: function () {
+      this.getSetting()
+    },
     data () {
       return {
-        input: `
-# Headers
-# H1
-## H2
-### H3
-#### H4
-##### H5
-###### H6
-# Text Modifiers
-Emphasis, aka italics, with *asterisks* or _underscores_.
-Strong emphasis, aka bold, with **asterisks** or __underscores__.
-Combined emphasis with **asterisks and _underscores_**.
-Strikethrough uses two tildes. ~~Scratch this.~~
-# Lists
-1. First ordered list item
-2. Another item
-⋅⋅* Unordered sub-list.
-1. Actual numbers don't matter, just that it's a number
-⋅⋅1. Ordered sub-list
-4. And another item.
-⋅⋅⋅You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).
-* Unordered list can use asterisks
-- Or minuses
-+ Or pluses
-# Links
-[I'm an inline-style link](https://www.google.com)
-[I'm an inline-style link with title](https://www.google.com "Google's Homepage")
-        `,
+        input: '',
+        original: '',
         edit: false
+      }
+    },
+    methods: {
+      getSetting () {
+        getSetting('motd')
+        .then((res) => {
+          this.input = ('id' in res.data && res.data.value) || ''
+          this.original = this.input
+        })
+        .catch((e) => {
+          this.$store.dispatch('createAlert', {message: 'Could not retrieve MOTD', type: 'danger'})
+        })
+      },
+      saveSetting () {
+        saveSetting('motd', this.input)
+          .then((res) => this.$store.dispatch('createAlert', {message: res.data, type: 'success'}))
+          .then(() => this.getSetting())
+          .catch((e) => this.$store.dispatch('createAlert', {message: 'Could not save MOTD', type: 'danger'}))
+        this.edit = false
       }
     },
     computed: {
