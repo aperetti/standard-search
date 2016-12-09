@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "array-equal": "^1.0.0",
-    "axios": "^0.15.2",
+    "axios": "^0.15.3",
     "babel-runtime": "^6.0.0",
     "bootstrap": "^3.3.6",
     "javascript-natural-sort": "^0.7.1",
@@ -23,6 +23,7 @@
     "natural-compare-lite": "^1.4.0",
     "pdfjs-dist": "^1.4.213",
     "pdfviewer": "^0.3.2",
+    "store2": "^2.3.2",
     "vue": "^2.0.5",
     "vue-html-editor": "^0.2.1",
     "vue-resource": "^0.7.0",
