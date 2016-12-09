@@ -6,20 +6,14 @@
 
 <script>
   import markdown from 'components/widget/markdown'
-  import {isAdmin} from 'src/api/auth'
   export default {
-    mounted () {
-      isAdmin().then((res) => {
-        this.admin = true
-      })
-    },
-    data () {
-      return {
-        admin: false
-      }
-    },
     components: {
       markdown
+    },
+    computed: {
+      admin: function () {
+        return this.$store.getters.isAdmin
+      }
     }
   }
 </script>

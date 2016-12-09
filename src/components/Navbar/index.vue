@@ -30,7 +30,6 @@
 </template>
 
 <script>
-  import {isAdmin} from 'src/api/auth'
   import Search from './Search'
   import StandardMenu from './StandardMenu'
   import NavHistory from './NavHistory'
@@ -42,16 +41,7 @@
   export default {
     mixins: [togglers],
     mounted: function () {
-      this.admin = isAdmin()
-            .then((res) => res.status === 200)
-            .catch((e) => false)
-
       bus.on('page-reset', (arg) => {
-        if (arg === 'beforeRoute') {
-          this.admin = isAdmin()
-            .then((res) => res.status === 200)
-            .catch((e) => false)
-        }
         if (arg !== 'drop-down') {
           this.optionOpen = false
         }
@@ -69,11 +59,13 @@
       return {
         menuOpen: false,
         mobileNav: false,
-        optionOpen: false,
-        admin: false
+        optionOpen: false
       }
     },
     computed: {
+      admin () {
+        return this.$store.getters.isAdmin
+      },
       editStandard () {
         var standardId = this.$route.params.standardId
         return `{name: "editStandard", params:{standardId: "${standardId}"}}`

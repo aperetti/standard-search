@@ -1,17 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import standard from './modules/standard'
-import modals from './modules/modals'
 import alerts from './modules/alerts'
+import user from './modules/user'
 
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
   modules: {
-    standard,
-    modals,
-    alerts
+    alerts,
+    user
   },
   strict: debug
 })

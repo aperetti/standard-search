@@ -4,8 +4,8 @@ import StandardView from 'components/StandardView'
 import Landing from 'components/LandingPage'
 import Login from './components/Login'
 import {loggedIn} from './api/config'
-import {isAdmin} from './api/auth'
 import bus from './bus'
+import store from 'src/vuex/store'
 
 var routes = [
   {
@@ -60,15 +60,11 @@ function before (to, from, next) {
   bus.emit('page-reset', 'beforeRoute')
   if (!loggedIn() && !to.fullPath.indexOf('/login') === -1) return next('/login')
   if (to.fullPath.indexOf('/admin') !== -1) {
-    isAdmin().then(function (res) {
-      if (res.status === 200) {
-        return next()
-      } else {
-        return next('/')
-      }
-    }, function (res) {
-      return next(false)
-    })
+    if (store.state.user.roles.indexOf('Admin') !== -1) {
+      return next()
+    } else {
+      return next('/')
+    }
   } else {
     if (to.fullPath.indexOf('/login') !== -1 && loggedIn()) return next(false)
     return next()
@@ -82,4 +78,3 @@ const router = new VueRouter({
 
 router.beforeEach(before)
 export default router
-

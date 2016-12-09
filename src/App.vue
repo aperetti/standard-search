@@ -52,7 +52,7 @@
     },
     computed: {
       logged: function () {
-        return (this.$store.state.standard.token.expiration > new Date().getTime())
+        return (this.$store.state.user.token.expiration > new Date().getTime())
       }
     },
     data () {
