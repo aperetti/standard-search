@@ -112,9 +112,12 @@ export default {
 <style scoped>
     .slide-enter-active, .slide-leave-active {
       transition: all .5s;
+      -webkit-transition: all .5s;
     }
     .slide-enter, .slide-leave-active {
       transform: translateX(-100%);
+      -ms-transform: translateX(-100%);
+      -webkit-transform: translateX(-100%);
     }
     .breadcrumb {
       font-size: 11px;
