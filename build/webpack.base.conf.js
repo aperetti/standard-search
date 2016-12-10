@@ -5,8 +5,7 @@ var projectRoot = path.resolve(__dirname, '../')
 
 module.exports = {
   entry: {
-    app: './src/main.js',
-    'pdf.worker': 'pdfjs-dist/build/pdf.worker.entry'
+    app: './src/main.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -23,8 +22,6 @@ module.exports = {
       'assets': path.resolve(__dirname, '../src/assets'),
       'components': path.resolve(__dirname, '../src/components'),
       'actions': path.resolve(__dirname, '../src/vuex/actions.js'),
-      'getters': path.resolve(__dirname, '../src/vuex/getters.js'),
-      'menus': path.resolve(__dirname, '../src/vuex/menus.js'),
       'mixins': path.resolve(__dirname, '../src/plugins/mixins.js'),
       'api' : path.resolve(__dirname, '../src/api')
     }
