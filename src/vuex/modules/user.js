@@ -15,20 +15,22 @@ const actions = {
     commit(t.CLEAR_USER)
   },
   login ({commit}, res) {
-    window.localStorage.setItem('token', res.data.token)
-    window.localStorage.setItem('expiration', res.data.expires)
-    window.localStorage.setItem('username', res.data.username)
-    window.localStorage.setItem('roles', JSON.stringify(res.data.roles))
-    console.log(res)
-    let user = {
-      roles: res.data.roles,
-      token: {
-        token: res.data.token,
-        expiration: res.data.expires
-      },
-      name: res.data.username
-    }
-    commit(t.SET_USER, user)
+    return new Promise((resolve, reject) => {
+      window.localStorage.setItem('token', res.data.token)
+      window.localStorage.setItem('expiration', res.data.expires)
+      window.localStorage.setItem('username', res.data.username)
+      window.localStorage.setItem('roles', JSON.stringify(res.data.roles))
+      let user = {
+        roles: res.data.roles,
+        token: {
+          token: res.data.token,
+          expiration: res.data.expires
+        },
+        name: res.data.username
+      }
+      commit(t.SET_USER, user)
+      return resolve()
+    })
   }
 }
 

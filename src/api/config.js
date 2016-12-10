@@ -1,7 +1,14 @@
 import store from 'src/vuex/store'
 import axios from 'axios'
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${window.localStorage.getItem('token')}`
+function extendWithToken (axios, base) {
+  var extend = axios.create({baseURL: base})
+  extend.interceptors.request.use(function (config) {
+    config.headers.authorization = 'Bearer ' + token()
+    return config
+  })
+  return extend
+}
 
 export {axios}
 
@@ -10,20 +17,16 @@ export const domainBase = 'https://www.photoredux.com/'
 export const apiBase = domainBase + 'api/'
 export const apiAuth = apiBase + 'authenticate'
 
-export const apiProject = axios.create({baseURL: apiBase + 'user/projects/'})
-export const apiStandard = axios.create({baseURL: apiBase + 'standards/'})
-export const apiAdmin = axios.create({baseURL: apiBase + 'admin/'})
-export const apiUser = axios.create({baseURL: apiBase + 'user/'})
+export const apiProject = extendWithToken(axios, apiBase + 'user/projects/')
+export const apiStandard = extendWithToken(axios, apiBase + 'standards/')
+export const apiAdmin = extendWithToken(axios, apiBase + 'admin/')
+export const apiUser = extendWithToken(axios, apiBase + 'user/')
 export const apiGetStandardPdf = (standard) => {
-  return apiBase + '/standards/pdf/' + standard
+  return apiBase + 'standards/pdf/' + standard
 }
 
 // Used to determine if the current User is admin. Should only be used to affect display. All authentication
 // should take place on the server.
-
-export const token = () => {
-  return store.state.user.token.token
-}
 
 export const loggedIn = () => {
   if (store.state.user.token.token && store.state.user.token.expiration > new Date().getTime()) {
@@ -39,7 +42,11 @@ export const loggedIn = () => {
   }
 }
 
-const getLocal = (str) => window.localStorage.getItem(str)
+export function token () {
+  return store.state.user.token.token || getLocal('token')
+}
+
+function getLocal (str) { return window.localStorage.getItem(str) }
 
 // appends the current token to the url string
 export const withToken = (url) => url + '?token=' + token()

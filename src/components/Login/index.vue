@@ -49,9 +49,9 @@
         this.loading = true
         getToken(this.username, this.password).then((response) => {
           this.$store.dispatch('login', response)
+          this.$router.push({name: 'landing'})
           this.password = ''
           this.loading = false
-          this.$router.push({name: 'landing'})
         }, (response) => {
           this.password = ''
           this.failed = true
