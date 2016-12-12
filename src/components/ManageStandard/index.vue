@@ -99,7 +99,7 @@
 
     <!-- PDF References -->
     <div class="form-group form-inline">
-      <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">PDF References</label>
+      <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">PDF Keywords</label>
       <div class="row">
       <div class="col-sm-5 col-xs-10 col-xs-offset-1">       
         <div class="checkbox pull-left" v-for="(ref, index) in possibleReferences">
@@ -122,16 +122,25 @@
             <tbody>      
           <template v-for='(reference, index) in references'>
             <tr>
-              <td class="pull-left">{{reference}}</td>
+              <td class="text-left">{{reference}}</td>
               <td><span @click="deleteReference(index)" class="glyphicon glyphicon-trash" /></td>
             </tr>
           </template>
-          <tr>
-            <td><input class="form-control" placeholder="Name" v-model='newReference.name'></input></td>
-            <td><button :class="['btn','btn-default']" :disabled="!newReference.valid" @click.prevent='addReference'>Add <span class="glyphicon glyphicon-plus"/><br/></td>
-          </tr>  
           </tbody>
         </table>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="input-group">
+              <input class="form-control" placeholder="Name" v-model='newReference.name'></input>
+              <span class="input-group-btn">
+                <button :class="['btn','btn-default']" :disabled="!newReference.valid" @click.prevent='addReference'>Add <span class="glyphicon glyphicon-plus"/></button>
+              </span>
+            </div>
+            <div class="list-group float">          
+              <a  v-for="ref in searchReference" class="list-group-item text-left" @click="newReference.name = ref">{{ref}}</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -206,14 +215,14 @@
 </template>
 
 <script>
-  import {apiAddStandard, apiEditStandard, withToken} from 'src/api/config'
-  import {processPdf} from 'src/api/admin'
+  import {processPdf, addStandard, editStandard} from 'src/api/admin'
   import {tooltip} from 'vue-strap'
-  import {validStandard, getStandardInfo} from 'src/api/standard'
+  import {validStandard, getStandardInfo, findStandard} from 'src/api/standard'
   import {getMenu, createMenu, deleteMenu} from 'src/api/menu'
   import BaseModal from 'components/modals/BaseModal'
   import LoadingModal from 'components/modals/LoadingModal'
   import DropDownButton from 'components/widget/dropdownbutton'
+
   export default {
     mounted: function () {
       if ('standardId' in this.$route.params) {
@@ -224,6 +233,7 @@
           this.editStandard = res.data
           this.code = res.data.code
           this.desc = res.data.description
+          this.references = res.data.references.map(ref => ref.code)
           this.fetchMenu(res.data.menu_id)
         }).catch(e => {
           this.$store.dispatch('createAlert', {message: e.res, type: 'danger'})
@@ -250,23 +260,28 @@
       })
       // Watch for code to find a conflict with the name of the standard.
       this.$watch('code', () => {
-        var self = this
         if (this.code.length > 0) {
-          validStandard(encodeURIComponent(this.code))
+          validStandard(this.code)
           .then((response) => {
-            self.validCode = Boolean(!response.data)
+            this.validCode = Boolean(!response.data)
           }).catch(e => {
-            self.validCode = false
+            this.validCode = false
           })
         }
       })
+
       this.$watch('newReference.name', () => {
-        validStandard(encodeURIComponent(this.newReference.name))
-          .then((response) => {
-            this.newReference.valid = Boolean(response.data)
-          }).catch(e => {
-            this.newReference.valid = false
-          })
+        if (this.newReference.name) {
+          findStandard(this.newReference.name)
+            .then((response) => { this.searchReference = response.data.map(ref => ref.code) })
+            .catch(e => { this.searchReference = [] })
+          validStandard(this.newReference.name)
+            .then((response) => { this.newReference.valid = this.references.map(ref => ref.toLowerCase()).indexOf(this.newReference.name.toLowerCase()) === -1 && Boolean(response.data) })
+            .catch(e => { this.newReference.valid = false })
+        } else {
+          this.searchReference = []
+          this.newReference.valid = false
+        }
       })
     },
     components: {
@@ -278,26 +293,17 @@
     data: function () {
       return {
         references: [],
-        newReference: {
-          name: '',
-          valid: false
-        },
+        searchReference: [],
+        newReference: {name: '', valid: false},
         possibleReferences: [],
         loadingStandard: false,
-        status: {
-          open: false,
-          value: 'ACTIVE'
-        },
+        status: {open: false, value: 'ACTIVE'},
         changelog: '',
         deleteModal: null,
         scrollDir: false,
         loadMenu: false,
         menuModal: false,
-        newMenu: {
-          name: null,
-          description: null,
-          parentId: null
-        },
+        newMenu: {name: null, description: null, parentId: null},
         menu: null,
         code: '',
         validCode: false,
@@ -381,6 +387,17 @@
       onSubmit: function (e) {
         var formData = new window.FormData()
         this.loading = true
+        var postHandler = (res) => {
+          this.loading = false
+          this.$router.push({name: 'standard', params: {standardId: res.data}})
+          var msg = ('standardId' in this.$route.params) ? 'Standard Edited!' : 'Standard Created!'
+          this.$store.dispatch('createAlert', {message: msg, type: 'success'})
+        }
+        var errorHandler = (e) => {
+          this.loading = false
+          var msg = `Error could not ${('standardId' in this.$route.params) ? 'edit' : 'create'}`
+          this.$store.dispatch('createAlert', {message: msg, type: 'danger'})
+        }
         formData.append('menu', this.menu.id)
         formData.append('code', this.code)
         formData.append('desc', this.desc)
@@ -390,26 +407,12 @@
         }
         formData.append('status', this.status.value)
         if (this.changelog.length > 0) formData.append('changelog', this.changelog)
-        var xhr = new window.XMLHttpRequest()
         if ('standardId' in this.$route.params) {
           formData.append('id', this.editStandard.id)
-          xhr.open('POST', withToken(apiEditStandard), true)
+          editStandard(formData).then(postHandler).catch(errorHandler)
         } else {
-          xhr.open('POST', withToken(apiAddStandard), true)
+          addStandard(formData).then(postHandler)
         }
-        xhr.onload = () => {
-          this.loading = false
-          var msg
-          if (xhr.status === 200) {
-            this.$router.push({name: 'standard', params: {standardId: this.editStandard.id}})
-            msg = ('standardId' in this.$route.params) ? 'Standard Edited!' : 'Standard Created!'
-            this.$store.dispatch('createAlert', {message: msg, type: 'success'})
-          } else {
-            msg = ('standardId' in this.$route.params) ? 'Failed editing Standard' : 'Failed creating Standard'
-            this.$store.dispatch('createAlert', {message: msg, type: 'danger'})
-          }
-        }
-        xhr.send(formData)
       }
     },
     computed: {
@@ -530,6 +533,11 @@ span:hover, span:focus, span:active, .dismiss:focus, btn-dismiss:focus{
 }
 button.btn.btn-primary.btn-dismiss.pull-left {
     outline: none !important;
+}
+.float {
+    position: absolute;
+    top: 100%;
+    z-index: 500;
 }
 </style>
 
