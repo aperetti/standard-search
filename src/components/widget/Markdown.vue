@@ -1,7 +1,7 @@
 <template>
   <div class='container'>
     <div class='row'>
-      <div class='col-xs-8'>
+      <div class='col-xs-12'>
         <div v-if='input !== original' class="alert alert-info" role="alert"><b>Heads up!</b> Changes have not been saved</div>
     <div class='row'>
        <template v-if='admin'>

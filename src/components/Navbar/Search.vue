@@ -8,7 +8,7 @@
         <a v-if='searchResults && searchResults.length === 0 && searchInput.length > 0 && !loading' id='results-0' @blur="blurResults" class='list-group-item text-left'>No Standards Found</a>
         <a v-if='loading' class='list-group-item text-left'>Loading...</a>
         <router-link 
-          v-if='!loading && $route.params && $route.params.standardId !== item._id' 
+          v-if='!loading' 
           v-for='(item, index) in searchResults' 
           :id="'results-'+index" 
           @blur="blurResults" 

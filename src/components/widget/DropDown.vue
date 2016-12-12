@@ -1,4 +1,5 @@
 <template>
+  
   <li role='presentation' v-bind:class="['dropdown', this.open ? 'open' : '']">
     <a class="dropdown-toggle" 
         href='#'
@@ -13,10 +14,11 @@
       <span v-if='loading === false && (open === true && persistant)' class="glyphicon glyphicon-eye-close"></span>
       <img v-if='loading' src='~assets/greyLoading14.svg'>
     </a>
-      <ul class="dropdown-menu" >
-        <slot name='dropdown'><li><a>Dropdown</a></li></slot>
-      </ul>
+    <ul class="dropdown-menu" v-if='open'>
+      <slot name='dropdown'><li><a>Dropdown</a></li></slot>
+    </ul>
   </li>
+  </transition>
 </template>
 
 <script>
