@@ -23,7 +23,7 @@ module.exports = {
       'components': path.resolve(__dirname, '../src/components'),
       'actions': path.resolve(__dirname, '../src/vuex/actions.js'),
       'mixins': path.resolve(__dirname, '../src/plugins/mixins.js'),
-      'api' : path.resolve(__dirname, '../src/api')
+      'api': path.resolve(__dirname, '../src/api')
     }
   },
   resolveLoader: {
