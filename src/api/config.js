@@ -25,6 +25,8 @@ export const apiGetStandardPdf = (standard) => {
   return apiBase + 'standards/pdf/' + standard
 }
 
+export const apiAddStandard = apiBase + 'admin/add_standard'
+export const apiEditStandard = apiBase + 'admin/edit_standard'
 // Used to determine if the current User is admin. Should only be used to affect display. All authentication
 // should take place on the server.
 

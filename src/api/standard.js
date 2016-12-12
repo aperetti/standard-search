@@ -20,12 +20,15 @@ export const addHistory = (id) => apiUser.post(`/add_history/${id}`)
 
 export const getHistory = () => apiUser.get('/get_history')
 
-export const searchStandard = (search, fields = ['code', 'description'], fuzzy = 2) => {
+export const searchStandard = (search, fields = ['code^10'], fuzzy = 0) => {
   var data = {}
   data.fields = fields
   data.search = search
   data.fuzzy = fuzzy
   return apiStandard.post('/search', data)
 }
+
+// Performs a simple like query on the standards code
+export const findStandard = (id) => apiStandard.get(`/find_standard/${id}`)
 
 export const getSetting = (id) => apiStandard.get(`/get_setting/${id}`)
