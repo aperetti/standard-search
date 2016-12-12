@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import markdown from 'components/widget/markdown'
+  import markdown from 'components/widget/Markdown'
   export default {
     components: {
       markdown

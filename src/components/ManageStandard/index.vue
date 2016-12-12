@@ -221,7 +221,7 @@
   import {getMenu, createMenu, deleteMenu} from 'src/api/menu'
   import BaseModal from 'components/modals/BaseModal'
   import LoadingModal from 'components/modals/LoadingModal'
-  import DropDownButton from 'components/widget/dropdownbutton'
+  import DropDownButton from 'components/widget/DrowDownButton'
 
   export default {
     mounted: function () {
