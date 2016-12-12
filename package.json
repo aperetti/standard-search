@@ -20,6 +20,7 @@
     "javascript-natural-sort": "^0.7.1",
     "json-editor": "^0.7.25",
     "marked": "^0.3.5",
+    "moment": "^2.17.1",
     "natural-compare-lite": "^1.4.0",
     "pdfjs-dist": "^1.4.213",
     "pdfviewer": "^0.3.2",
