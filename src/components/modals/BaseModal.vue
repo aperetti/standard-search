@@ -14,7 +14,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default"  @click='close' data-dismiss="modal">Cancel</button>
-            <button v-if="!hideSubmit" type="button" class="btn btn-primary" @click='submit' @keyup.enter='submit'><slot name='button'>Button</slot></button>
+            <button v-if="!hideSubmit" type="button" class="btn btn-primary" @click='submit'><slot name='button'>Button</slot></button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
