@@ -1,5 +1,5 @@
 <template>
-  <div class='container view'>
+  <div id='landing' class='container view'>
     <markdown :admin='admin'></markdown>
   </div>
 </template>

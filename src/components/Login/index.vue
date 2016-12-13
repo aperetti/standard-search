@@ -11,13 +11,13 @@
           <form class='login'>
             <div class='form-group'>
               <label class='sr-only' for="loginUsername">User</label>
-              <input id='loginUsername' class='form-control' v-model='username' type='text' placeholder='Username' />
+              <input id='login-username' class='form-control' v-model='username' type='text' placeholder='Username' />
             </div>
             <div class='form-group'>
               <label class='sr-only' for='loginPassword'>Password</label>
-              <input id='loginPassword' class='form-control' @keyup.13='processLogin' v-model='password' type='password' placeholder='Password'/>
+              <input id='login-password' class='form-control' @keyup.13='processLogin' v-model='password' type='password' placeholder='Password'/>
               <br />
-              <button class='btn btn-primary btn-block' @click.prevent='processLogin' type='button'>{{loading ? 'Loading' : 'Sign in'}}</button>
+              <button id='sign-in' class='btn btn-primary btn-block' @click.prevent='processLogin' type='button'>{{loading ? 'Loading' : 'Sign in'}}</button>
             </div>
             <transition name="roll-down">
               <div v-show='failed' class='alert alert-danger'>

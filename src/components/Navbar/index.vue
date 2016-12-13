@@ -2,7 +2,7 @@
   <div>
     <nav class=" navbar navbar-default" role="navigation">
       <div class="navbar-header">         
-        <a class="navbar-brand cursor" @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
+        <a class="navbar-brand cursor" id='standard-menu-button' @click='toggleMenu'><span class="glyphicon glyphicon-th"></span></a>
         
         <button type="button" class="navbar-toggle" @click="toggleOption">
           <span class="sr-only">Toggle navigation</span>

@@ -7,7 +7,7 @@
     <div v-bind:class="['form-group', {'has-success': $vd.code.$valid, 'has-error': !$vd.code.$valid}]">
       <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">Standard Code</label>
       <div class="col-sm-3 col-xs-10 col-xs-offset-1">
-          <input type="text" class="form-control" v-model="code" @></input>
+          <input id='standard-code-input' type="text" class="form-control" v-model="code" @></input>
       </div>
     </div>
       
@@ -15,7 +15,7 @@
     <div v-bind:class="['form-group', $vd.desc.$valid ? 'has-success' : 'has-error']">
       <label for="inputStandard" placeholder="One or Two Line Description" class="col-sm-2 col-sm-offset-1 control-label">Description</label>
       <div class="col-sm-6 col-xs-10 col-xs-offset-1">
-        <textarea rows="2" class="form-control" v-model="desc"></textarea>
+        <textarea id='standard-description-input' rows="2" class="form-control" v-model="desc"></textarea>
       </div>
     </div>
 
