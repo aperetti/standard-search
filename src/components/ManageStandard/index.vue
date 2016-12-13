@@ -1,7 +1,7 @@
 <template>
   <div>
     <form class="form-horizontal well" method="POST" enctype="multipart/form-data" v-on:submit.prevent="onSubmit">
-    <div class="page-header"><h2 class="text-left">Create Standard</h2></div>
+    <div class="page-header"><h2 class="text-left">{{$route.name === 'editStandard' ? 'Edit' :'Create'}} Standard</h2></div>
 
     <!-- Input Standard Code -->
     <div v-bind:class="['form-group', {'has-success': $vd.code.$valid, 'has-error': !$vd.code.$valid}]">
@@ -216,12 +216,36 @@
 
 <script>
   import {processPdf, addStandard, editStandard} from 'src/api/admin'
-  import {tooltip} from 'vue-strap'
   import {validStandard, getStandardInfo, findStandard} from 'src/api/standard'
   import {getMenu, createMenu, deleteMenu} from 'src/api/menu'
   import BaseModal from 'components/modals/BaseModal'
   import LoadingModal from 'components/modals/LoadingModal'
   import DropDownButton from 'components/widget/DropDownButton'
+
+  function initialData () {
+    return {
+      references: [],
+      searchReference: [],
+      newReference: {name: '', valid: false},
+      possibleReferences: [],
+      loadingStandard: false,
+      status: {open: false, value: 'ACTIVE'},
+      changelog: '',
+      deleteModal: null,
+      scrollDir: false,
+      loadMenu: false,
+      menuModal: false,
+      newMenu: {name: null, description: null, parentId: null},
+      menu: null,
+      code: '',
+      validCode: false,
+      desc: '',
+      file: '',
+      fileConflictInfo: {},
+      loading: false,
+      editStandard: {}
+    }
+  }
 
   export default {
     mounted: function () {
@@ -234,7 +258,7 @@
           this.code = res.data.code
           this.desc = res.data.description
           this.references = res.data.references.map(ref => ref.code)
-          this.fetchMenu(res.data.menu_id)
+          this.fetchMenu(res.data.menuId)
         }).catch(e => {
           this.$store.dispatch('createAlert', {message: e.res, type: 'danger'})
           this.loadingStandard = false
@@ -243,6 +267,25 @@
         this.fetchMenu(0) // Get base level Menu
       }
 
+      this.$watch('$route.name', () => {
+        if (this.$route.name === 'createStandard') {
+          Object.assign(this.$data, initialData())
+        } else {
+          this.loadingStandard = true
+          getStandardInfo(this.$route.params.standardId)
+          .then(res => {
+            this.loadingStandard = false
+            this.editStandard = res.data
+            this.code = res.data.code
+            this.desc = res.data.description
+            this.references = res.data.references.map(ref => ref.code)
+            this.fetchMenu(res.data.menuId)
+          }).catch(e => {
+            this.$store.dispatch('createAlert', {message: e.res, type: 'danger'})
+            this.loadingStandard = false
+          })
+        }
+      })
       // Watch for file and process when uploaded.
       this.$watch('file', () => {
         if (this.file.length > 0) {
@@ -285,34 +328,12 @@
       })
     },
     components: {
-      tooltip,
       BaseModal,
       DropDownButton,
       LoadingModal
     },
     data: function () {
-      return {
-        references: [],
-        searchReference: [],
-        newReference: {name: '', valid: false},
-        possibleReferences: [],
-        loadingStandard: false,
-        status: {open: false, value: 'ACTIVE'},
-        changelog: '',
-        deleteModal: null,
-        scrollDir: false,
-        loadMenu: false,
-        menuModal: false,
-        newMenu: {name: null, description: null, parentId: null},
-        menu: null,
-        code: '',
-        validCode: false,
-        desc: '',
-        file: '',
-        fileConflictInfo: {},
-        loading: false,
-        editStandard: {}
-      }
+      return initialData()
     },
     methods: {
       addReference () {
@@ -395,7 +416,8 @@
         }
         var errorHandler = (e) => {
           this.loading = false
-          var msg = `Error could not ${('standardId' in this.$route.params) ? 'edit' : 'create'}`
+          var msg = `Error could not ${('standardId' in this.$route.params) ? 'edit' : 'create'}.`
+          msg = `${msg} ${e.response.data}`
           this.$store.dispatch('createAlert', {message: msg, type: 'danger'})
         }
         formData.append('menu', this.menu.id)
@@ -411,7 +433,7 @@
           formData.append('id', this.editStandard.id)
           editStandard(formData).then(postHandler).catch(errorHandler)
         } else {
-          addStandard(formData).then(postHandler)
+          addStandard(formData).then(postHandler).catch(errorHandler)
         }
       }
     },
