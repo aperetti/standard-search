@@ -2,7 +2,7 @@
   <span>
     <div class="input-group" style="padding: 8px;">
       <span class="input-group-addon" id="sizing-addon1">@</span>
-       <input autocomplete="off" placeholder='Search for...' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="showResults = true" @blur="blurResults" />
+       <input autocomplete="off" placeholder='Search for...' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="focusSearch" @blur="blurResults" />
 
         <div class='list-group float' id='results' v-show='showResults'>
         <a v-if='searchResults && searchResults.length === 0 && searchInput.length > 0 && !loading' id='results-0' @blur="blurResults" class='list-group-item text-left'>No Standards Found</a>
@@ -42,6 +42,10 @@
       }
     },
     methods: {
+      focusSearch: function () {
+        bus.emit('page-reset')
+        this.showResults = true
+      },
       setCurrentStandard: function (item) {
         this.currentStandard = item._source.file
       },

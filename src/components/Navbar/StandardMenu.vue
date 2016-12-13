@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-  <div class=" navbar navbar-default" v-show="enable">
+  <div id='standard-menu' class=" navbar navbar-default" v-show="enable">
     <div class='row'>
       <div class='col-xs-12'>
         <h4 class='pull-left'>Standards Menu</h4>

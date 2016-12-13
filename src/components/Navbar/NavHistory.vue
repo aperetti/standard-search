@@ -1,5 +1,5 @@
 <template>
-  <drop-down v-show="history.length > 0">
+  <drop-down id='history-dropdown' v-show="history.length > 0">
     <template slot='title'>History</template>
     <template slot='dropdown'>
       <li :id="'drop ' + standard.code" v-for='standard in history'><router-link :to="{name: 'standard', params: {standardId: standard.id}}">{{standard.code}}</router-link></li>

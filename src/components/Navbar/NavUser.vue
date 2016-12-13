@@ -1,5 +1,5 @@
 <template>
-  <drop-down>
+  <drop-down id='user-dropdown'>
     <template slot='title'>User</template>
     <template slot='dropdown'>
       <li><router-link :to="{ name: 'projectsHome' }" class='cursor'><span class="glyphicon glyphicon-list-alt"></span> Projects</router-link></li>
