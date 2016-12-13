@@ -15,5 +15,5 @@ export const getProject = (projectId) => apiProject.get(`/by_id/${projectId}`)
 export const toggleStandard = (projectId, standardId) => apiProject.post(`/toggle_standard/${projectId}/${standardId}`)
 
 export const createProject = (name, description, standardIds) => {
-  return apiProject.post(`/create_project/${name}`, {description: description, standards: standardIds})
+  return apiProject.post('/create_project', {name: name, description: description, standards: standardIds})
 }
