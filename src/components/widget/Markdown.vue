@@ -11,7 +11,7 @@
       <div id="editor" class='col-xs-12 col-md-6' v-if='edit'>
         <textarea v-model="input" class="form-control" rows="25"></textarea>
       </div>
-      <div :class="['col-xs-12', edit ? 'col-md-6' : 'col-md-12']">
+      <div :class="['col-xs-12', edit ? 'col-md-6' : 'col-md-12', 'text-left']">
         <div v-html="htmlInput"></div>
       </div>
     </div>

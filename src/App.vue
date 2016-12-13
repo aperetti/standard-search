@@ -7,7 +7,7 @@
     </div>
     <!-- MODALS -->
       
-    <div class='router' v-show='logged'>
+    <div class='router' v-if='logged'>
       <router-view></router-view>
     </div>
 
