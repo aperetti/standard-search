@@ -43,7 +43,7 @@
     },
     methods: {
       focusSearch: function () {
-        bus.emit('page-reset')
+        bus.emit('page-reset', 'drop-down')
         this.showResults = true
       },
       setCurrentStandard: function (item) {
