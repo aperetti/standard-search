@@ -46,8 +46,8 @@
           this.cancelModal()
           this.$emit('submit')
           this.$store.dispatch('createAlert', {message: res.data, type: 'success'})
-        }).catch((er) => {
-          this.$store.dispatch('createAlert', {message: er.data, type: 'danger'})
+        }).catch((e) => {
+          this.$store.dispatch('createAlert', {message: e.response.data, type: 'danger'})
         })
       }
     }
