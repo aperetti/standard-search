@@ -13,7 +13,7 @@
           :id="'results-'+index" 
           @blur="blurResults" 
           :to="{ name: 'standard', params: { standardId: item._id }}"  
-          :class="['list-group-item text-left']">
+          :class="['list-group-item text-left', item._id == $route.params.standardId ? 'active' : '']">
             {{item._source.code}} - {{item._source.description}}
         </router-link>
       </div>
@@ -78,6 +78,17 @@
 </script>
 
 <style scoped>
+  .active {
+    cursor: default;
+    background-color: #fff;
+    border-color: #ddd;
+    color: #999;
+  }
+  .active:hover {
+    color: #999;
+    background-color: #fff;
+    border-color: #ddd;
+  }
   .float {
     position: absolute;
     top: 42px;
