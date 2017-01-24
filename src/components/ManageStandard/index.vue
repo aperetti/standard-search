@@ -68,7 +68,6 @@
           <template slot='dropdown'>
             <li><a href='#' @click="status.value = 'ACTIVE'">ACTIVE</a></li>
             <li><a href='#' @click="status.value = 'OBSOLETE'">OBSOLETE</a></li>
-            <li><a href='#' @click="status.value = 'DELETED'">DELETED</a></li>
           </template>             
         </drop-down-button>
       </div>
@@ -93,53 +92,6 @@
           <label class="btn btn-default btn-file pull-left" v-if="file">
             {{file}}
           </label>
-        </div>
-      </div>
-    </div>
-
-    <!-- PDF References -->
-    <div class="form-group form-inline">
-      <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">PDF Keywords</label>
-      <div class="row">
-      <div class="col-sm-5 col-xs-10 col-xs-offset-1">       
-        <div class="checkbox pull-left" v-for="(ref, index) in possibleReferences">
-          {{ref.match}}<span v-if="index !== possibleReferences.length -1">,	&nbsp;</span>
-        </div>  
-      </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">References</label>
-      <div class="col-sm-5 col-xs-10 col-xs-offset-1"> 
-        <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Standard</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>      
-          <template v-for='(reference, index) in references'>
-            <tr>
-              <td class="text-left">{{reference}}</td>
-              <td><span @click="deleteReference(index)" class="glyphicon glyphicon-trash" /></td>
-            </tr>
-          </template>
-          </tbody>
-        </table>
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="input-group">
-              <input class="form-control" placeholder="Name" v-model='newReference.name'></input>
-              <span class="input-group-btn">
-                <button :class="['btn','btn-default']" :disabled="!newReference.valid" @click.prevent='addReference'>Add <span class="glyphicon glyphicon-plus"/></button>
-              </span>
-            </div>
-            <div class="list-group float">          
-              <a  v-for="ref in searchReference" class="list-group-item text-left" @click="newReference.name = ref">{{ref}}</a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -173,7 +125,6 @@
         </div>
       </div>
     </div>
-
 
     <base-modal  :dim="deleteModal" v-on:close="cancelModals" v-on:submit="deleteMenu" id="delete">
       <template slot='title' v-if="deleteModal">Delete Menu: {{deleteModal.name}}</template>
@@ -215,8 +166,8 @@
 </template>
 
 <script>
-  import {processPdf, addStandard, editStandard} from 'src/api/admin'
-  import {validStandard, getStandardInfo, findStandard} from 'src/api/standard'
+  import {addStandard, editStandard} from 'src/api/admin'
+  import {validStandard, getStandardInfo} from 'src/api/standard'
   import {getMenu, createMenu, deleteMenu} from 'src/api/menu'
   import BaseModal from 'components/modals/BaseModal'
   import LoadingModal from 'components/modals/LoadingModal'
@@ -232,6 +183,7 @@
       status: {open: false, value: 'ACTIVE'},
       changelog: '',
       deleteModal: null,
+      searchModal: null,
       scrollDir: false,
       loadMenu: false,
       menuModal: false,
@@ -249,6 +201,8 @@
 
   export default {
     mounted: function () {
+      // Handles initial load of the site, check if it should be in create or edit mode
+      // Then loads the data approriately
       if ('standardId' in this.$route.params) {
         this.loadingStandard = true
         getStandardInfo(this.$route.params.standardId)
@@ -257,7 +211,7 @@
           this.editStandard = res.data
           this.code = res.data.code
           this.desc = res.data.description
-          this.references = res.data.references.map(ref => ref.code)
+          this.status.value = res.data.status
           this.fetchMenu(res.data.menuId)
         }).catch(e => {
           this.$store.dispatch('createAlert', {message: e.res, type: 'danger'})
@@ -266,7 +220,8 @@
       } else {
         this.fetchMenu(0) // Get base level Menu
       }
-
+      // Watches the route and then initializes data if it goes to create from edit
+      // Fixes issue with the route not completely reloading
       this.$watch('$route.name', () => {
         if (this.$route.name === 'createStandard') {
           Object.assign(this.$data, initialData())
@@ -277,27 +232,10 @@
             this.loadingStandard = false
             this.editStandard = res.data
             this.code = res.data.code
-            this.desc = res.data.description
-            this.references = res.data.references.map(ref => ref.code)
             this.fetchMenu(res.data.menuId)
           }).catch(e => {
             this.$store.dispatch('createAlert', {message: e.res, type: 'danger'})
             this.loadingStandard = false
-          })
-        }
-      })
-      // Watch for file and process when uploaded.
-      this.$watch('file', () => {
-        if (this.file.length > 0) {
-          var formData = new window.FormData()
-          formData.append('pdf', document.getElementById('pdfFile').files[0])
-          processPdf(formData)
-          .then(res => {
-            var refs = res.data.map(ref => {
-              ref.add = false
-              return ref
-            })
-            this.possibleReferences = refs
           })
         }
       })
@@ -312,20 +250,6 @@
           })
         }
       })
-
-      this.$watch('newReference.name', () => {
-        if (this.newReference.name) {
-          findStandard(this.newReference.name)
-            .then((response) => { this.searchReference = response.data.map(ref => ref.code) })
-            .catch(e => { this.searchReference = [] })
-          validStandard(this.newReference.name)
-            .then((response) => { this.newReference.valid = this.references.map(ref => ref.toLowerCase()).indexOf(this.newReference.name.toLowerCase()) === -1 && Boolean(response.data) })
-            .catch(e => { this.newReference.valid = false })
-        } else {
-          this.searchReference = []
-          this.newReference.valid = false
-        }
-      })
     },
     components: {
       BaseModal,
@@ -336,13 +260,6 @@
       return initialData()
     },
     methods: {
-      addReference () {
-        this.references.push(this.newReference.name)
-        this.newReference.name = ''
-      },
-      deleteReference: function (index) {
-        this.references.splice(index, 1)
-      },
       getFile: function (event) {
         this.file = document.getElementById('pdfFile').files[0].name
       },
@@ -410,7 +327,7 @@
         this.loading = true
         var postHandler = (res) => {
           this.loading = false
-          this.$router.push({name: 'standard', params: {standardId: res.data}})
+          this.$router.push({name: 'editStandardKeywords', params: {standardId: res.data}})
           var msg = ('standardId' in this.$route.params) ? 'Standard Edited!' : 'Standard Created!'
           this.$store.dispatch('createAlert', {message: msg, type: 'success'})
         }
@@ -423,7 +340,6 @@
         formData.append('menu', this.menu.id)
         formData.append('code', this.code)
         formData.append('desc', this.desc)
-        formData.append('references', JSON.stringify(this.references))
         if (this.file.length > 0) {
           formData.append('pdf', document.getElementById('pdfFile').files[0])
         }
@@ -560,6 +476,25 @@ button.btn.btn-primary.btn-dismiss.pull-left {
     position: absolute;
     top: 100%;
     z-index: 500;
+}
+tr.strikeout td:before {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    border-bottom: 1px solid #111;
+    width: 100%;
+}
+tr.strikeout td:last-child:before {
+    border-bottom: 0px !important;
+}
+table {
+    border-collapse: collapse;
+}
+
+td {
+    position: relative;
+    padding: 5px 10px;
 }
 </style>
 

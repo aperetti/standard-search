@@ -12,3 +12,7 @@ export const saveSetting = (id, val) => apiAdmin.post('/save_setting', {setting:
 export const addStandard = (formData) => apiAdmin.post('/add_standard', formData)
 
 export const editStandard = (formData) => apiAdmin.post('/edit_standard', formData)
+
+export const keywords = (id) => apiAdmin.get('/keywords', {params: {id: id}})
+
+export const saveKeywords = (data) => apiAdmin.post('/save_keywords', data)

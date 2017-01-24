@@ -33,6 +33,13 @@ var routes = [
     }
   },
   {
+    path: '/admin/standard/edit_keywords/:standardId',
+    name: 'editStandardKeywords',
+    component: function (resolve) {
+      require(['components/ManageStandard/Keywords'], resolve)
+    }
+  },
+  {
     path: '/admin/settings',
     name: 'adminSettings',
     component: function (resolve) {

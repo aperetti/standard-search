@@ -1,8 +1,8 @@
 <template>
   <span>
     <div class="input-group" style="padding: 8px;">
-      <span class="input-group-addon" id="sizing-addon1">@</span>
-       <input autocomplete="off" placeholder='Search for...' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="focusSearch" @blur="blurResults" />
+      <span @click="searchMethod += 1" class="input-group-addon link" id="sizing-addon1"><span :class="[getSearchGlyph]"></span></span>
+       <input autocomplete="off" :placeholder='getSearchPlaceholder' class='form-control' id='search' v-model="searchInput" @keyup="getResults"  @focus="focusSearch" @blur="blurResults" />
 
         <div class='list-group float' id='results' v-show='showResults'>
         <a v-if='searchResults && searchResults.length === 0 && searchInput.length > 0 && !loading' id='results-0' @blur="blurResults" class='list-group-item text-left'>No Standards Found</a>
@@ -12,9 +12,9 @@
           v-for='(item, index) in searchResults' 
           :id="'results-'+index" 
           @blur="blurResults" 
-          :to="{ name: 'standard', params: { standardId: item._id }}"  
-          :class="['list-group-item text-left', item._id == $route.params.standardId ? 'active' : '']">
-            {{item._source.code}} - {{item._source.description}}
+          :to="{ name: 'standard', params: { standardId: item.id }}"  
+          :class="['list-group-item text-left', item.id == $route.params.standardId ? 'active' : '']">
+            {{item.code}} - {{item.description}}
         </router-link>
       </div>
     </div>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import {searchStandard} from 'src/api/standard'
+  import {searchStandard, searchSubstring} from 'src/api/standard'
   import bus from 'src/bus'
   export default {
     mounted () {
@@ -38,7 +38,18 @@
         showResults: false,
         fuzzy: 2,
         searchCode: true,
-        searchDesc: true
+        searchDesc: true,
+        searchPlaceholder: ['Search for standard by code and description', 'Search for standard by code'],
+        searchGlyph: ['glyphicon glyphicon-search', 'glyphicon glyphicon-signal'],
+        searchMethod: 0
+      }
+    },
+    computed: {
+      getSearchGlyph () {
+        return this.searchGlyph[this.searchMethod % this.searchGlyph.length]
+      },
+      getSearchPlaceholder () {
+        return this.searchPlaceholder[this.searchMethod % this.searchPlaceholder.length]
       }
     },
     methods: {
@@ -51,7 +62,16 @@
       },
       getResults: function () {
         var tempLoad = true
-        searchStandard(this.searchInput).then((res) => {
+        var searchRequest
+        switch (this.searchMethod % this.searchGlyph.length) {
+          case 0:
+            searchRequest = searchStandard(this.searchInput)
+            break
+          case 1:
+            searchRequest = searchSubstring(this.searchInput)
+            break
+        }
+        searchRequest.then((res) => {
           tempLoad = false
           this.loading = false
           this.searchResults = res.data
@@ -78,6 +98,9 @@
 </script>
 
 <style scoped>
+  .link {
+    cursor: pointer;
+  }
   .active {
     cursor: default;
     background-color: #fff;

@@ -10,7 +10,7 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>      
+        <tbody>
       <template v-for='(category, index) in categories'>
         <tr v-if="category.edit">
           <td :class="[validRegex(category) ? '' : 'form-group has-error']"><input class="form-control" v-model='category.name'></input></td>
@@ -30,7 +30,7 @@
         <td :class="[validRegex(newCategory) ? '' : 'form-group has-error']"><input class="form-control" placeholder="Description" v-model='newCategory.description'></input></td>
         <td :class="[validRegex(newCategory) ? '' : 'form-group has-error']"><input :class="['form-control']" placeholder="Regex" v-model='newCategory.regex'></input></td>
         <td><button :class="['btn btn-default']" :disabled="!validRegex(newCategory)" @click.prevent='addCategory'>Add <span class="glyphicon glyphicon-plus"/><br/></td>
-      </tr>  
+      </tr>
       </tbody>
     </table>
     <div class="row">
@@ -41,7 +41,7 @@
     </div>
     <div class="row" style="margin-top: 10px;">
       <div class="col-md-12">
-        <div v-if="edited" class="alert alert-info" role="alert"><b>Heads Up!</b> Changes have not been saved!</div>
+        <div v-if="edited">="alert alert-info" role="alert"><b>Heads Up!</b> Changes have not been saved!</div>
       </div>
     </div>
     <base-modal v-on:submit="deleteCategory" v-on:close="modals.delete = false" :dim="modals.delete">

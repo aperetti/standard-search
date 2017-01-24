@@ -28,6 +28,8 @@ export const searchStandard = (search, fields = ['code^10'], fuzzy = 0) => {
   return apiStandard.post('/search', data)
 }
 
+// Performs a substring search starting with the whole word and then removing the last letter and trying again until only 1 letter is searched.
+export const searchSubstring = (substring) => apiStandard.post('/search/substring', {substring: substring})
 // Performs a simple like query on the standards code
 export const findStandard = (id) => apiStandard.get(`/find_standard/${id}`)
 

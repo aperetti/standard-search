@@ -66,3 +66,10 @@
   }
 
 </script>
+<style scoped>
+  .float {
+    position: absolute;
+    top: 42px;
+    z-index: 500;
+  }
+</style>

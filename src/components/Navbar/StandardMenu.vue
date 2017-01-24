@@ -21,9 +21,10 @@
     <div class='row' >
       <div class = 'col-xs-5 col-md-4 tabl'  style="padding-right:0px; padding-left:0px; text-align: left;">
           <div class="list-group">
+              <div v-if="menus.parent" :class="['list-group-item','parent']" @click='fetchMenu(menus.parent.id)'>{{menus.parent.name}}<span class="glyphicon glyphicon-arrow-up pull-right"/></div>
             <!-- Display for Root -->
              <template v-if="!menus.parent">
-              <div :class="['list-group-item','parent', 'arrow']" style="cursor: pointer">{{menus.name}}</div>
+              <div :class="['list-group-item', 'arrow']" style="cursor: pointer">{{menus.name}}</div>
               <template v-for='child in menus.children'>
                 <a class="list-group-item child" style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
               </template>
@@ -31,12 +32,15 @@
             <!-- Display Else -->
             <template v-if="menus.parent">
               <template v-for='sibling in menus.parent.children'>
-                <div :class="['list-group-item','parent', menus.id === sibling.id ? 'arrow' : '']" @click='fetchMenu(sibling.id)' style="cursor: pointer">{{sibling.name}}</div>
+                <div v-if="menus.id === sibling.id" :class="['list-group-item', menus.id === sibling.id ? 'arrow' : '']">{{sibling.name}}</div>
+                <div v-else :class="['list-group-item','sibling', menus.id === sibling.id ? 'arrow' : '']" @click='fetchMenu(sibling.id)' style="cursor: pointer">{{sibling.name}}</div>
+                <transition-group tag="div" name="shrink">
                 <template v-if='sibling.id === menus.id && menus.children'>
                   <template  v-for="child in menus.children">
-                    <a class="list-group-item" style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
+                    <a class="list-group-item"  v-bind:key="child" style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
                   </template>
                 </template>
+                </transition-group>
               </template>
             </template>
           </div>
@@ -118,6 +122,19 @@ export default {
       transform: translateX(-100%);
       -ms-transform: translateX(-100%);
       -webkit-transform: translateX(-100%);
+   }
+   .shrink-enter-active, .shrink-leave-to {
+      transition: all .5s;
+      -webkit-transition: all .5s;
+      transform: scaleY(1); 
+      -ms-transform: scaleY(1); 
+      -webkit-transform: scaleY(1); 
+
+    }
+    .shrink-leave-active {
+       transform: scaleY(0); 
+      -ms-transform: scaleY(0); 
+      -webkit-transform: scaleY(0); 
     }
     .breadcrumb {
       font-size: 11px;
@@ -132,7 +149,7 @@ export default {
     .list-group-item-text {
       font-size: 11px;
     }
-    .tabl {
+    .table {
       display: table-cell;
           vertical-align:top;
     }
@@ -140,20 +157,38 @@ export default {
       background-color: #fff;
 
     }
-    .parent, .parent:focus {
+    .sibling, .sibling:focus {
+      cursor: pointer;
       padding-left: 5px;
       background-color: #333;
       border-color: #332;
       color: #bbb;
       box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-      z-index:10;
+      z-index:11;
+    }
+    .sibling:hover {
+      background-color: #353535;
+    }
+    .parent, .parent:focus {
+      cursor: pointer;
+      padding-left: 5px;
+      background-color: #222;
+      border-color: #222;
+      color: #bbb;
+      box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2), 0 19px 20px 0 rgba(0, 0, 0, 0.19);
+      z-index:12;
+    }
+    .parent:hover {
+      background-color: #252525
     }
     .arrow, .arrow:focus {
-      background-color: #333;
-      border-color: #332;
+      background-color: #5f5f5f;
+      cursor: default;
+      border-color: #5f5f5f;
       color: #bbb;
       z-index:10;
     }
+
     .arrow:before {
       content: "";
       position: absolute;
@@ -165,7 +200,7 @@ export default {
       box-sizing: border-box;
       margin: auto;
       border: .5em solid black;
-      border-color: transparent transparent #333 #333;
+      border-color: transparent transparent #5f5f5f #5f5f5f;
       transform-origin: 0 0;
       transform: rotate(-135deg);
     }
