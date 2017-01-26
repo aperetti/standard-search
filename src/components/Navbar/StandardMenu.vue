@@ -129,7 +129,6 @@ export default {
       transform: scaleY(1); 
       -ms-transform: scaleY(1); 
       -webkit-transform: scaleY(1); 
-
     }
     .shrink-leave-active {
        transform: scaleY(0); 

@@ -22,7 +22,7 @@
     </nav>
   <!-- Standard PDF Viewer -->
     <div class='row' style="position: fixed; height: 95%; min-height: 95%; width: 100%; ">
-      <div class='col-xs-12 col-md-8 col-md-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
+      <div class='col-xs-12 col-lg-8 col-lg-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
         <iframe id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
       </div>
     </div>

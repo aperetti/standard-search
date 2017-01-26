@@ -41,7 +41,7 @@
     </div>
     <div class="row" style="margin-top: 10px;">
       <div class="col-md-12">
-        <div v-if="edited">="alert alert-info" role="alert"><b>Heads Up!</b> Changes have not been saved!</div>
+        <div v-if="edited" class="alert alert-info" role="alert"><b>Heads Up!</b> Changes have not been saved!</div>
       </div>
     </div>
     <base-modal v-on:submit="deleteCategory" v-on:close="modals.delete = false" :dim="modals.delete">
