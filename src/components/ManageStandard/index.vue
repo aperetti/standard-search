@@ -86,7 +86,7 @@
       <label for="inputStandard" class="col-sm-2 col-sm-offset-1 control-label">File</label>
       <div class="col-sm-8 col-xs-10 col-xs-offset-1">
         <div class="input-group-btn">
-          <label v-bind:class="['btn', fileUploaded ? 'btn-success' : 'btn-default', this.fileConflict ? 'btn-warning' : 'btn-default', 'btn-file', 'pull-left']">
+          <label v-bind:class="['btn', fileUploaded ? 'btn-success' : 'btn-default', 'btn-file', 'pull-left']">
             <span class="glyphicon glyphicon-cloud-upload"></span> Upload PDF <input id="pdfFile" type="file" name="pdf" style="display: none;" v-on:change="getFile" >
           </label>
           <label class="btn btn-default btn-file pull-left" v-if="file">

@@ -2,6 +2,15 @@
   <div>
     <div class="container">
       <h2>Setup Standard References</h2>
+        <div class="col-xs-12"><hr><h4>Possible References Found in PDF</h4></div>
+          <div class="col-xs-12 col-md-3" v-for="type in uniqueTypes">
+            <h5>{{type}}</h5>
+            <div class="list-group">
+              <a class="list-group-item" @click="toggleKeyword(keyword)" v-for="keyword in filteredKeyword(type)">
+                {{keyword.keyword}} <span style="font-size: 18px;" :class="['pull-left glyphicon glyphicon-ok-sign', activeKeyword(keyword.keyword) ? '' : 'glyphicon-grey']"></span>
+              </a>
+            </div>
+          </div>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -50,20 +59,15 @@
       </table>
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-default" @click="modals.save = true">Save Changes</button>
+          <button :class="['btn btn-default']" :disabled='!uniqueReferences' @click="modals.save = true">Save Changes</button>
         </div>
-        <div class="col-xs-12"><hr><h4>Possible References Found in PDF</h4></div>
-      <div class="col-xs-12 col-md-3" v-for="type in uniqueTypes">
-        <h5>{{type}}</h5>
-        <div class="list-group">
-          <a class="list-group-item" @click="toggleKeyword(keyword)" v-for="keyword in filteredKeyword(type)">
-            {{keyword.keyword}} <span style="font-size: 18px;" :class="['pull-left glyphicon glyphicon-ok-sign', activeKeyword(keyword.keyword) ? '' : 'glyphicon-grey']"></span>
-          </a>
-        </div>
-      </div>
 
       </div>
-
+    <div class="row" style="margin-top: 10px;">
+      <div class="col-md-12">
+        <div v-if="!uniqueReferences" class="alert alert-info" role="alert"><b>Heads Up!</b> You cannot have the same standard referenced more than once!</div>
+      </div>
+    </div>
       <!-- Modal to search for a standard and assign it a reference -->
       <base-modal hide-submit="true" v-on:close="closeSearch()" :dim="modals.search.active">
         <template slot="title">Search Standard</template>
@@ -195,6 +199,17 @@
         } else {
           this.keywords.splice(index, 1)
         }
+      }
+    },
+    computed: {
+      uniqueReferences () {
+        return this.keywords.reduce((accum, el, index, arr) => {
+          if (!el.reference) return false
+          if (index + 1 === arr.length) return accum
+          console.log(arr.slice(index + 1).findIndex((searchEl) => searchEl.reference.id === el.reference.id))
+          if (accum && arr.slice(index + 1).findIndex((searchEl) => searchEl.reference.id === el.reference.id) === -1) return true
+          return false
+        }, true)
       }
     }
   }
