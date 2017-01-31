@@ -94,7 +94,7 @@
   </template>
 <script>
   import {keywords, getCategories, saveKeywords} from 'src/api/admin'
-  import {searchSubstring} from 'src/api/standard'
+  import {searchSubstring, getStandardKeywords} from 'src/api/standard'
   import BaseModal from 'components/modals/BaseModal'
   import DropDownButton from 'components/widget/DropDownButton'
   export default {
@@ -123,6 +123,11 @@
           this.modals.search.results = res.data
         })
       })
+      getStandardKeywords(this.$route.params.standardId).then(res => {
+        this.keywords = res.data.keywords.map(el => {
+          return Object.assign({}, {keyword: el.standardKeyword.keyword, keywordName: el.standardKeyword.keywordName, reference: el})
+        })
+      })
       getCategories().then(res => {
         this.keywordTypes = res.data
       })
@@ -130,7 +135,6 @@
       .then(res => {
         this.foundKeywords = res.data
         this.uniqueTypes = res.data.reduce((prev, el) => {
-          console.log(prev)
           if (prev.indexOf(el.keywordName) === -1) {
             prev.push(el.keywordName)
           }

@@ -21,47 +21,42 @@
     <div class='row' >
       <div class = 'col-xs-5 col-md-4 tabl'  style="padding-right:0px; padding-left:0px; text-align: left;">
           <div class="list-group">
-              <div v-if="menus.parent" :class="['list-group-item','parent']" @click='fetchMenu(menus.parent.id)'>{{menus.parent.name}}<span class="glyphicon glyphicon-arrow-up pull-right"/></div>
+              <div v-if="menus.parent" :class="['list-group-item','parent']" @click='fetchMenu(menus.parent.id)'>{{menus.parent.name}}<span class="glyphicon glyphicon-arrow-up pull-right" style='position: absolute; right: 5px; top: 5px;'/></div>
             <!-- Display for Root -->
              <template v-if="!menus.parent">
-              <div :class="['list-group-item', 'arrow']" style="cursor: pointer">{{menus.name}}</div>
+              <div :class="['list-group-item', 'parent']" style="cursor: pointer">{{menus.name}}</div>
               <template v-for='child in menus.children'>
                 <a class="list-group-item child" style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
               </template>
             </template>
             <!-- Display Else -->
-            <template v-if="menus.parent">
+            <div v-if="menus.parent">
               <template v-for='sibling in menus.parent.children'>
                 <div v-if="menus.id === sibling.id" :class="['list-group-item', menus.id === sibling.id ? 'arrow' : '']">{{sibling.name}}</div>
                 <div v-else :class="['list-group-item','sibling', menus.id === sibling.id ? 'arrow' : '']" @click='fetchMenu(sibling.id)' style="cursor: pointer">{{sibling.name}}</div>
-                <transition-group tag="div" name="shrink">
-                <template v-if='sibling.id === menus.id && menus.children'>
-                  <template  v-for="child in menus.children">
-                    <a class="list-group-item"  v-bind:key="child" style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
+                <transition v-on:leave='shrinkLeave' name="shrink">
+                <div v-if='sibling.id === menus.id && menus.children' style='overflow: hidden;'>
+                  <template  v-for="child in menus.children" >
+                    <a class="list-group-item"  v-bind:key="child" v-if='sibling.id === menus.id && menus.children' style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
                   </template>
-                </template>
-                </transition-group>
+                <div>
+                </transition>
               </template>
-            </template>
+            </div>
           </div>
 
       </div>
     <div class = 'col-xs-7 col-md-8 tabl'  style="padding-left:0px;padding-right: 0px;">
-        <div v-if='!menus.standards || menus.standards.length === 0 || standardsLoading' class="list-group">
-            <a  class="list-group-item">
-              <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-sunglasses glyphicon"></span></h4>
-              <p class="list-group-item-text">No Standards</p>
-            </a>
-        </div>
-        <div v-else class="list-group">             
-          <template v-for='std in sortedStandards'>
-              <router-link class="list-group-item" :to="{name: 'standard', params: {standardId: std.id}}">
-                <h5 class="list-group-item-heading">{{std.code}}</h5>
-                <p class="list-group-item-text">{{std.description}}</p>
-              </router-link>
-          </template>
-        </div>
-      
+    <transition name="fast">
+      <div v-if='!(!menus.standards || menus.standards.length === 0 || standardsLoading)' style="overflow: hidden;" class="list-group">             
+        <template v-for='std in sortedStandards'>
+          <router-link class="list-group-item" :to="{name: 'standard', params: {standardId: std.id}}">
+            <h5 class="list-group-item-heading">{{std.code}}</h5>
+            <p class="list-group-item-text">{{std.description}}</p>
+          </router-link>
+        </template>
+      </div>
+    </transition>
     </div>
   </div>
   </transition>
@@ -70,6 +65,7 @@
 <script>
 import naturalSort from 'javascript-natural-sort'
 import {getMenu} from 'src/api/menu'
+import Velocity from 'velocity-animate'
 
 export default {
   props: ['enable'],
@@ -88,6 +84,9 @@ export default {
     }
   },
   methods: {
+    shrinkLeave (el, done) {
+      Velocity(el, { height: 0 }, {complete: done})
+    },
     menuStandards () {
       let standards = []
       if (standards.length > 0) {
@@ -123,24 +122,32 @@ export default {
       -ms-transform: translateX(-100%);
       -webkit-transform: translateX(-100%);
    }
-   .shrink-enter-active, .shrink-leave-to {
+   .shrink-enter-active{
+      transition: all 1.5s;
+      -webkit-transition: all 1.5s;
+      max-height: 100em;
+   }
+    .shrink-enter {
+      max-height: 0;
+    }
+    .fast-enter-active, .shrinkfast-leave  {
       transition: all .5s;
       -webkit-transition: all .5s;
-      transform: scaleY(1); 
-      -ms-transform: scaleY(1); 
-      -webkit-transform: scaleY(1); 
-    }
-    .shrink-leave-active {
-       transform: scaleY(0); 
-      -ms-transform: scaleY(0); 
-      -webkit-transform: scaleY(0); 
+      max-height: 100em;
+   }
+    .fast-enter{
+      opacity: 0;
+      max-height: 0;
     }
     .breadcrumb {
       font-size: 11px;
     }
     .list-group-item {
+      max-height: 5em;
       padding-top: 4px;
       padding-bottom: 4px;
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
     }
     .list-group-item-heading {
       margin-bottom: 0px;
@@ -175,6 +182,8 @@ export default {
       border-color: #222;
       color: #bbb;
       box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2), 0 19px 20px 0 rgba(0, 0, 0, 0.19);
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
       z-index:12;
     }
     .parent:hover {

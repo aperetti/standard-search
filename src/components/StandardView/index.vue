@@ -4,7 +4,7 @@
     <nav class="navbar navbar-inverse" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">         
-        <a class="navbar-brand">{{standard.code}}</a>
+        <a class="navbar-brand">{{standard && standard.code}}</a>
         <button type="button" class="navbar-toggle" @click="toggleOption">
           <span class="sr-only">Toggle navigation</span>
           <span class="caret caret-mod"></span>
@@ -60,13 +60,9 @@
 
   export default {
     created () {
-      this.addHistory()
-      this.getStandardRevisions()
-      this.getStandardInfo()
+      this.initialize()
       this.$watch('$route.params.standardId', () => {
-        this.addHistory()
-        this.getStandardRevisions()
-        this.getStandardInfo()
+        this.initialize()
       })
     },
     computed: {
@@ -84,6 +80,15 @@
       }
     },
     methods: {
+      initialize () {
+        this.getStandardInfo()
+        .then(this.addHistory)
+        .then(this.getStandardRevisions)
+        .catch(e => {
+          console.log('Could not load standard')
+          this.$store.dispatch('createAlert', {message: 'Could not load. Standard most likely no longer exists. Redirecting...', type: 'info', delay: 7000})
+        })
+      },
       toggleOption () {
         var temp = !this.optionOpen
         bus.emit('page-reset', 'standardView')
@@ -92,15 +97,19 @@
       addHistory () {
         addHistory(this.$route.params.standardId)
         .then((res) => {})
-        .catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
+        .catch(e => this.$store.dispatch('createAlert', {message: 'Could not add standard to history.', type: 'warning'}))
       },
       getStandardInfo () {
         this.loadingRevisions = true
-        getStandardInfo(this.$route.params.standardId)
+        return getStandardInfo(this.$route.params.standardId)
         .then((res) => {
+          if (!res.data) {
+            this.$router.push({name: 'landing'})
+            throw new Error('Could not load standard')
+          }
           this.loadingRevisions = false
           this.standard = res.data
-        }).catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
+        })
       },
       getStandardRevisions () {
         this.loadingRevisions = true
@@ -108,7 +117,7 @@
         .then((res) => {
           this.loadingRevisions = false
           this.revisions = res.data
-        }).catch(e => this.$store.dispatch('createAlert', {message: e.data, type: 'warning'}))
+        }).catch(e => this.$store.dispatch('createAlert', {message: 'Could not load standard revisions. Standard may no longer exist.', type: 'warning'}))
       },
       standardLink: function () {
         viewPdfStandard(this.$route.params.standardId)

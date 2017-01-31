@@ -5,7 +5,8 @@ export const getStandardInfo = (id) => apiStandard.get(`/lookup/${id}`)
 
 // Get Revisions
 export const getStandardRevisions = (id) => apiStandard.get(`/revisions/${id}`)
-
+// Get Standard Keywords
+export const getStandardKeywords = (id) => apiStandard.get(`/get_keywords/${id}`)
 // Requires Admin
 export const validStandard = (code) => apiStandard.get(`/valid_standard/${code}`)
 
