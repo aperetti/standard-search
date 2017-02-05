@@ -23,14 +23,14 @@
           <div class="list-group">
               <div v-if="menus.parent" :class="['list-group-item','parent']" @click='fetchMenu(menus.parent.id)'>{{menus.parent.name}}<span class="glyphicon glyphicon-arrow-up pull-right" style='position: absolute; right: 5px; top: 5px;'/></div>
             <!-- Display for Root -->
-             <template v-if="!menus.parent">
+             <div v-if="!menus.parent">
               <div :class="['list-group-item', 'parent']" style="cursor: pointer">{{menus.name}}</div>
               <template v-for='child in menus.children'>
                 <a class="list-group-item child" style="cursor: pointer;" @click='fetchMenu(child.id)'>{{child.name}}</a>
               </template>
-            </template>
+            </div>
             <!-- Display Else -->
-            <div v-if="menus.parent">
+            <div v-if="menus.parent" style='overflow:hidden;'>
               <template v-for='sibling in menus.parent.children'>
                 <div v-if="menus.id === sibling.id" :class="['list-group-item', menus.id === sibling.id ? 'arrow' : '']">{{sibling.name}}</div>
                 <div v-else :class="['list-group-item','sibling', menus.id === sibling.id ? 'arrow' : '']" @click='fetchMenu(sibling.id)' style="cursor: pointer">{{sibling.name}}</div>
@@ -122,7 +122,7 @@ export default {
       -ms-transform: translateX(-100%);
       -webkit-transform: translateX(-100%);
    }
-   .shrink-enter-active{
+   .shrink-enter-to {
       transition: all 1.5s;
       -webkit-transition: all 1.5s;
       max-height: 100em;
@@ -195,8 +195,11 @@ export default {
       border-color: #5f5f5f;
       color: #bbb;
       z-index:10;
+      padding-left: 5px;
     }
-
+    #standard-menu { 
+      min-height: 300px;
+    }
     .arrow:before {
       content: "";
       position: absolute;
