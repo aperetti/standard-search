@@ -41,7 +41,7 @@
         searchDesc: true,
         searchPlaceholder: ['Search for standard by code and description', 'Search for standard by code'],
         searchGlyph: ['glyphicon glyphicon-search', 'glyphicon glyphicon-signal'],
-        searchMethod: 0
+        searchMethod: 1
       }
     },
     computed: {
