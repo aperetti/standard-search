@@ -14,7 +14,6 @@
       </div>
       <div v-bind:class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
         <ul class="nav navbar-nav">
-          <li><a @click.prevent='proccessLogout' class='cursor'>Logout</a></li>
           <nav-history></nav-history>
           <nav-user></nav-user>
         </ul>
@@ -80,10 +79,6 @@
       close: function () {
         this.optionOpen = false
         this.menuOpen = false
-      },
-      proccessLogout: function () {
-        this.$store.dispatch('logout')
-        this.$router.push('/login')
       },
       createStandard: function () {
         this.$router.push('/admin/standard/create')
