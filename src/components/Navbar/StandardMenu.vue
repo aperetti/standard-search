@@ -44,7 +44,6 @@
               </template>
             </div>
           </div>
-
       </div>
     <div class = 'col-xs-7 col-md-8 tabl'  style="padding-left:0px;padding-right: 0px;">
     <transition name="fast">
