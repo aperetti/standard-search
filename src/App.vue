@@ -67,6 +67,7 @@
  @import'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css';
  html {
   height: 100%;
+
 }
 .navbar {
   z-index: 99;
@@ -94,7 +95,9 @@ body {
 #app {
   font-family: Source Sans Pro, Helvetica, sans-serif;
   text-align: center;
-  height: 100%;;
+  height: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 .login {
   max-width: 400px;
