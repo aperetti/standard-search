@@ -2,7 +2,6 @@
   
   <li role='presentation' v-bind:class="['dropdown', this.open ? 'open' : '']">
     <a class="dropdown-toggle" 
-        href='#'
         data-toggle="dropdown"
         role="button" 
         @click="toggleState()" 

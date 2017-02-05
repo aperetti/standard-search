@@ -4,7 +4,7 @@
     <nav class="navbar navbar-inverse" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">         
-        <a class="navbar-brand">{{standard && standard.code}}</a>
+        <a class="navbar-brand" style="cursor: default;">{{standard && standard.code}}</a>
         <button type="button" class="navbar-toggle" @click="toggleOption">
           <span class="sr-only">Toggle navigation</span>
           <span class="caret caret-mod"></span>
@@ -12,10 +12,9 @@
       </div>
       <div :class="['navbar-collapse', optionOpen ? 'collapse-in' : 'collapse']">
         <ul class="nav navbar-nav">
-          <nav-add-to-project :standard="routerStandard" v-on:create-project='createProject = true'></nav-add-to-project>
           <li><a href='#' @click="standardLink"><span class="glyphicon glyphicon-open" /> Open</a></li>
-        </ul>
-        <ul class="nav navbar-nav">
+          <nav-add-to-project :standard="routerStandard" v-on:create-project='createProject = true'></nav-add-to-project>
+          <nav-references v-if="standard && standard.keywords && standard.keywords.length > 0" :references="standard.keywords"></nav-references>
           <li><a href='#' @click="showRevision = true"><span class="glyphicon glyphicon-list" /> Revisions</a></li>
         </ul>
       </div>
@@ -23,7 +22,7 @@
   <!-- Standard PDF Viewer -->
     <div class='row' style="position: fixed; height: 95%; min-height: 95%; width: 100%; ">
       <div class='col-xs-12 col-lg-8 col-lg-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
-        <iframe id='pdf' class='pdf-frame' :src="standardUrl" frameborder="0" wmode="transparent"></iframe>
+        <object type="text/html" id='pdf' class='pdf-frame' :data="standardUrl" frameborder="0" wmode="transparent"></object>
       </div>
     </div>
   <!-- Versions Modal -->
@@ -55,6 +54,7 @@
   import {withToken, apiGetStandardPdf} from 'src/api/config'
   import {addHistory, getStandardRevisions, viewPdfStandard, getStandardInfo} from 'src/api/standard'
   import NavAddToProject from './NavAddToProject'
+  import NavReferences from './NavReferences'
   import bus from 'src/bus'
   import CreateProject from 'components/modals/CreateProject'
 
@@ -140,6 +140,7 @@
     },
     components: {
       NavAddToProject,
+      NavReferences,
       BaseModal,
       CreateProject
     }
@@ -179,7 +180,9 @@
 .filler{
   min-height: 2000px;
 }
-
+.navbar-brand:hover {
+  color: #9d9d9d;
+}
 .navbar-form {
    padding-left: 0;
 }

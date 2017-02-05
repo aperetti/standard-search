@@ -8,8 +8,8 @@ function extendWithToken (axios, base) {
     return config
   })
   extend.interceptors.response.use(function (response) {
-    console.log(response.headers)
     if (Object.keys(response.headers).indexOf('auth-token') !== -1) {
+      console.log(response.headers)
       setLocal('token', response.headers['auth-token'])
       setLocal('expiration', response.headers['auth-expiration'])
       hydrateUser()
