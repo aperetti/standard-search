@@ -7,6 +7,15 @@ function extendWithToken (axios, base) {
     config.headers.authorization = 'Bearer ' + token()
     return config
   })
+  extend.interceptors.response.use(function (response) {
+    console.log(response.headers)
+    if (Object.keys(response.headers).indexOf('auth-token') !== -1) {
+      setLocal('token', response.headers['auth-token'])
+      setLocal('expiration', response.headers['auth-expiration'])
+      hydrateUser()
+    }
+    return response
+  })
   return extend
 }
 
@@ -34,10 +43,7 @@ export const loggedIn = () => {
   if (store.state.user.token.token && store.state.user.token.expiration > new Date().getTime()) {
     return true
   } else if (window.localStorage.getItem('token') && window.localStorage.getItem('expiration') > new Date().getTime()) {
-    store.dispatch(
-      'hydrateUser',
-      {name: getLocal('username'), roles: JSON.parse(getLocal('roles')), token: {token: getLocal('token'), expiration: window.localStorage.getItem('expiration')}}
-    )
+    hydrateUser()
     return true
   } else {
     return false
@@ -50,5 +56,12 @@ export function token () {
 
 function getLocal (str) { return window.localStorage.getItem(str) }
 
+function setLocal (str, val) { return window.localStorage.setItem(str, val) }
+function hydrateUser () {
+  store.dispatch(
+    'hydrateUser',
+    {name: getLocal('username'), roles: JSON.parse(getLocal('roles')), token: {token: getLocal('token'), expiration: window.localStorage.getItem('expiration')}}
+  )
+}
 // appends the current token to the url string
 export const withToken = (url) => url + '?token=' + token()
