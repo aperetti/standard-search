@@ -19,7 +19,11 @@
           @blur="blurResults" 
           :to="{ name: 'standard', params: { standardId: item.id }}"  
           :class="['list-group-item text-left', item.id == $route.params.standardId ? 'active' : '']">
-            {{item.code}} - {{item.description}}
+            <span v-if="item.highlights"><strong>{{item.code}} - {{item.description}}</strong></span>
+            <span v-else>{{item.code}} - {{item.description}}</span>
+            </br>
+            <hr v-if="item.highlights" style='margin: 3px;'>
+          <small v-if="item.highlights && index < 2" v-for="(highlight, index) in item.highlights" style="padding-left: 20px;" v-html="'...' + highlight + '...<br>'"></small>
         </router-link>
       </div>
     </div>
@@ -27,7 +31,7 @@
 </template>
 
 <script>
-  import {searchStandard, searchSubstring} from 'src/api/standard'
+  import {searchStandard, searchSubstring, searchStandardText} from 'src/api/standard'
   import bus from 'src/bus'
   export default {
     mounted () {
@@ -44,8 +48,8 @@
         fuzzy: 2,
         searchCode: true,
         searchDesc: true,
-        searchPlaceholder: ['Search for standard by code and description', 'Search for standard by code'],
-        searchGlyph: ['glyphicon glyphicon-search', 'glyphicon glyphicon-signal'],
+        searchPlaceholder: ['Search for standard by code and description', 'Search for standard by code', 'Search by standard text'],
+        searchGlyph: ['glyphicon glyphicon-search', 'glyphicon glyphicon-signal', 'glyphicon glyphicon-console'],
         searchMethod: 1,
         toggleButton: true
       }
@@ -61,6 +65,7 @@
     methods: {
       focusSearch: function (event) {
         bus.emit('page-reset', 'drop-down')
+        this.getResults()
         this.showResults = true
       },
       setCurrentStandard: function (item) {
@@ -76,6 +81,8 @@
           case 1:
             searchRequest = searchSubstring(this.searchInput)
             break
+          case 2:
+            searchRequest = searchStandardText(this.searchInput)
         }
         searchRequest.then((res) => {
           tempLoad = false

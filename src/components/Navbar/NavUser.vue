@@ -3,6 +3,7 @@
     <template slot='title'>User</template>
     <template slot='dropdown'>
       <li><router-link :to="{ name: 'projectsHome' }" class='cursor'><span class="glyphicon glyphicon-list-alt"></span> Projects</router-link></li>
+      <hr style="margin: 5px;">
       <li><a @click.prevent='proccessLogout' class='cursor'>Logout</a></li>
     </template>
   </drop-down>

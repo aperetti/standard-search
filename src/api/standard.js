@@ -21,16 +21,14 @@ export const addHistory = (id) => apiUser.post(`/add_history/${id}`)
 
 export const getHistory = () => apiUser.get('/get_history')
 
-export const searchStandard = (search, fields = ['code^10'], fuzzy = 0) => {
-  var data = {}
-  data.fields = fields
-  data.search = search
-  data.fuzzy = fuzzy
-  return apiStandard.post('/search', data)
+export const searchStandard = (input) => {
+  return apiStandard.post('/search', {search: input})
 }
 
 // Performs a substring search starting with the whole word and then removing the last letter and trying again until only 1 letter is searched.
 export const searchSubstring = (substring) => apiStandard.post('/search/substring', {substring: substring})
+
+export const searchStandardText = (input) => apiStandard.post('/search/text', {search: input})
 // Performs a simple like query on the standards code
 export const findStandard = (id) => apiStandard.get(`/find_standard/${id}`)
 
