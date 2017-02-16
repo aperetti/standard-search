@@ -86,7 +86,7 @@
   top: 0px;
   bottom: 0px;
   background-color: #f8f8f8;
-  overflow: scroll;
+  overflow: hidden;
   -webkit-overflow-scrolling: touch;
 }
 body {

@@ -20,8 +20,8 @@
       </div>
     </nav>
   <!-- Standard PDF Viewer -->
-    <div class='row' style="position: fixed; height: 95%; min-height: 95%; width: 100%; ">
-      <div class='col-xs-12 col-lg-8 col-lg-offset-2 col-xs-offset' style="height: calc( 100% - 100px );">
+      <div class='row' style="position: absolute; bottom: 10px; top: 0px; width: 100%; overflow: hidden; ">
+      <div class='col-xs-12 col-lg-8 col-lg-offset-2 col-xs-offset' style="position: absolute; bottom: 0px; top: 55px;">
         <object type="text/html" id='pdf' class='pdf-frame' :data="standardUrl" frameborder="0" wmode="transparent"></object>
       </div>
     </div>

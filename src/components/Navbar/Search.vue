@@ -1,6 +1,6 @@
 <template>
-  <span>
-    <div class="input-group" style="padding: 8px;">
+  <div class='col-lg-5'>
+    <div class="input-group"  style="padding: 8px;">
       <span @click="searchMethod += 1" class="input-group-addon link" id="sizing-addon1">
         <div style="overflow: hidden;">
           <transition name="slide" mode="out-in">
@@ -8,9 +8,14 @@
           </transition>
         </div>
       </span>
-       <input autocomplete="off" :placeholder='getSearchPlaceholder' class='form-control' type="search" id='search' v-model="searchInput" @keyup="getResults"  @focus="focusSearch" @blur="blurResults" />
-        <div class='list-group float' id='results' v-show='showResults'>
-        <a v-if='searchResults && searchResults.length === 0 && searchInput.length > 0 && !loading' id='results-0' @blur="blurResults" class='list-group-item text-left'>No Standards Found</a>
+       <input autocomplete="off" :placeholder='getSearchPlaceholder' class='form-control' type="search" id='search' v-model="searchInput" @keyup="getResults"  @focus="onSearchFocus" @blur="blurResults" />
+        <div class='list-group float' id='results' style="padding-right: 8px;" v-show='showResults'>
+        <div class='list-group-item nav nav-tab' style="padding: 0px; height: 30px; width: 100%">
+          <a :class="['col-xs-4 highlight', index === searchMethod ? 'active' : '']" :tabindex="index" :id="'search-method-' + index" v-for="(search, index) in searchGlyph" @blur="blurResults" @click="searchMethod = index; getResults();">
+            <span :class="[search]" style="height:30px; padding:5px;"></span><span class="hidden-xs">{{searchLabel[index]}}</span>
+          </a>
+        </div>
+        <a v-if='searchResults && searchResults.length === 0 && searchInput.length > 0 && !loading' id='results-0' class='list-group-item text-left'>No Standards Found</a>
         <a v-if='loading' class='list-group-item text-left'>Loading...</a>
         <router-link 
           v-if='!loading' 
@@ -26,8 +31,9 @@
           <small v-if="item.highlights && index < 2" v-for="(highlight, index) in item.highlights" style="padding-left: 20px;" v-html="'...' + highlight + '...<br>'"></small>
         </router-link>
       </div>
+      </div>
     </div>
-  </span>
+  </div>
 </template>
 
 <script>
@@ -44,13 +50,15 @@
         loading: false,
         searchInput: '',
         searchResults: [],
+        preventClose: false,
         showResults: false,
         fuzzy: 2,
         searchCode: true,
         searchDesc: true,
-        searchPlaceholder: ['Search for standard by code and description', 'Search for standard by code', 'Search by standard text'],
-        searchGlyph: ['glyphicon glyphicon-search', 'glyphicon glyphicon-signal', 'glyphicon glyphicon-console'],
-        searchMethod: 1,
+        searchLabel: ['Code', 'Code + Desc', 'Full Text'],
+        searchPlaceholder: ['Search for standard by code', 'Search for standard by code and description', 'Search by standard text'],
+        searchGlyph: ['glyphicon glyphicon-signal', 'glyphicon glyphicon-search', 'glyphicon glyphicon-console'],
+        searchMethod: 0,
         toggleButton: true
       }
     },
@@ -63,10 +71,12 @@
       }
     },
     methods: {
-      focusSearch: function (event) {
+      onSearchFocus: function (event) {
         bus.emit('page-reset', 'drop-down')
         this.getResults()
-        this.showResults = true
+        this.$nextTick(() => {
+          this.showResults = true
+        })
       },
       setCurrentStandard: function (item) {
         this.currentStandard = item._source.file
@@ -96,14 +106,15 @@
           this.loading = tempLoad
         }, 100)
       },
-      blurResults: function () {
+      blurResults: function (ev) {
         var self = this
-        window.setTimeout(function () {
-          if (window.document.activeElement.id.indexOf('results') === -1) {
-            window.setTimeout(function () {
+        window.setTimeout(() => {
+          if (!ev.relatedTarget || ev.relatedTarget.id.indexOf('search') === -1) {
+            window.setTimeout(() => {
               self.showResults = false
             }, 50)
           }
+          self.preventClose = false
         }, 100)
       }
     }
@@ -116,6 +127,17 @@
   }
   .slide-enter {
     top: 20px;
+  }
+  a.highlight:focus, a.highlight:hover {
+    text-decoration: none;
+  }
+  a.highlight.active {
+    cursor: default;
+  }
+  a.highlight {
+    cursor: pointer;
+    outline-color: grey;
+    outline-width: 0;
   }
   .slide-leave-to {
     top: -20px;
@@ -137,6 +159,8 @@
   .float {
     position: absolute;
     top: 42px;
+    left: 50px;
+    right: 0px;
     z-index: 500;
   }
     /* always present */
